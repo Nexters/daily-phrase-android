@@ -2,7 +2,6 @@
 kotlin = "1.9.21"
 android = "8.2.1"
 ksp = "1.9.21-1.0.16"
-
 activity-ktx = "1.8.2"
 fragment-ktx = "1.6.2"
 lifecycle = "2.7.0"
@@ -110,5 +109,6 @@ navigation = ["androidx-navigation-ui-ktx", "androidx-hilt-navigation-fragment",
 lifecycle = ["androidx-lifecycle-runtime-ktx", "androidx-lifecycle-viewmodel-ktx", "androidx-lifecycle-viewmodel-savedstate"]
 android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-coroutines-test"]
 network = ["retrofit", "converter-gson", "logging-interceptor"]
-db = ["androidx-datastore", "androidx-datastore-preferences-core", "androidx-room-runtime", "androidx-room-ktx"]
+database = ["androidx-room-runtime", "androidx-room-ktx"]
+datastore = ["androidx-datastore", "androidx-datastore-preferences-core"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
