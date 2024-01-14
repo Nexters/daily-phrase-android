@@ -8,10 +8,10 @@ plugins {
 
 android {
     namespace = "com.slivertown.android.dailyphrase.data"
-    compileSdk = 34
+    compileSdk = Configuration.compileSdk
 
     defaultConfig {
-        minSdk = 21
+        minSdk = Configuration.minSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

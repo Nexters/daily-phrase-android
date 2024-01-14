@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "com.slivertown.android.dailyphrase"
-    compileSdk = 34
+    compileSdk = Configuration.compileSdk
 
     defaultConfig {
         applicationId = "com.slivertown.android.dailyphrase"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = Configuration.minSdk
+        targetSdk = Configuration.targetSdk
+        versionCode = Configuration.versionCode
+        versionName = Configuration.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
