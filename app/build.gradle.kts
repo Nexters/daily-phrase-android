@@ -61,4 +61,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     kapt(libs.hilt.compiler)
+
+    implementation(libs.androidx.core.splashscreen)
 }
