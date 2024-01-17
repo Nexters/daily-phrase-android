@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.slivertown.android.dailyphrase.data"
+    namespace = "com.silvertown.android.dailyphrase.data"
     compileSdk = Configuration.compileSdk
 
     defaultConfig {
