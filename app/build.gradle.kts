@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.slivertown.android.dailyphrase"
+    namespace = "com.silvertown.android.dailyphrase"
     compileSdk = Configuration.compileSdk
 
     defaultConfig {
-        applicationId = "com.slivertown.android.dailyphrase"
+        applicationId = "com.silvertown.android.dailyphrase"
         minSdk = Configuration.minSdk
         targetSdk = Configuration.targetSdk
         versionCode = Configuration.versionCode
