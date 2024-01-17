@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/move_to_postFragment"
+            app:destination="@id/postFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.post.PostFragment"
+        tools:layout="@layout/fragment_post"/>
+</navigation>
