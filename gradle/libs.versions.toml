@@ -36,6 +36,7 @@ firebase-config = "21.6.0"
 activity-compose = "1.8.2"
 compose-bom = "2023.10.01"
 splashscreen = "1.0.1"
+kakao = "2.19.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -80,6 +81,7 @@ firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+kakao = { module = "com.kakao.sdk:v2-user", version.ref = "kakao"}
 
 # compose
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
