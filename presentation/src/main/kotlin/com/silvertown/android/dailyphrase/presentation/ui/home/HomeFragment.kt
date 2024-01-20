@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
 import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
 
@@ -49,15 +50,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             .moveToPostFragment()
             .also { findNavController().navigate(it) }
     }
-
-    // TODO JH: Domain 모듈에 파일 생성이 잘 안돼서 임시로 여기에 만듬
-    data class Post(
-        val id: Long,
-        val title: String,
-        val previewText: String,
-        val imageUrl: String,
-        val viewCount: Long,
-        val likeCount: Long,
-        val isBookmarked: Boolean,
-    )
 }
