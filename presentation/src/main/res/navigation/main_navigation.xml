@@ -18,5 +18,8 @@
     <fragment
         android:id="@+id/postFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.post.PostFragment"
-        tools:layout="@layout/fragment_post"/>
+        tools:layout="@layout/fragment_post">
+
+        <deepLink app:uri="demo://www.example.com"/>
+    </fragment>
 </navigation>
