@@ -23,7 +23,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.bundles.navigation)
     implementation(libs.timber)
+    implementation(libs.kakao)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
@@ -82,5 +83,4 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     implementation(libs.androidx.core.splashscreen)
-
 }
