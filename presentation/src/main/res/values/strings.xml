@@ -1,5 +1,6 @@
 <resources>
     <string name="favorite">좋아요</string>
     <string name="bookmark">즐겨찾기</string>
-    <string name="share">공유하기</string>
+    <string name="kakao_link_share">카카오톡으로 공유하기</string>
+    <string name="more_see">자세히 보기</string>
 </resources>
