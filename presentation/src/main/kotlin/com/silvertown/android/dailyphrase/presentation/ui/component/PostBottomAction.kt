@@ -1,22 +1,21 @@
 package com.silvertown.android.dailyphrase.presentation.ui.component
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,66 +23,60 @@ import com.silvertown.android.dailyphrase.presentation.R
 
 @Composable
 fun PostBottomAction(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit,
     onBookmarkClick: () -> Unit,
     onShareClick: () -> Unit,
 ) {
-    Box(
+    Row(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Row(
+        Icon(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            PostActionBox(
-                icon = R.drawable.ic_favorite_24,
-                title = R.string.favorite,
-                onClick = onFavoriteClick
-            )
-            PostActionBox(
-                icon = R.drawable.ic_bookmark_24,
-                title = R.string.bookmark,
-                onClick = onBookmarkClick
-            )
-            PostActionBox(
-                icon = R.drawable.ic_share_24,
-                title = R.string.share,
-                onClick = onShareClick
-            )
-        }
+                .padding(1.dp)
+                .size(48.dp)
+                .clickable { onFavoriteClick() },
+            painter = painterResource(id = R.drawable.ic_favorite_24),
+            contentDescription = null,
+        )
+        Icon(
+            modifier = Modifier
+                .padding(1.dp)
+                .size(48.dp)
+                .clickable { onBookmarkClick() },
+            painter = painterResource(id = R.drawable.ic_bookmark_24),
+            contentDescription = null,
+        )
+        PostKaKaoShareButton(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = onShareClick
+        )
     }
 }
 
 @Composable
-private fun PostActionBox(
-    @DrawableRes icon: Int,
-    @StringRes title: Int,
+private fun PostKaKaoShareButton(
+    modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .heightIn(max = 44.dp)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+    Button(
+        onClick = { onClick() },
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(id = R.color.orange),
+            contentColor = colorResource(id = R.color.white)
+        ),
+        contentPadding = PaddingValues(
+            vertical = 13.dp
+        )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(10.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = stringResource(id = title)
-            )
-        }
+        Text(
+            text = stringResource(id = R.string.kakao_link_share),
+            color = colorResource(id = R.color.white)
+        )
     }
 }
