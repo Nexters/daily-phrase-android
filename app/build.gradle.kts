@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -26,8 +28,12 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
+        }
+        debug {
+            manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
+            buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
         }
     }
     compileOptions {
@@ -59,10 +65,15 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.hilt.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.kakao)
 
     implementation(libs.kakao.link)
 
     kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.splashscreen)
+}
+
+fun getKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
