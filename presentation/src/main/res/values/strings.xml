@@ -9,7 +9,7 @@
     <string name="share_app">앱 공유하기</string>
     <string name="leave_review">앱 리뷰 남기기</string>
     <string name="logout">로그아웃</string>
-    <string name="login_and_share_message">로그인하고\n글귀를 공유해 보세요</string>
+    <string name="login_and_share_message">로그인하고\n글귀를 공유해 보세요.</string>
     <string name="unsubscribe_service">서비스 탈퇴</string>
     <string name="message_before_leaving">탈퇴하기 전에 꼭 확인해주세요.</string>
     <string name="unsubscribe_message_title_1">즐겨찾는 글귀가 모두 사라져요.</string>
