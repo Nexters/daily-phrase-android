@@ -65,8 +65,11 @@ dependencies {
     implementation(libs.bundles.navigation)
     implementation(libs.timber)
     implementation(libs.kakao)
-
     implementation(libs.kakao.link)
+
+    implementation(libs.coil.kt.compose)
+    implementation(libs.coil.kt.gif)
+    implementation(libs.coil.kt.svg)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
