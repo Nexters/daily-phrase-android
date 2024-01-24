@@ -13,6 +13,15 @@
         <action
             android:id="@+id/move_to_postFragment"
             app:destination="@id/postFragment"/>
+        <action
+            android:id="@+id/move_to_bookmarkFragment"
+            app:destination="@id/bookmarkFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookmarkFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.bookmark.BookmarkFragment"
+        tools:layout="@layout/fragment_bookmark">
     </fragment>
 
     <fragment

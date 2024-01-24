@@ -35,6 +35,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun initListeners() {
+        binding.tvBookmark.setOnClickListener {
+            HomeFragmentDirections
+                .moveToBookmarkFragment()
+                .also { findNavController().navigate(it) }
+        }
     }
 
     private fun initViews() {
