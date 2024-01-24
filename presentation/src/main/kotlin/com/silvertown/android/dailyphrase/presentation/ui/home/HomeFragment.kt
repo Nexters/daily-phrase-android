@@ -13,6 +13,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
 import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
 import kotlinx.coroutines.launch
@@ -157,16 +158,5 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
             }
         }
-    }
-
-    // TODO JH: Domain 모듈에 파일 생성이 잘 안돼서 임시로 여기에 만듬
-    data class Post(
-        val id: Long,
-        val title: String,
-        val previewText: String,
-        val imageUrl: String,
-        val viewCount: Long,
-        val likeCount: Long,
-        val isBookmarked: Boolean,
     )
 }

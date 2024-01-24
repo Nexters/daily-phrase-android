@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBinding
-import com.silvertown.android.dailyphrase.presentation.ui.home.HomeFragment.Post
 
 class PostAdapter(
     private val onPostClick: (Long) -> Unit,
