@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.kakao)
 
+    implementation(libs.kakao.link)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 
