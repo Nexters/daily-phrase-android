@@ -1,6 +1,7 @@
 package com.silvertown.android.dailyphrase.presentation.ui.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -37,7 +39,12 @@ fun PostBottomAction(
             modifier = Modifier
                 .padding(1.dp)
                 .size(48.dp)
-                .clickable { onFavoriteClick() },
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    onFavoriteClick()
+                },
             painter = painterResource(id = R.drawable.ic_favorite_24),
             contentDescription = null,
         )
@@ -45,7 +52,12 @@ fun PostBottomAction(
             modifier = Modifier
                 .padding(1.dp)
                 .size(48.dp)
-                .clickable { onBookmarkClick() },
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    onBookmarkClick()
+                },
             painter = painterResource(id = R.drawable.ic_bookmark_24),
             contentDescription = null,
         )
