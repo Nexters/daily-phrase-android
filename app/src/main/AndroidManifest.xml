@@ -43,6 +43,15 @@
                 <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
                 <data
                     android:host="oauth"
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="kakaolink"
                     android:scheme="kakao${KAKAO_APP_KEY}" />
             </intent-filter>
         </activity>
@@ -51,6 +60,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -61,5 +71,9 @@
             </intent-filter>
         </activity>
     </application>
+
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
 
 </manifest>

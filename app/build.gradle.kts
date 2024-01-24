@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.kakao)
 
+    implementation(libs.kakao.link)
+
     kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.splashscreen)
