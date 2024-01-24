@@ -17,5 +17,10 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
         binding.tvAllPhrase.setOnClickListener {
             findNavController().popBackStack() // TODO: 수정
         }
+        binding.ivProfile.setOnClickListener {
+            BookmarkFragmentDirections
+                .moveToMyPageFragment()
+                .also { findNavController().navigate(it) }
+        }
     }
 }

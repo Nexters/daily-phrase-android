@@ -40,6 +40,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 .moveToBookmarkFragment()
                 .also { findNavController().navigate(it) }
         }
+        binding.ivProfile.setOnClickListener {
+            HomeFragmentDirections
+                .moveToMyPageFragment()
+                .also { findNavController().navigate(it) }
+        }
     }
 
     private fun initViews() {

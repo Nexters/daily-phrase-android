@@ -16,16 +16,28 @@
         <action
             android:id="@+id/move_to_bookmarkFragment"
             app:destination="@id/bookmarkFragment"/>
+        <action
+            android:id="@+id/move_to_myPageFragment"
+            app:destination="@id/myPageFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/bookmarkFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.bookmark.BookmarkFragment"
         tools:layout="@layout/fragment_bookmark">
+
+        <action
+            android:id="@+id/move_to_myPageFragment"
+            app:destination="@id/myPageFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/postFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.post.PostFragment"
         tools:layout="@layout/fragment_post"/>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.MyPageFragment"
+        tools:layout="@layout/fragment_my_page"/>
 </navigation>
