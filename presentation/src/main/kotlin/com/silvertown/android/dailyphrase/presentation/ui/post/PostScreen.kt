@@ -30,7 +30,7 @@ import com.kakao.sdk.template.model.Social
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseWebView
 import com.silvertown.android.dailyphrase.presentation.ui.component.PostBottomAction
-import com.silvertown.android.dailyphrase.presentation.ui.component.PostTopAppBar
+import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun PostScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            PostTopAppBar(
+            BaseTopAppBar(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
