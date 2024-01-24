@@ -24,7 +24,7 @@ import kotlin.coroutines.resumeWithException
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private lateinit var adapter: PostAdapter
-    val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by viewModels<HomeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,14 +35,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun initListeners() {
-        binding.btnLogin.setOnClickListener {
-            kakaoLogin()
-        }
     }
 
     private fun initViews() {
         adapter = PostAdapter { moveToPost() }
         binding.rvPost.adapter = adapter
+        binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
+
         adapter.submitList(getData())
     }
 
@@ -60,20 +59,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         return listOf(
             Post(
                 id = 1,
-                title = "타이틀",
-                previewText = "짜잔",
-                imageUrl = "임시 데이터입니다.",
-                viewCount = 250,
-                likeCount = 200,
+                title = "자식사랑 내리사랑",
+                previewText = "어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다. 성급한 사람, 무덤덤한 사람, 아무 생각이 없는 사람",
+                imageUrl = "https://picsum.photos/800/400",
+                viewCount = 1020104,
+                likeCount = 9999,
                 isBookmarked = true,
             ),
             Post(
                 id = 2,
-                title = "타이틀2",
-                previewText = "짜잔2",
-                imageUrl = "임시 데이터입니다.2",
+                title = "잔잔해 보이지만",
+                previewText = "어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다. 성급한 사람, 무덤덤한 사람, 아무 생각이 없는 사람",
+                imageUrl = "https://picsum.photos/800/400",
                 viewCount = 130,
                 likeCount = 90,
+                isBookmarked = false,
+            ),
+            Post(
+                id = 3,
+                title = "사랑의 향기가 나는 시간",
+                previewText = "어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다.",
+                imageUrl = null,
+                viewCount = 139501,
+                likeCount = 1234,
+                isBookmarked = true,
+            ),
+            Post(
+                id = 4,
+                title = "커피를 많이 마실수록 더 오래산다? - 의학계에서 긍정적인 측면",
+                previewText = "오늘의 끝이 내일의 처음입니다. 오늘 무엇을 했느냐가 내일을 결정합니다. 오늘 바쁜 일을 미루면 더 바쁜 내일이 되고, 오늘",
+                imageUrl = null,
+                viewCount = 12345,
+                likeCount = 316,
                 isBookmarked = true,
             ),
         )
