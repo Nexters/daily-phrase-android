@@ -37,6 +37,7 @@ import timber.log.Timber
 @Composable
 fun PostScreen(
     modifier: Modifier,
+    navigationToBack: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -45,7 +46,7 @@ fun PostScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navigationToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null

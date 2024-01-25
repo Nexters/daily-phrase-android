@@ -35,11 +35,13 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
+    navigationToBack: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.white))
+            .background(color = colorResource(id = R.color.white)),
+        navigationToBack = navigationToBack
     )
 }
 
@@ -47,6 +49,7 @@ fun MyPageScreen(
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
+    navigationToBack: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -55,7 +58,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navigationToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null
