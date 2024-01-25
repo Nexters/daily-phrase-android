@@ -10,9 +10,11 @@ import androidx.compose.ui.unit.dp
 import com.silvertown.android.dailyphrase.presentation.R
 
 @Composable
-fun ItemDivider() {
+fun ItemDivider(
+    modifier: Modifier = Modifier,
+) {
     Divider(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(1.dp),
         color = colorResource(id = R.color.divider)
@@ -20,9 +22,11 @@ fun ItemDivider() {
 }
 
 @Composable
-fun GroupDivider() {
+fun GroupDivider(
+    modifier: Modifier = Modifier,
+) {
     Divider(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(8.dp),
         color = colorResource(id = R.color.divider)
