@@ -1,18 +1,19 @@
-package com.silvertown.android.dailyphrase.presentation.ui.post
+package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
 import android.os.Bundle
 import android.view.View
 import androidx.compose.ui.Modifier
 import androidx.navigation.fragment.findNavController
-import com.silvertown.android.dailyphrase.presentation.databinding.FragmentPostBinding
+import com.silvertown.android.dailyphrase.presentation.databinding.FragmentUnsubscribeBinding
 import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
 
-class PostFragment : BaseFragment<FragmentPostBinding>(FragmentPostBinding::inflate) {
+class UnsubscribeFragment :
+    BaseFragment<FragmentUnsubscribeBinding>(FragmentUnsubscribeBinding::inflate) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            PostScreen(
+            UnsubscribeScreen(
                 modifier = Modifier,
                 navigateToBack = {
                     findNavController().popBackStack()

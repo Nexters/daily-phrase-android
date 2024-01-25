@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.mypage
+package com.silvertown.android.dailyphrase.presentation.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
-import com.silvertown.android.dailyphrase.presentation.ui.component.RenderAsyncUrlImage
 
 @Composable
 fun ProfileContent(

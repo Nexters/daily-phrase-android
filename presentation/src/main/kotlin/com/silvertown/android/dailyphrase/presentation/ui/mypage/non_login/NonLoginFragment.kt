@@ -1,22 +1,23 @@
-package com.silvertown.android.dailyphrase.presentation.ui.post
+package com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login
 
 import android.os.Bundle
 import android.view.View
 import androidx.compose.ui.Modifier
 import androidx.navigation.fragment.findNavController
-import com.silvertown.android.dailyphrase.presentation.databinding.FragmentPostBinding
+import com.silvertown.android.dailyphrase.presentation.databinding.FragmentNonLoginBinding
 import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
 
-class PostFragment : BaseFragment<FragmentPostBinding>(FragmentPostBinding::inflate) {
+class NonLoginFragment : BaseFragment<FragmentNonLoginBinding>(FragmentNonLoginBinding::inflate) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            PostScreen(
+            NonLoginScreen(
                 modifier = Modifier,
                 navigateToBack = {
                     findNavController().popBackStack()
-                }
+                },
+                onClickKaKaoLogin = { }
             )
         }
     }

@@ -14,8 +14,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         binding.composeView.setContent {
             MyPageScreen(
                 modifier = Modifier,
-                navigationToBack = {
+                navigateToBack = {
                     findNavController().popBackStack()
+                },
+                navigateToUnsubscribe = {
+                    MyPageFragmentDirections
+                        .moveToUnsubscribeFragment()
+                        .also { findNavController().navigate(it) }
                 }
             )
         }

@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:text="자식사랑 내리사랑"
+        android:textColor="@color/black"
         android:textSize="20sp"
-        android:textColor="#000000"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="자식사랑 내리사랑"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_preview_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/gray"
         android:textSize="16sp"
-        android:textColor="#64696B"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다. 성급한 사람, 무덤덤한 사람, 아무 생각이 없는 사람"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다. 성급한 사람, 무덤덤한 사람, 아무 생각이 없는 사람" />
 
     <ImageView
         android:id="@+id/iv_image"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_preview_text"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_preview_text"
         tools:background="@color/material_dynamic_secondary60" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,35 +45,36 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:paddingVertical="6dp"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintEnd_toStartOf="@id/cl_view"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toBottomOf="@id/iv_image"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/cl_view">
+        app:layout_constraintTop_toBottomOf="@id/iv_image">
 
         <ImageView
             android:id="@+id/iv_bookmark"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_bookmark"
-            app:tint="#64696B"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@id/tv_bookmark"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/tv_bookmark"
-            app:layout_constraintEnd_toStartOf="@id/tv_bookmark"/>
+            app:layout_constraintEnd_toStartOf="@id/tv_bookmark"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_bookmark"
+            app:tint="@color/gray" />
 
         <TextView
             android:id="@+id/tv_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
             android:text="@string/bookmark"
+            android:textColor="@color/gray"
             android:textSize="14sp"
-            android:textColor="#64696B"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_bookmark"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_bookmark"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,40 +82,41 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingVertical="6dp"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="@id/cl_bookmark"
         app:layout_constraintBottom_toBottomOf="@id/cl_bookmark"
+        app:layout_constraintEnd_toStartOf="@id/cl_like"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/cl_bookmark"
-        app:layout_constraintEnd_toStartOf="@id/cl_like">
+        app:layout_constraintTop_toTopOf="@id/cl_bookmark">
 
         <ImageView
             android:id="@+id/iv_view"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_view"
+            app:layout_constraintBottom_toBottomOf="@id/tv_view"
+            app:layout_constraintEnd_toStartOf="@id/tv_view"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintHorizontal_weight="1"
-            app:tint="#64696B"
-            app:layout_constraintTop_toTopOf="@id/tv_view"
-            app:layout_constraintBottom_toBottomOf="@id/tv_view"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_view"/>
+            app:layout_constraintTop_toTopOf="@id/tv_view"
+            app:tint="@color/gray" />
 
         <TextView
             android:id="@+id/tv_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
-            android:text="@string/default_view_count"
-            android:textColor="#64696B"
-            android:lines="1"
             android:ellipsize="end"
+            android:fontFamily="@font/pretendard_regular"
+            android:lines="1"
+            android:text="@string/default_view_count"
+            android:textColor="@color/gray"
             app:layout_constrainedWidth="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_view"
+            app:layout_constraintBottom_toBottomOf="@id/iv_view"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="1,020,104"/>
+            app:layout_constraintStart_toEndOf="@id/iv_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1,020,104" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -120,34 +124,36 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingVertical="6dp"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="@id/cl_view"
         app:layout_constraintBottom_toBottomOf="@id/cl_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/cl_view"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="@id/cl_view">
 
         <ImageView
             android:id="@+id/iv_like"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_like"
-            app:tint="#64696B"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@id/tv_like"
             app:layout_constraintBottom_toBottomOf="@id/tv_like"
+            app:layout_constraintEnd_toStartOf="@id/tv_like"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_like"/>
+            app:layout_constraintTop_toTopOf="@id/tv_like"
+            app:tint="@color/gray" />
 
         <TextView
             android:id="@+id/tv_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            android:fontFamily="@font/pretendard_regular"
             android:text="@string/default_like_count"
-            android:textColor="#64696B"
-            app:layout_constraintTop_toTopOf="@id/iv_like"
-            app:layout_constraintStart_toEndOf="@id/iv_like"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/iv_like"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="9,999"/>
+            app:layout_constraintStart_toEndOf="@id/iv_like"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="9,999" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

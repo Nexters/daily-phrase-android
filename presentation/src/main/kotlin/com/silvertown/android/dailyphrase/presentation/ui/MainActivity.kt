@@ -7,9 +7,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.silvertown.android.dailyphrase.presentation.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -17,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        navController = (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
+        navController =
+            (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
     }
 
 

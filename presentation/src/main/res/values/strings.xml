@@ -21,4 +21,7 @@
     <string name="default_view_count">0</string>
     <string name="default_like_count">0</string>
     <string name="all_phrase">모든 글귀</string>
+    <string name="close">닫기</string>
+    <string name="confirm_logout">정말 로그아웃할까요?</string>
+    <string name="keep_logged_in">로그인 유지하기</string>
 </resources>

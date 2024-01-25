@@ -26,22 +26,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.ui.component.GroupDivider
 import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.ui.component.ProfileContent
 
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
-    navigationToBack: () -> Unit,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
+    navigateToBack: () -> Unit,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
-        navigationToBack = navigationToBack
+        navigateToBack = navigateToBack,
+        navigateToUnsubscribe = navigateToUnsubscribe,
     )
 }
 
@@ -49,7 +54,8 @@ fun MyPageScreen(
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -58,7 +64,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { navigationToBack() }) {
+                    IconButton(onClick = { navigateToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null
@@ -84,7 +90,9 @@ private fun Content(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            MyPageBody()
+            MyPageBody(
+                navigateToUnsubscribe = navigateToUnsubscribe,
+            )
         }
     }
 }
@@ -92,6 +100,7 @@ private fun Content(
 @Composable
 private fun MyPageBody(
     modifier: Modifier = Modifier,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -134,7 +143,7 @@ private fun MyPageBody(
             UnsubscribeTextItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.unsubscribe_service),
-                action = {}
+                action = { navigateToUnsubscribe() }
             )
         }
     }

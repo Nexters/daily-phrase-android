@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.mypage
+package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
@@ -35,12 +36,15 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
 @Composable
 fun UnsubscribeScreen(
     modifier: Modifier = Modifier,
+    unsubscribeViewModel: UnsubscribeViewModel = hiltViewModel(),
+    navigateToBack: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
         userName = "김춘배",
+        navigateToBack = navigateToBack,
         onClickUnsubscribed = {}
     )
 }
@@ -50,6 +54,7 @@ fun UnsubscribeScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     userName: String,
+    navigateToBack: () -> Unit,
     onClickUnsubscribed: () -> Unit,
 ) {
     Scaffold(
@@ -59,7 +64,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { /* TODO: 뒤로 가기 동작 구현 */ }) {
+                    IconButton(onClick = { navigateToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null
