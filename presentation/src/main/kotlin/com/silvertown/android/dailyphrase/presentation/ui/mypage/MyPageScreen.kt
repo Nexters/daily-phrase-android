@@ -61,16 +61,8 @@ private fun Content(
         modifier = modifier,
         topBar = {
             BaseTopAppBar(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                navigationContent = {
-                    IconButton(onClick = { navigateToBack() }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_arrow_back_24),
-                            contentDescription = null
-                        )
-                    }
-                },
+                modifier = Modifier.fillMaxWidth(),
+                navigateToBack = { navigateToBack() },
                 titleContent = {
                     Text(
                         text = stringResource(id = R.string.my_page_title),
@@ -81,7 +73,7 @@ private fun Content(
                         ),
                         color = colorResource(id = R.color.black)
                     )
-                },
+                }
             )
         }
     ) { paddingValues ->

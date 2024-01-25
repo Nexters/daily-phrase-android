@@ -10,14 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
@@ -45,16 +42,8 @@ fun PostScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             BaseTopAppBar(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                navigationContent = {
-                    IconButton(onClick = { navigateToBack() }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_arrow_back_24),
-                            contentDescription = null
-                        )
-                    }
-                }
+                modifier = Modifier.fillMaxWidth(),
+                navigateToBack = { navigateToBack() },
             )
         }
     ) { paddingValues ->
