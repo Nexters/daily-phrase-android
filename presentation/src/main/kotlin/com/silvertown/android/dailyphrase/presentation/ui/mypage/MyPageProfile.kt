@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.my_page
+package com.silvertown.android.dailyphrase.presentation.ui.mypage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
