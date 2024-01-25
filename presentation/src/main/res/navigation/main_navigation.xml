@@ -13,6 +13,22 @@
         <action
             android:id="@+id/move_to_postFragment"
             app:destination="@id/postFragment"/>
+        <action
+            android:id="@+id/move_to_bookmarkFragment"
+            app:destination="@id/bookmarkFragment"/>
+        <action
+            android:id="@+id/move_to_myPageFragment"
+            app:destination="@id/myPageFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookmarkFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.bookmark.BookmarkFragment"
+        tools:layout="@layout/fragment_bookmark">
+
+        <action
+            android:id="@+id/move_to_myPageFragment"
+            app:destination="@id/myPageFragment"/>
     </fragment>
 
     <fragment
@@ -22,4 +38,9 @@
 
         <deepLink app:uri="demo://www.example.com"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.MyPageFragment"
+        tools:layout="@layout/fragment_my_page"/>
 </navigation>
