@@ -153,9 +153,9 @@ fun InfoMessageBox(
             subtitleId = R.string.unsubscribe_message_subtitle_1
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
-        ItemDivider()
-        Spacer(modifier = Modifier.height(40.dp))
+        ItemDivider(
+            modifier = Modifier.padding(40.dp)
+        )
 
         InfoMessageSection(
             iconId = R.drawable.ic_sad_60,
