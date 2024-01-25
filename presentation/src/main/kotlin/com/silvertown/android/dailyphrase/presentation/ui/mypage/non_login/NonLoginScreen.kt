@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
@@ -36,6 +37,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBa
 @Composable
 fun NonLoginScreen(
     modifier: Modifier = Modifier,
+    nonLoginViewModel: NonLoginViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
     onClickKaKaoLogin: () -> Unit,
 ) {
