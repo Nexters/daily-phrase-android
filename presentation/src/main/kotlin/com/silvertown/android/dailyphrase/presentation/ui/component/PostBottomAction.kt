@@ -20,8 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.silvertown.android.dailyphrase.presentation.R
+import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 
 @Composable
 fun PostBottomAction(
@@ -88,6 +92,11 @@ private fun PostKaKaoShareButton(
     ) {
         Text(
             text = stringResource(id = R.string.kakao_link_share),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = pretendardFamily,
+                fontWeight = FontWeight.SemiBold
+            ),
             color = colorResource(id = R.color.white)
         )
     }
