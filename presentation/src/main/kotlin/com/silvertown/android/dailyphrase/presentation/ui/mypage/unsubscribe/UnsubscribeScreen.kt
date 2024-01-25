@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,16 +60,8 @@ private fun Content(
         modifier = modifier,
         topBar = {
             BaseTopAppBar(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                navigationContent = {
-                    IconButton(onClick = { navigateToBack() }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_arrow_back_24),
-                            contentDescription = null
-                        )
-                    }
-                },
+                modifier = Modifier.fillMaxWidth(),
+                navigateToBack = { navigateToBack() },
                 titleContent = {
                     Text(
                         text = stringResource(id = R.string.unsubscribed_title),
