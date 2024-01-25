@@ -12,13 +12,16 @@
 
         <action
             android:id="@+id/move_to_postFragment"
-            app:destination="@id/postFragment"/>
+            app:destination="@id/postFragment" />
         <action
             android:id="@+id/move_to_bookmarkFragment"
-            app:destination="@id/bookmarkFragment"/>
+            app:destination="@id/bookmarkFragment" />
         <action
             android:id="@+id/move_to_myPageFragment"
-            app:destination="@id/myPageFragment"/>
+            app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/move_to_NonLoginFragment"
+            app:destination="@id/nonLoginFragment" />
     </fragment>
 
     <fragment
@@ -28,7 +31,7 @@
 
         <action
             android:id="@+id/move_to_myPageFragment"
-            app:destination="@id/myPageFragment"/>
+            app:destination="@id/myPageFragment" />
     </fragment>
 
     <fragment
@@ -36,11 +39,26 @@
         android:name="com.silvertown.android.dailyphrase.presentation.ui.post.PostFragment"
         tools:layout="@layout/fragment_post">
 
-        <deepLink app:uri="demo://www.example.com"/>
+        <deepLink app:uri="demo://www.example.com" />
     </fragment>
 
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.MyPageFragment"
-        tools:layout="@layout/fragment_my_page"/>
+        tools:layout="@layout/fragment_my_page">
+
+        <action
+            android:id="@+id/move_to_unsubscribeFragment"
+            app:destination="@id/unsubscribeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nonLoginFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login.NonLoginFragment"
+        tools:layout="@layout/fragment_non_login" />
+
+    <fragment
+        android:id="@+id/unsubscribeFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe.UnsubscribeFragment"
+        tools:layout="@layout/fragment_unsubscribe" />
 </navigation>

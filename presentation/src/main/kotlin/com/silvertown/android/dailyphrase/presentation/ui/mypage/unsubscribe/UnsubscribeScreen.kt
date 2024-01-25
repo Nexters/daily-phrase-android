@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.mypage
+package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,12 +35,14 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
 @Composable
 fun UnsubscribeScreen(
     modifier: Modifier = Modifier,
+    navigationToBack: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
         userName = "김춘배",
+        navigationToBack = navigationToBack,
         onClickUnsubscribed = {}
     )
 }
@@ -50,6 +52,7 @@ fun UnsubscribeScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     userName: String,
+    navigationToBack: () -> Unit,
     onClickUnsubscribed: () -> Unit,
 ) {
     Scaffold(
@@ -59,7 +62,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { /* TODO: 뒤로 가기 동작 구현 */ }) {
+                    IconButton(onClick = { navigationToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null
