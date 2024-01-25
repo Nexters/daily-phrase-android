@@ -18,4 +18,7 @@
     <string name="unsubscribe_message_subtitle_2">글귀를 공유하기 위해서는 로그인이 필요해요.</string>
     <string name="confirm_unsubscribe_service">그래도 탈퇴할게요.</string>
     <string name="user_name_suffix">"님,\n"</string>
+    <string name="default_view_count">0</string>
+    <string name="default_like_count">0</string>
+    <string name="all_phrase">모든 글귀</string>
 </resources>

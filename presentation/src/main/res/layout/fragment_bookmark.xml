@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.bookmark.BookmarkFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_tool_bar"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:textSize="22sp"
-            android:textColor="#000000"
+            android:textColor="#989898"
             android:text="@string/all_phrase"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:textSize="22sp"
-            android:textColor="#989898"
+            android:textColor="#000000"
             android:text="@string/bookmark"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,17 +49,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_post"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_tool_bar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:itemCount="6"
-        tools:listitem="@layout/item_post"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

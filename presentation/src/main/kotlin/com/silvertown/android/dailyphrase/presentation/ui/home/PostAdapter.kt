@@ -2,9 +2,13 @@ package com.silvertown.android.dailyphrase.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBinding
 
@@ -29,6 +33,12 @@ class PostAdapter(
             tvPreviewText.text = post.previewText
             tvView.text = post.viewCount.toString()
             tvLike.text = post.likeCount.toString()
+            binding.ivImage.isGone = post.imageUrl.isNullOrEmpty()
+
+            Glide.with(itemView)
+                .load(post.imageUrl)
+                .transform(CenterCrop(), RoundedCorners(16))
+                .into(binding.ivImage)
         }
     }
 
