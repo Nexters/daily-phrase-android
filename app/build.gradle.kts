@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.appcompat)
     implementation(libs.kakao)
+    implementation(libs.hilt.navigation)
 
     implementation(libs.kakao.link)
 

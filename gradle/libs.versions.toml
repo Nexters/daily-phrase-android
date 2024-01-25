@@ -38,6 +38,7 @@ compose-bom = "2023.10.01"
 splashscreen = "1.0.1"
 kakaolink = "2.13.0"
 kakao = "2.19.0"
+hilt-navigaiton = "1.1.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -82,8 +83,8 @@ firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
-kakao-link = { group = "com.kakao.sdk", name = "v2-share", version.ref = "kakaolink"}
-kakao = { group = "com.kakao.sdk", name ="v2-user", version.ref = "kakao"}
+kakao-link = { group = "com.kakao.sdk", name = "v2-share", version.ref = "kakaolink" }
+kakao = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 
 # compose
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
@@ -99,6 +100,7 @@ coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 coil-kt-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigaiton" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
