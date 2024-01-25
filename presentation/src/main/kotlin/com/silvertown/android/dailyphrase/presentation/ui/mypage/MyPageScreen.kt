@@ -38,12 +38,14 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     myPageViewModel: MyPageViewModel = hiltViewModel(),
     navigationToBack: () -> Unit,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
-        navigationToBack = navigationToBack
+        navigationToBack = navigationToBack,
+        navigateToUnsubscribe = navigateToUnsubscribe,
     )
 }
 
@@ -52,6 +54,7 @@ fun MyPageScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     navigationToBack: () -> Unit,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -86,7 +89,9 @@ private fun Content(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            MyPageBody()
+            MyPageBody(
+                navigateToUnsubscribe = navigateToUnsubscribe,
+            )
         }
     }
 }
@@ -94,6 +99,7 @@ private fun Content(
 @Composable
 private fun MyPageBody(
     modifier: Modifier = Modifier,
+    navigateToUnsubscribe: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -136,7 +142,7 @@ private fun MyPageBody(
             UnsubscribeTextItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.unsubscribe_service),
-                action = {}
+                action = { navigateToUnsubscribe() }
             )
         }
     }

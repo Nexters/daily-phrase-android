@@ -16,6 +16,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 modifier = Modifier,
                 navigationToBack = {
                     findNavController().popBackStack()
+                },
+                navigateToUnsubscribe = {
+                    MyPageFragmentDirections
+                        .moveToUnsubscribeFragment()
+                        .also { findNavController().navigate(it) }
                 }
             )
         }
