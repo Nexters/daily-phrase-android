@@ -39,7 +39,7 @@ import timber.log.Timber
 fun PostScreen(
     modifier: Modifier,
     postViewModel: PostViewModel = hiltViewModel(),
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -48,7 +48,7 @@ fun PostScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { navigationToBack() }) {
+                    IconButton(onClick = { navigateToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null

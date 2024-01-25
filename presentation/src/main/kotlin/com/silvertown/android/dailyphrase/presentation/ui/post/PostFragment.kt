@@ -14,7 +14,7 @@ class PostFragment : BaseFragment<FragmentPostBinding>(FragmentPostBinding::infl
         binding.composeView.setContent {
             PostScreen(
                 modifier = Modifier,
-                navigationToBack = {
+                navigateToBack = {
                     findNavController().popBackStack()
                 }
             )

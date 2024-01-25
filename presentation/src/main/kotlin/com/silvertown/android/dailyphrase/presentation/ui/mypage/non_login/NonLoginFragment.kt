@@ -14,7 +14,7 @@ class NonLoginFragment : BaseFragment<FragmentNonLoginBinding>(FragmentNonLoginB
         binding.composeView.setContent {
             NonLoginScreen(
                 modifier = Modifier,
-                navigationToBack = {
+                navigateToBack = {
                     findNavController().popBackStack()
                 },
                 onClickKaKaoLogin = { }

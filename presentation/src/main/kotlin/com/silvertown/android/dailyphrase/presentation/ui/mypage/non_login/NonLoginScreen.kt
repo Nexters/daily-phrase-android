@@ -36,14 +36,14 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBa
 @Composable
 fun NonLoginScreen(
     modifier: Modifier = Modifier,
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
     onClickKaKaoLogin: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
-        navigationToBack = navigationToBack,
+        navigateToBack = navigateToBack,
         onClickKaKaoLogin = onClickKaKaoLogin
     )
 }
@@ -52,7 +52,7 @@ fun NonLoginScreen(
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
     onClickKaKaoLogin: () -> Unit,
 ) {
     Scaffold(
@@ -62,7 +62,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { navigationToBack() }) {
+                    IconButton(onClick = { navigateToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null

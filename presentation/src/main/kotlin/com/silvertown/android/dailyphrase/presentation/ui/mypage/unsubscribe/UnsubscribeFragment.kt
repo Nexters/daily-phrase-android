@@ -15,7 +15,7 @@ class UnsubscribeFragment :
         binding.composeView.setContent {
             UnsubscribeScreen(
                 modifier = Modifier,
-                navigationToBack = {
+                navigateToBack = {
                     findNavController().popBackStack()
                 }
             )

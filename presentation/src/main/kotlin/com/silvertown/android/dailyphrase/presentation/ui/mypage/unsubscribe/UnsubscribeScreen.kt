@@ -35,14 +35,14 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
 @Composable
 fun UnsubscribeScreen(
     modifier: Modifier = Modifier,
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
 ) {
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
         userName = "김춘배",
-        navigationToBack = navigationToBack,
+        navigateToBack = navigateToBack,
         onClickUnsubscribed = {}
     )
 }
@@ -52,7 +52,7 @@ fun UnsubscribeScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     userName: String,
-    navigationToBack: () -> Unit,
+    navigateToBack: () -> Unit,
     onClickUnsubscribed: () -> Unit,
 ) {
     Scaffold(
@@ -62,7 +62,7 @@ private fun Content(
                 modifier = Modifier
                     .fillMaxWidth(),
                 navigationContent = {
-                    IconButton(onClick = { navigationToBack() }) {
+                    IconButton(onClick = { navigateToBack() }) {
                         Icon(
                             painterResource(id = R.drawable.ic_arrow_back_24),
                             contentDescription = null
