@@ -32,6 +32,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.ui.component.GroupDivider
 import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.ui.component.ProfileContent
 
 @Composable
 fun MyPageScreen(
