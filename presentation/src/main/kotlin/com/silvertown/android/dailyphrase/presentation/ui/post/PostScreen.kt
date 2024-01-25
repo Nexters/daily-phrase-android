@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient
@@ -37,6 +38,7 @@ import timber.log.Timber
 @Composable
 fun PostScreen(
     modifier: Modifier,
+    postViewModel: PostViewModel = hiltViewModel(),
     navigationToBack: () -> Unit,
 ) {
     Scaffold(

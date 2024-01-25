@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
@@ -35,6 +36,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
     navigationToBack: () -> Unit,
 ) {
     Content(
