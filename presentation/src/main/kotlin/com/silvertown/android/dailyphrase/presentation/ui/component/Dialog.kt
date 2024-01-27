@@ -120,7 +120,7 @@ fun KakaoLoginDialog(
                         .size(20.dp)
                         .align(Alignment.CenterStart),
                     painter = painterResource(id = R.drawable.ic_kakao_symbol),
-                    tint = Color.Black,
+                    tint = colorResource(id = R.color.black),
                     contentDescription = null
                 )
 
@@ -133,7 +133,7 @@ fun KakaoLoginDialog(
                         fontFamily = pretendardFamily,
                         fontWeight = FontWeight.SemiBold
                     ),
-                    color = colorResource(id = R.color.black)
+                    color = colorResource(id = R.color.kakao_text)
                 )
             }
         }
