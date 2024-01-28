@@ -3,14 +3,11 @@ package com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
-import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
+import com.silvertown.android.dailyphrase.presentation.ui.component.KaKaoLoginButton
 
 @Composable
 fun NonLoginScreen(
@@ -99,28 +97,10 @@ private fun NonLoginBody(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            onClick = { onClickKaKaoLogin() },
-            modifier = Modifier,
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.yellow),
-                contentColor = colorResource(id = R.color.white)
-            ),
-            contentPadding = PaddingValues(
-                vertical = 9.dp,
-                horizontal = 40.dp
-            )
-        ) {
-            Text(
-                text = stringResource(id = R.string.kakao_login),
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = pretendardFamily,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = colorResource(id = R.color.black)
-            )
-        }
+
+        KaKaoLoginButton(
+            modifier = Modifier.widthIn(max = 240.dp),
+            onClickKaKaoLogin = onClickKaKaoLogin
+        )
     }
 }
