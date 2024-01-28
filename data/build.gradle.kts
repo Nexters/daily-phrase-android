@@ -17,6 +17,11 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,10 +36,15 @@ android {
 dependencies {
     implementation(project(":domain"))
 
-    implementation(libs.bundles.database)
     implementation(libs.bundles.datastore)
     implementation(libs.bundles.network)
-    ksp(libs.androidx.room.compiler)
+
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
+    implementation(libs.paging.compose)
+    implementation(libs.paging.ktx)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.bundles.coroutines)

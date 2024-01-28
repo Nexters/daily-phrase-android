@@ -39,6 +39,7 @@ splashscreen = "1.0.1"
 kakaolink = "2.13.0"
 kakao = "2.19.0"
 hilt-navigaiton = "1.1.0"
+paging = "3.2.1"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -58,9 +59,6 @@ androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fr
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -85,8 +83,13 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 kakao-link = { group = "com.kakao.sdk", name = "v2-share", version.ref = "kakaolink" }
 kakao = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+paging-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
-# compose
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
@@ -119,6 +122,5 @@ navigation = ["androidx-navigation-ui-ktx", "androidx-hilt-navigation-fragment",
 lifecycle = ["androidx-lifecycle-runtime-ktx", "androidx-lifecycle-viewmodel-ktx", "androidx-lifecycle-viewmodel-savedstate"]
 android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-coroutines-test"]
 network = ["retrofit", "converter-gson", "logging-interceptor"]
-database = ["androidx-room-runtime", "androidx-room-ktx"]
 datastore = ["androidx-datastore", "androidx-datastore-preferences-core"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
