@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.silvertown.android.dailyphrase.presentation.ui.extensions.dpToPx
+import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
 
 class PostItemDecoration(val context: Context) : RecyclerView.ItemDecoration() {
     private val dividerHeight = 1.dpToPx(context)

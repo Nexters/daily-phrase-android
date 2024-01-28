@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.component
+package com.silvertown.android.dailyphrase.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 
 @Composable
 fun BaseDialog(

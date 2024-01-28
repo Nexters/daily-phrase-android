@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentBookmarkBinding
-import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
+import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 
 class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkBinding::inflate) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

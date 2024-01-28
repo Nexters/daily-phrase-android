@@ -15,7 +15,7 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
-import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
+import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber

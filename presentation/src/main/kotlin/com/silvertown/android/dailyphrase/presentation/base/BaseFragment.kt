@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.base
+package com.silvertown.android.dailyphrase.presentation.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
