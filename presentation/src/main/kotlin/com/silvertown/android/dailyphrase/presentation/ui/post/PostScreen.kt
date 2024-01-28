@@ -2,19 +2,18 @@ package com.silvertown.android.dailyphrase.presentation.ui.post
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
@@ -26,9 +25,14 @@ import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.Social
 import com.silvertown.android.dailyphrase.presentation.R
+import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
+import com.silvertown.android.dailyphrase.presentation.ui.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseWebView
 import com.silvertown.android.dailyphrase.presentation.ui.component.PostBottomAction
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.ui.util.vibrateSingle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,30 +42,32 @@ fun PostScreen(
     postViewModel: PostViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
+    val snackbarScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    DailyPhraseBaseShell(
+        modifier = modifier,
         topBar = {
             BaseTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 navigateToBack = { navigateToBack() },
             )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            PostBody(
-                modifier = Modifier
-            )
-        }
+        },
+        snackbarHostState = snackbarHostState
+    ) {
+        PostBody(
+            modifier = Modifier,
+            snackbarScope = snackbarScope,
+            snackbarHostState = snackbarHostState,
+        )
     }
 }
 
 @Composable
 fun PostBody(
     modifier: Modifier,
+    snackbarScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
 ) {
     val context = LocalContext.current
 
@@ -81,10 +87,20 @@ fun PostBody(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .height(60.dp)
-                .background(color = colorResource(id = R.color.white)),
-            onFavoriteClick = {},
-            onBookmarkClick = {},
+                .height(60.dp),
+            onFavoriteClick = {
+                vibrateSingle(context)
+            },
+            onBookmarkClick = {
+                snackbarScope.launch {
+                    baseSnackbar(
+                        snackbarHostState = snackbarHostState,
+                        message = context.getString(R.string.bookmark_snackbar_message),
+                        actionLabel = context.getString(R.string.bookmark_snackbar_action_label),
+                    )
+                }
+                vibrateSingle(context)
+            },
             onShareClick = {
                 sendKakaoLink(
                     context = context,
@@ -166,3 +182,5 @@ private fun sendKakaoLink(
         }
     }
 }
+
+
