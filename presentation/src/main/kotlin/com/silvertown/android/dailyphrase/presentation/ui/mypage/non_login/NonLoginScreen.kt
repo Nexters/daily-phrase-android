@@ -2,19 +2,16 @@ package com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
 
 @Composable
@@ -54,7 +52,7 @@ private fun Content(
     navigateToBack: () -> Unit,
     onClickKaKaoLogin: () -> Unit,
 ) {
-    Scaffold(
+    DailyPhraseBaseShell(
         modifier = modifier,
         topBar = {
             BaseTopAppBar(
@@ -73,17 +71,11 @@ private fun Content(
                 },
             )
         }
-    ) { paddingValues ->
-        Box(
-            modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            NonLoginBody(
-                modifier = Modifier,
-                onClickKaKaoLogin = onClickKaKaoLogin
-            )
-        }
+    ) {
+        NonLoginBody(
+            modifier = Modifier,
+            onClickKaKaoLogin = onClickKaKaoLogin
+        )
     }
 }
 
