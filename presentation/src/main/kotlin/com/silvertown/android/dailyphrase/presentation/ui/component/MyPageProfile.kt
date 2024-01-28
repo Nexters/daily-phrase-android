@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
 
 @Composable
 fun ProfileContent(
