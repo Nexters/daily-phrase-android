@@ -1,11 +1,19 @@
 package com.silvertown.android.dailyphrase.data.repository.di
 
+import com.silvertown.android.dailyphrase.data.repository.PostRepositoryImpl
+import com.silvertown.android.dailyphrase.domain.repository.PostRepository
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface RepositoryModule {
-
+    @Singleton
+    @Binds
+    fun bindPostRepository(
+        postRepository: PostRepositoryImpl,
+    ): PostRepository
 }
