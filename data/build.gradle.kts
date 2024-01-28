@@ -1,5 +1,7 @@
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
@@ -8,6 +10,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.protobuf)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = File(rootProject.rootDir, "local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -26,14 +34,31 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${localProperties["RELEASE_BASE_URL"] as String?}\""
+            )
         }
+
+        getByName("debug") {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${localProperties["DEBUG_BASE_URL"] as String?}\""
+            )
+        }
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
