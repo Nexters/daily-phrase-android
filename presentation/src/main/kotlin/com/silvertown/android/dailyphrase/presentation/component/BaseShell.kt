@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.component
+package com.silvertown.android.dailyphrase.presentation.component
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.DailyPhraseTheme
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.LocalBackgroundTheme
+import com.silvertown.android.dailyphrase.presentation.base.theme.DailyPhraseTheme
+import com.silvertown.android.dailyphrase.presentation.base.theme.LocalBackgroundTheme
 
 @Composable
 fun DailyPhraseBaseShell(

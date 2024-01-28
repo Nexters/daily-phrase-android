@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.component
+package com.silvertown.android.dailyphrase.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.material3.CircularProgressIndicator

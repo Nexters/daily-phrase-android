@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui
+package com.silvertown.android.dailyphrase.presentation
 
 import android.content.Intent
 import android.os.Bundle

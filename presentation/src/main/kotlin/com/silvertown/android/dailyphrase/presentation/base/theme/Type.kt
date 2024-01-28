@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.base.theme
+package com.silvertown.android.dailyphrase.presentation.base.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily

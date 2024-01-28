@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
-import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
-import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
-import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
+import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
 
 @Composable
 fun UnsubscribeScreen(

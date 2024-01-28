@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.component
+package com.silvertown.android.dailyphrase.presentation.component
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup

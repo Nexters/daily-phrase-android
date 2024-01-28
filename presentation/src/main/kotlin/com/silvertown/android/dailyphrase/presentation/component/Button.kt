@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.component
+package com.silvertown.android.dailyphrase.presentation.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 
 @Composable
 fun KaKaoLoginButton(

@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.base.theme
+package com.silvertown.android.dailyphrase.presentation.base.theme
 
 
 import android.os.Build

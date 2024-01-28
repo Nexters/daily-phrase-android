@@ -5,7 +5,7 @@ import android.view.View
 import androidx.compose.ui.Modifier
 import androidx.navigation.fragment.findNavController
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentNonLoginBinding
-import com.silvertown.android.dailyphrase.presentation.ui.base.BaseFragment
+import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 
 class NonLoginFragment : BaseFragment<FragmentNonLoginBinding>(FragmentNonLoginBinding::inflate) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

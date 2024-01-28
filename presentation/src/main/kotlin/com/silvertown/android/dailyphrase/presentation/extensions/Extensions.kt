@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.extensions
+package com.silvertown.android.dailyphrase.presentation.extensions
 
 import android.content.Context
 

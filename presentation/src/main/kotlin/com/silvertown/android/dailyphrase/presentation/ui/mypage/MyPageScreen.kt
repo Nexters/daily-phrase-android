@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.silvertown.android.dailyphrase.presentation.R
-import com.silvertown.android.dailyphrase.presentation.ui.base.theme.pretendardFamily
-import com.silvertown.android.dailyphrase.presentation.ui.component.DailyPhraseBaseShell
-import com.silvertown.android.dailyphrase.presentation.ui.component.BaseTopAppBar
-import com.silvertown.android.dailyphrase.presentation.ui.component.GroupDivider
-import com.silvertown.android.dailyphrase.presentation.ui.component.ItemDivider
-import com.silvertown.android.dailyphrase.presentation.ui.component.ProfileContent
+import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
+import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.GroupDivider
+import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.component.ProfileContent
 
 @Composable
 fun MyPageScreen(
