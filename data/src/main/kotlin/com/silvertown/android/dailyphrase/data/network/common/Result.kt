@@ -60,8 +60,8 @@ inline fun <reified R, reified D> Flow<Result<R>>.mapResultModel(crossinline tra
 
 suspend fun <T : Any, R> ApiResponse<T>.toResultModel(transform: suspend (T) -> R): Result<R> {
     return when (this) {
-        is ApiResponse.Success -> Result.Success(transform(data))
-        is ApiResponse.Error -> Result.Failure(message ?: "Error", code)
+        is ApiResponse.Success -> Result.Success(transform(result))
+        is ApiResponse.Error -> Result.Failure(reason, status)
         is ApiResponse.Exception -> Result.Failure("Api Exception", -1)
     }
 }
