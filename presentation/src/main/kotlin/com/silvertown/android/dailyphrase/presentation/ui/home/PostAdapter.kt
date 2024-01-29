@@ -3,8 +3,8 @@ package com.silvertown.android.dailyphrase.presentation.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -14,7 +14,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBindi
 
 class PostAdapter(
     private val onPostClick: (Long) -> Unit,
-) : ListAdapter<Post, PostAdapter.PostViewHolder>(diffUtil) {
+) : PagingDataAdapter<Post, PostAdapter.PostViewHolder>(diffUtil) {
 
     class PostViewHolder(
         private val binding: ItemPostBinding,
@@ -24,16 +24,16 @@ class PostAdapter(
         private lateinit var post: Post
 
         init {
-            binding.root.setOnClickListener { onPostClick(post.id) }
+            binding.root.setOnClickListener { onPostClick(post.phraseId) }
         }
 
         fun bind(post: Post) = with(binding) {
             this@PostViewHolder.post = post
             tvTitle.text = post.title
-            tvPreviewText.text = post.previewText
+            tvContent.text = post.content
             tvView.text = post.viewCount.toString()
             tvLike.text = post.likeCount.toString()
-            binding.ivImage.isGone = post.imageUrl.isNullOrEmpty()
+            binding.ivImage.isGone = post.imageUrl.isEmpty()
 
             Glide.with(itemView)
                 .load(post.imageUrl)
@@ -50,13 +50,15 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(currentList[position])
+        getItem(position)?.let {
+            holder.bind(it)
+        }
     }
 
     companion object {
         private val diffUtil = object : DiffUtil.ItemCallback<Post>() {
             override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.phraseId == newItem.phraseId
             }
 
             override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
