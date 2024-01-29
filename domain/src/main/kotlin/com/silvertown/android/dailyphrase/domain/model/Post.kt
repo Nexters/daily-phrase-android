@@ -1,11 +1,11 @@
 package com.silvertown.android.dailyphrase.domain.model
 
 data class Post(
-    val id: Long,
+    val phraseId: Long,
     val title: String,
-    val previewText: String,
-    val imageUrl: String?,
-    val viewCount: Long,
-    val likeCount: Long,
-    val isBookmarked: Boolean,
+    val content: String,
+    val imageUrl: String,
+    val imageRatio: String,
+    val viewCount: Int,
+    val likeCount: Int,
 )
