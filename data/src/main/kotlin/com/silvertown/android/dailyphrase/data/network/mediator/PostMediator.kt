@@ -10,15 +10,12 @@ import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
 import com.silvertown.android.dailyphrase.data.network.common.onException
 import com.silvertown.android.dailyphrase.data.network.common.onSuccess
 import com.silvertown.android.dailyphrase.data.network.datasource.PostDataSource
-import com.silvertown.android.dailyphrase.data.network.model.response.PostsResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.toEntity
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-/**
- * TODO: 임시 처리 - API 명세에 나오면 수정 예정
- */
 @OptIn(ExperimentalPagingApi::class)
 class PostMediator @Inject constructor(
     private val postDao: PostDao,
@@ -32,7 +29,7 @@ class PostMediator @Inject constructor(
 
         return try {
             val loadKey = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> 0
 
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
@@ -40,14 +37,14 @@ class PostMediator @Inject constructor(
 
                 LoadType.APPEND -> {
                     state.lastItemOrNull()?.let { lastItem ->
-                        (lastItem.id.toInt() / state.config.pageSize) + 1
+                        (lastItem.phraseId.toInt() / state.config.pageSize) + 1
                     } ?: 1
                 }
             }
 
             val postsResult = postDataSource.getPosts(
                 page = loadKey,
-                limit = state.config.pageSize
+                size = state.config.pageSize
             )
 
             postsResult.onSuccess { response ->
@@ -73,11 +70,11 @@ class PostMediator @Inject constructor(
     }
 
     private suspend fun savePosts(
-        postsResponse: PostsResponse,
+        response: BasePostResponse,
         loadType: LoadType,
     ) {
-        postsResponse.let {
-            val entities = it.posts.map { item ->
+        response.let {
+            val entities = it.postList.map { item ->
                 item.toEntity()
             }
 
@@ -88,9 +85,9 @@ class PostMediator @Inject constructor(
         }
     }
 
-    private fun isEndOfPagination(postsResult: ApiResponse<PostsResponse>) =
-        if (postsResult is ApiResponse.Success) {
-            postsResult.data.posts.isEmpty()
+    private fun isEndOfPagination(result: ApiResponse<BasePostResponse>) =
+        if (result is ApiResponse.Success) {
+            result.result.hasNext
         } else {
             true
         }
