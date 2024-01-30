@@ -141,7 +141,7 @@ fun InfoMessageBox(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         InfoMessageSection(
-            iconId = R.drawable.ic_bookmark_60,
+            iconId = R.drawable.ic_bookmark_fill_60,
             titleId = R.string.unsubscribe_message_title_1,
             subtitleId = R.string.unsubscribe_message_subtitle_1
         )

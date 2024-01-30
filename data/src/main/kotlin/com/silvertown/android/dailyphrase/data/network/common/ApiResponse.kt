@@ -1,5 +1,7 @@
 package com.silvertown.android.dailyphrase.data.network.common
 
+import com.silvertown.android.dailyphrase.domain.model.Result
+
 sealed interface ApiResponse<T : Any> {
     class Success<T : Any>(
         val isSuccess: Boolean,
@@ -38,5 +40,13 @@ suspend fun <T : Any> ApiResponse<T>.onException(
 ): ApiResponse<T> = apply {
     if (this is ApiResponse.Exception<T>) {
         action(e)
+    }
+}
+
+suspend fun <T : Any, R> ApiResponse<T>.toResultModel(transform: suspend (T) -> R): Result<R> {
+    return when (this) {
+        is ApiResponse.Success -> Result.Success(transform(result))
+        is ApiResponse.Error -> Result.Failure(reason, status)
+        is ApiResponse.Exception -> Result.Failure("Api Exception", -1)
     }
 }

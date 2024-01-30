@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -50,7 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun initViews() {
-        adapter = PostAdapter { moveToPost() }
+        adapter = PostAdapter { moveToDetail(it) }
         binding.rvPost.adapter = adapter
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
     }
@@ -64,18 +65,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.postList.collectLatest { pagingData ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.postList
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { pagingData ->
                     adapter.submitData(pagingData)
                 }
-            }
         }
     }
 
-    private fun moveToPost() {
+    private fun moveToDetail(phraseId: Long) {
         HomeFragmentDirections
-            .moveToPostFragment()
+            .moveToDetailFragment(phraseId)
             .also { findNavController().navigate(it) }
     }
 

@@ -3,6 +3,8 @@ package com.silvertown.android.dailyphrase.data.datastore.datasource
 import androidx.datastore.core.DataStore
 import com.silvertown.android.dailyphrase.data.UserPreferences
 import com.silvertown.android.dailyphrase.domain.model.User
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -13,31 +15,38 @@ class UserPreferencesDataSource @Inject constructor(
         .map { preferences ->
             User(
                 id = preferences.id,
-                nickName = preferences.name,
-                profileImage = preferences.profile
+                name = preferences.name,
+                imageUrl = preferences.imageUrl
             )
         }
 
-    suspend fun setUserName(userName: String) {
+    suspend fun getMemberId(): Long {
+        return userPreferences.data
+            .map { preferences ->
+                preferences.id
+            }.firstOrNull() ?: -1
+    }
+
+    suspend fun setName(name: String) {
         userPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
-                .setName(userName)
+                .setName(name)
                 .build()
         }
     }
 
-    suspend fun setUserProfile(userProfile: String) {
+    suspend fun setImageUrl(imageUrl: String) {
         userPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
-                .setProfile(userProfile)
+                .setImageUrl(imageUrl)
                 .build()
         }
     }
 
-    suspend fun setUserId(userId: String) {
+    suspend fun setMemberId(memberId: Long) {
         userPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
-                .setId(userId)
+                .setId(memberId)
                 .build()
         }
     }

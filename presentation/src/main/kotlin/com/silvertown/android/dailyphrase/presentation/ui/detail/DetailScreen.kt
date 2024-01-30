@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.post
+package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient
@@ -26,10 +28,10 @@ import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.Social
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
-import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
-import com.silvertown.android.dailyphrase.presentation.component.PostBottomAction
+import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,11 +39,12 @@ import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(
+fun DetailScreen(
     modifier: Modifier,
-    postViewModel: PostViewModel = hiltViewModel(),
+    detailViewModel: DetailViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
 ) {
+    val detailUiState by detailViewModel.detailUiState.collectAsStateWithLifecycle()
     val snackbarScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -55,19 +58,25 @@ fun PostScreen(
         },
         snackbarHostState = snackbarHostState
     ) {
-        PostBody(
+        DetailBody(
             modifier = Modifier,
             snackbarScope = snackbarScope,
             snackbarHostState = snackbarHostState,
+            uiState = detailUiState,
+            onClickLike = detailViewModel::onClickLike,
+            onClickBookmark = detailViewModel::onClickBookmark,
         )
     }
 }
 
 @Composable
-fun PostBody(
+fun DetailBody(
     modifier: Modifier,
     snackbarScope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
+    uiState: DetailUiState,
+    onClickLike: () -> Unit,
+    onClickBookmark: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -83,34 +92,41 @@ fun PostBody(
             BaseWebView(url = "https://m.blog.naver.com/woo762658/221790330636")
         }
 
-        PostBottomAction(
+        DetailBottomAction(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
                 .height(60.dp),
-            onFavoriteClick = {
+            isLike = uiState.isLike,
+            isBookmark = uiState.isBookmark,
+            onClickLike = {
+                onClickLike()
                 vibrateSingle(context)
             },
-            onBookmarkClick = {
-                snackbarScope.launch {
-                    baseSnackbar(
-                        snackbarHostState = snackbarHostState,
-                        message = context.getString(R.string.bookmark_snackbar_message),
-                        actionLabel = context.getString(R.string.bookmark_snackbar_action_label),
-                    )
+            onClickBookmark = {
+                onClickBookmark()
+                vibrateSingle(context)
+                if (!uiState.isBookmark) {
+                    snackbarScope.launch {
+                        baseSnackbar(
+                            snackbarHostState = snackbarHostState,
+                            message = context.getString(R.string.bookmark_snackbar_message),
+                            actionLabel = context.getString(R.string.bookmark_snackbar_action_label),
+                            actionPerformed = {}
+                        )
+                    }
                 }
-                vibrateSingle(context)
             },
-            onShareClick = {
+            onClickShare = {
                 sendKakaoLink(
                     context = context,
-                    title = "타이틀타이틀타이틀",
-                    description = "가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
-                    imageUrl = "https://cdn.pixabay.com/photo/2015/06/25/04/50/hand-print-820913_1280.jpg",
-                    likeCount = 332,
-                    commentCount = 123,
-                    sharedCount = 32,
-                    postId = 1
+                    title = uiState.title,
+                    description = uiState.content,
+                    imageUrl = uiState.imageUrl,
+                    phraseId = uiState.phraseId,
+                    likeCount = uiState.likeCount,
+                    commentCount = uiState.commentCount,
+                    sharedCount = uiState.sharedCount,
                 )
             }
         )
@@ -122,39 +138,44 @@ private fun sendKakaoLink(
     title: String,
     description: String,
     imageUrl: String,
-    postId: Int,
+    phraseId: Long,
     likeCount: Int? = null,
     commentCount: Int? = null,
     sharedCount: Int? = null,
+    viewCount: Int? = null,
 ) {
-    val postFeed = FeedTemplate(
+    /**
+     * TODO: Url 수정 예정
+     */
+    val phraseFeed = FeedTemplate(
         content = Content(
             title = title,
             description = description,
             imageUrl = imageUrl,
             link = Link(
-                webUrl = "https://www.naver.com",
-                mobileWebUrl = "https://www.naver.com"
+                webUrl = "https://www.naver.com/${phraseId}",
+                mobileWebUrl = "https://www.naver.com/${phraseId}"
             )
         ),
         social = Social(
             likeCount = likeCount,
             commentCount = commentCount,
-            sharedCount = sharedCount
+            sharedCount = sharedCount,
+            viewCount = viewCount
         ),
         buttons = listOf(
             Button(
                 title = context.resources.getString(R.string.more_see),
                 Link(
-                    webUrl = "https://www.naver.com",
-                    mobileWebUrl = "https://www.naver.com"
+                    webUrl = "https://www.naver.com/${phraseId}",
+                    mobileWebUrl = "https://www.naver.com/${phraseId}"
                 )
             )
         )
     )
 
     if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
-        ShareClient.instance.shareDefault(context, postFeed) { sharingResult, error ->
+        ShareClient.instance.shareDefault(context, phraseFeed) { sharingResult, error ->
             if (error != null) {
                 Timber.e(error)
                 Timber.e("카카오톡 공유 실패", error)
@@ -167,7 +188,7 @@ private fun sendKakaoLink(
             }
         }
     } else {
-        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(postFeed)
+        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(phraseFeed)
 
         try {
             KakaoCustomTabsClient.openWithDefault(context, sharerUrl)

@@ -8,4 +8,6 @@ data class Post(
     val imageRatio: String,
     val viewCount: Int,
     val likeCount: Int,
+    val isLike: Boolean,
+    val isFavorite: Boolean,
 )

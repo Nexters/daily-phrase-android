@@ -42,7 +42,12 @@ fun DailyPhraseBaseShell(
                 Scaffold(
                     modifier = modifier.fillMaxSize(),
                     topBar = topBar,
-                    snackbarHost = { SnackbarHost(snackbarHostState) }
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            modifier = Modifier.padding(bottom = 70.dp)
+                        )
+                    }
                 ) { paddingValues ->
                     Box(
                         modifier = Modifier

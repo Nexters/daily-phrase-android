@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
+import com.silvertown.android.dailyphrase.domain.model.Post
 
 data class PostResponse(
     @SerializedName("content")
@@ -18,6 +19,10 @@ data class PostResponse(
     val title: String,
     @SerializedName("viewCount")
     val viewCount: Int,
+    @SerializedName("isLike")
+    val isLike: Boolean,
+    @SerializedName("isFavorite")
+    val isFavorite: Boolean,
 )
 
 fun PostResponse.toEntity(): PostEntity {
@@ -28,6 +33,22 @@ fun PostResponse.toEntity(): PostEntity {
         imageUrl = imageUrl,
         imageRatio = imageRatio,
         viewCount = viewCount,
-        likeCount = likeCount
+        likeCount = likeCount,
+        isLike = isLike,
+        isFavorite = isFavorite
+    )
+}
+
+fun PostResponse.toDomainModel(): Post {
+    return Post(
+        content = content,
+        imageRatio = imageRatio,
+        imageUrl = imageUrl,
+        likeCount = likeCount,
+        phraseId = phraseId,
+        title = title,
+        viewCount = viewCount,
+        isLike = isLike,
+        isFavorite = isFavorite
     )
 }

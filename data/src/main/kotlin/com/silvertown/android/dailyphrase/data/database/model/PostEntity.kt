@@ -16,6 +16,8 @@ data class PostEntity(
     val imageRatio: String,
     val viewCount: Int,
     val likeCount: Int,
+    val isLike: Boolean,
+    val isFavorite: Boolean,
 )
 
 fun PostEntity.toDomainModel(): Post {
@@ -26,6 +28,8 @@ fun PostEntity.toDomainModel(): Post {
         imageUrl = imageUrl,
         imageRatio = imageRatio,
         viewCount = viewCount,
-        likeCount = likeCount
+        likeCount = likeCount,
+        isLike = isLike,
+        isFavorite = isFavorite
     )
 }
