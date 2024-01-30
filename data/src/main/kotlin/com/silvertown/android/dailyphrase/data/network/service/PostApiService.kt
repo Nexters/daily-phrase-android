@@ -28,7 +28,7 @@ interface PostApiService {
     ): ApiResponse<PostResponse>
 
     @POST("/api/v1/likes")
-    suspend fun sendLike(
+    suspend fun saveLike(
         @Body data: LikeRequest,
     ): ApiResponse<LikeResponse>
 
@@ -44,7 +44,7 @@ interface PostApiService {
     ): ApiResponse<PostResponse>
 
     @POST("/api/v1/favorites")
-    suspend fun sendFavorites(
+    suspend fun saveFavorites(
         @Body data: FavoritesRequest,
     ): ApiResponse<FavoritesResponse>
 
