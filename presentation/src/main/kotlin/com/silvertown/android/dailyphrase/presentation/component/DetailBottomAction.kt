@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,9 +31,11 @@ import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFami
 @Composable
 fun DetailBottomAction(
     modifier: Modifier = Modifier,
-    onFavoriteClick: () -> Unit,
-    onBookmarkClick: () -> Unit,
-    onShareClick: () -> Unit,
+    onClickLike: () -> Unit,
+    onClickBookmark: () -> Unit,
+    onClickShare: () -> Unit,
+    isLike: Boolean,
+    isBookmark: Boolean,
 ) {
     Row(
         modifier = modifier,
@@ -47,9 +50,12 @@ fun DetailBottomAction(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    onFavoriteClick()
+                    onClickLike()
                 },
-            painter = painterResource(id = R.drawable.ic_favorite_24),
+            painter = painterResource(
+                if (isLike) R.drawable.ic_like_fill_60 else R.drawable.ic_like_60
+            ),
+            tint = Color.Unspecified,
             contentDescription = null,
         )
         Icon(
@@ -60,15 +66,18 @@ fun DetailBottomAction(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    onBookmarkClick()
+                    onClickBookmark()
                 },
-            painter = painterResource(id = R.drawable.ic_bookmark_24),
+            painter = painterResource(
+                if (isBookmark) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
+            ),
+            tint = Color.Unspecified,
             contentDescription = null,
         )
         DetailKaKaoShareButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = onShareClick
+            onClick = onClickShare
         )
     }
 }
