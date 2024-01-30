@@ -42,6 +42,7 @@ paging = "3.2.1"
 protobuf = "3.24.4"
 protobufPlugin = "0.9.4"
 androidxDataStore = "1.0.0"
+lifecycleCompose = "2.7.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -92,6 +93,7 @@ room-paging = { group = "androidx.room", name = "room-paging", version.ref = "ro
 paging-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+lifecycle-compose = {group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleCompose"}
 
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
