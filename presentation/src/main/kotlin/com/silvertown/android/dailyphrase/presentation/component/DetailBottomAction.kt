@@ -28,7 +28,7 @@ import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 
 @Composable
-fun PostBottomAction(
+fun DetailBottomAction(
     modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit,
     onBookmarkClick: () -> Unit,
@@ -65,7 +65,7 @@ fun PostBottomAction(
             painter = painterResource(id = R.drawable.ic_bookmark_24),
             contentDescription = null,
         )
-        PostKaKaoShareButton(
+        DetailKaKaoShareButton(
             modifier = Modifier
                 .fillMaxWidth(),
             onClick = onShareClick
@@ -74,7 +74,7 @@ fun PostBottomAction(
 }
 
 @Composable
-private fun PostKaKaoShareButton(
+private fun DetailKaKaoShareButton(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {

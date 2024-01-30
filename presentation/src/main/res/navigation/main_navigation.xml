@@ -11,8 +11,8 @@
         tools:layout="@layout/fragment_home">
 
         <action
-            android:id="@+id/move_to_postFragment"
-            app:destination="@id/postFragment" />
+            android:id="@+id/move_to_detailFragment"
+            app:destination="@id/detailFragment" />
         <action
             android:id="@+id/move_to_bookmarkFragment"
             app:destination="@id/bookmarkFragment" />
@@ -35,9 +35,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/postFragment"
-        android:name="com.silvertown.android.dailyphrase.presentation.ui.post.PostFragment"
-        tools:layout="@layout/fragment_post">
+        android:id="@+id/detailFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.detail.DetailFragment"
+        tools:layout="@layout/fragment_detail">
 
         <deepLink app:uri="demo://www.example.com" />
     </fragment>

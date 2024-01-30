@@ -1,11 +1,11 @@
-package com.silvertown.android.dailyphrase.presentation.ui.post
+package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PostViewModel @Inject constructor(
+class DetailViewModel @Inject constructor(
 
 ) : ViewModel() {
 

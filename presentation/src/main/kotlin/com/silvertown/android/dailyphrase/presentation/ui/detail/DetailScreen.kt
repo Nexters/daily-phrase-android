@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.presentation.ui.post
+package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -28,7 +28,7 @@ import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
-import com.silvertown.android.dailyphrase.presentation.component.PostBottomAction
+import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
@@ -37,9 +37,9 @@ import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(
+fun DetailScreen(
     modifier: Modifier,
-    postViewModel: PostViewModel = hiltViewModel(),
+    postViewModel: DetailViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
 ) {
     val snackbarScope = rememberCoroutineScope()
@@ -55,7 +55,7 @@ fun PostScreen(
         },
         snackbarHostState = snackbarHostState
     ) {
-        PostBody(
+        DetailBody(
             modifier = Modifier,
             snackbarScope = snackbarScope,
             snackbarHostState = snackbarHostState,
@@ -64,7 +64,7 @@ fun PostScreen(
 }
 
 @Composable
-fun PostBody(
+fun DetailBody(
     modifier: Modifier,
     snackbarScope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
@@ -83,7 +83,7 @@ fun PostBody(
             BaseWebView(url = "https://m.blog.naver.com/woo762658/221790330636")
         }
 
-        PostBottomAction(
+        DetailBottomAction(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()

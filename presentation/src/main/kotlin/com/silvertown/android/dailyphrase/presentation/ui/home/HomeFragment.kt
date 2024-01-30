@@ -50,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun initViews() {
-        adapter = PostAdapter { moveToPost() }
+        adapter = PostAdapter { moveToDetail() }
         binding.rvPost.adapter = adapter
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
     }
@@ -73,9 +73,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-    private fun moveToPost() {
+    private fun moveToDetail() {
         HomeFragmentDirections
-            .moveToPostFragment()
+            .moveToDetailFragment()
             .also { findNavController().navigate(it) }
     }
 
