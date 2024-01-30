@@ -22,6 +22,11 @@ interface PostApiService {
         @Query("size") size: Int,
     ): ApiResponse<BasePostResponse>
 
+    @GET("/api/v1/phrases/{id}")
+    suspend fun getPost(
+        @Path("id") phraseId: Long
+    ): ApiResponse<PostResponse>
+
     @POST("/api/v1/likes")
     suspend fun sendLike(
         @Body data: LikeRequest,
@@ -29,13 +34,13 @@ interface PostApiService {
 
     @DELETE("/api/v1/likes/members/{memberId}/phrases/{phraseId}")
     suspend fun deleteLike(
-        @Path("memberId") memberId: String,
-        @Path("phraseId") phraseId: String,
+        @Path("memberId") memberId: Long,
+        @Path("phraseId") phraseId: Long,
     ): ApiResponse<LikeResponse>
 
-    @POST("/api/v1/members/{id}")
+    @GET("/api/v1/favorites/members/{id}")
     suspend fun getFavorites(
-        @Path("id") memberId: String,
+        @Path("id") memberId: Long,
     ): ApiResponse<PostResponse>
 
     @POST("/api/v1/favorites")
@@ -45,8 +50,8 @@ interface PostApiService {
 
     @DELETE("/api/v1/favorites/members/{memberId}/phrases/{phraseId}")
     suspend fun deleteFavorites(
-        @Path("memberId") memberId: String,
-        @Path("phraseId") phraseId: String,
+        @Path("memberId") memberId: Long,
+        @Path("phraseId") phraseId: Long,
     ): ApiResponse<FavoritesResponse>
 
 }
