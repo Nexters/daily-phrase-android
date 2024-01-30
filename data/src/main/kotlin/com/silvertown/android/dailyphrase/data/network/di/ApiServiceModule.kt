@@ -15,11 +15,12 @@ object ApiServiceModule {
     @Singleton
     @Provides
     fun providePostApiService(
-        @DefaultOkHttpClient okHttpclient: OkHttpClient,
+        @AuthOkHttpClient okHttpclient: OkHttpClient,
         retrofit: Retrofit.Builder,
     ): PostApiService =
         retrofit
             .client(okHttpclient)
             .build()
             .create(PostApiService::class.java)
+
 }
