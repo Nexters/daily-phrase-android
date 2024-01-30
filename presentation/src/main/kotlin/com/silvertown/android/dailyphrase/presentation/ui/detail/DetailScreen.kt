@@ -120,13 +120,7 @@ fun DetailBody(
             onClickShare = {
                 sendKakaoLink(
                     context = context,
-                    title = uiState.title,
-                    description = uiState.content,
-                    imageUrl = uiState.imageUrl,
-                    phraseId = uiState.phraseId,
-                    likeCount = uiState.likeCount,
-                    commentCount = uiState.commentCount,
-                    sharedCount = uiState.sharedCount,
+                    uiState = uiState,
                 )
             }
         )
@@ -135,40 +129,36 @@ fun DetailBody(
 
 private fun sendKakaoLink(
     context: Context,
-    title: String,
-    description: String,
-    imageUrl: String,
-    phraseId: Long,
-    likeCount: Int? = null,
-    commentCount: Int? = null,
-    sharedCount: Int? = null,
-    viewCount: Int? = null,
+    uiState: DetailUiState,
 ) {
     /**
      * TODO: Url 수정 예정
      */
+    val webUrl = "https://www.naver.com/${uiState.phraseId}"
+    val mobileWebUrl = "https://www.naver.com/${uiState.phraseId}"
+
     val phraseFeed = FeedTemplate(
         content = Content(
-            title = title,
-            description = description,
-            imageUrl = imageUrl,
+            title = uiState.title,
+            description = uiState.content,
+            imageUrl = uiState.imageUrl,
             link = Link(
-                webUrl = "https://www.naver.com/${phraseId}",
-                mobileWebUrl = "https://www.naver.com/${phraseId}"
+                webUrl = webUrl,
+                mobileWebUrl = mobileWebUrl
             )
         ),
         social = Social(
-            likeCount = likeCount,
-            commentCount = commentCount,
-            sharedCount = sharedCount,
-            viewCount = viewCount
+            likeCount = uiState.likeCount,
+            commentCount = uiState.commentCount,
+            sharedCount = uiState.sharedCount,
+            viewCount = uiState.viewCount
         ),
         buttons = listOf(
             Button(
                 title = context.resources.getString(R.string.more_see),
                 Link(
-                    webUrl = "https://www.naver.com/${phraseId}",
-                    mobileWebUrl = "https://www.naver.com/${phraseId}"
+                    webUrl = webUrl,
+                    mobileWebUrl = mobileWebUrl
                 )
             )
         )
@@ -203,5 +193,3 @@ private fun sendKakaoLink(
         }
     }
 }
-
-
