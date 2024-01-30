@@ -1,25 +1,33 @@
 package com.silvertown.android.dailyphrase.data.network.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
 
 data class PostResponse(
-    val id: Long,
+    @SerializedName("content")
+    val content: String,
+    @SerializedName("imageRatio")
+    val imageRatio: String,
+    @SerializedName("imageUrl")
+    val imageUrl: String,
+    @SerializedName("likeCount")
+    val likeCount: Int,
+    @SerializedName("phraseId")
+    val phraseId: Long,
+    @SerializedName("title")
     val title: String,
-    val previewText: String,
-    val imageUrl: String?,
-    val viewCount: Long,
-    val likeCount: Long,
-    val isBookmarked: Boolean,
+    @SerializedName("viewCount")
+    val viewCount: Int,
 )
 
 fun PostResponse.toEntity(): PostEntity {
     return PostEntity(
-        id = id,
+        phraseId = phraseId,
+        content = content,
         title = title,
-        previewText = previewText,
         imageUrl = imageUrl,
+        imageRatio = imageRatio,
         viewCount = viewCount,
-        likeCount = likeCount,
-        isBookmarked = isBookmarked
+        likeCount = likeCount
     )
 }

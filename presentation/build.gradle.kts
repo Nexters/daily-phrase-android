@@ -71,6 +71,9 @@ dependencies {
     implementation(libs.coil.kt.gif)
     implementation(libs.coil.kt.svg)
 
+    implementation(libs.paging.compose)
+    implementation(libs.paging.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 
