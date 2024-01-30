@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.data.network.common
 
+import com.silvertown.android.dailyphrase.domain.model.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

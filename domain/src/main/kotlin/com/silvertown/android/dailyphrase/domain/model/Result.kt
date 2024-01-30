@@ -1,4 +1,4 @@
-package com.silvertown.android.dailyphrase.data.network.common
+package com.silvertown.android.dailyphrase.domain.model
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -55,13 +55,5 @@ inline fun <reified R, reified D> Flow<Result<R>>.mapResultModel(crossinline tra
             is Result.Failure -> Result.Failure(apiResponse.errorMessage, apiResponse.code)
             is Result.Empty -> Result.Empty
         }
-    }
-}
-
-suspend fun <T : Any, R> ApiResponse<T>.toResultModel(transform: suspend (T) -> R): Result<R> {
-    return when (this) {
-        is ApiResponse.Success -> Result.Success(transform(result))
-        is ApiResponse.Error -> Result.Failure(reason, status)
-        is ApiResponse.Exception -> Result.Failure("Api Exception", -1)
     }
 }
