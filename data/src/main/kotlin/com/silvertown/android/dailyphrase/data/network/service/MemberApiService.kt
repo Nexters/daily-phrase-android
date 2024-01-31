@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface SignInApiService {
+interface MemberApiService {
 
     @POST("/api/auth")
     suspend fun signInWithKaKaoTokenViaServer(
@@ -19,4 +19,7 @@ interface SignInApiService {
     suspend fun replaceToken(
         @Header("Refresh-Token") token: String,
     ): Response<SignInTokenResponse>
+
+
 }
+
