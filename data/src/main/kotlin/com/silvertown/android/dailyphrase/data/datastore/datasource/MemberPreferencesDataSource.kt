@@ -1,34 +1,35 @@
 package com.silvertown.android.dailyphrase.data.datastore.datasource
 
 import androidx.datastore.core.DataStore
-import com.silvertown.android.dailyphrase.data.UserPreferences
-import com.silvertown.android.dailyphrase.domain.model.User
-import kotlinx.coroutines.flow.first
+import com.silvertown.android.dailyphrase.data.MemberPreferences
+import com.silvertown.android.dailyphrase.domain.model.Member
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class UserPreferencesDataSource @Inject constructor(
-    private val userPreferences: DataStore<UserPreferences>,
+class MemberPreferencesDataSource @Inject constructor(
+    private val memberPreferences: DataStore<MemberPreferences>,
 ) {
-    val userData = userPreferences.data
+    val memberData = memberPreferences.data
         .map { preferences ->
-            User(
+            Member(
                 id = preferences.id,
                 name = preferences.name,
-                imageUrl = preferences.imageUrl
+                imageUrl = preferences.imageUrl,
+                email = "",
+                quitAt = ""
             )
         }
 
     suspend fun getMemberId(): Long {
-        return userPreferences.data
+        return memberPreferences.data
             .map { preferences ->
                 preferences.id
             }.firstOrNull() ?: -1
     }
 
     suspend fun setName(name: String) {
-        userPreferences.updateData { currentPreferences ->
+        memberPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
                 .setName(name)
                 .build()
@@ -36,7 +37,7 @@ class UserPreferencesDataSource @Inject constructor(
     }
 
     suspend fun setImageUrl(imageUrl: String) {
-        userPreferences.updateData { currentPreferences ->
+        memberPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
                 .setImageUrl(imageUrl)
                 .build()
@@ -44,7 +45,7 @@ class UserPreferencesDataSource @Inject constructor(
     }
 
     suspend fun setMemberId(memberId: Long) {
-        userPreferences.updateData { currentPreferences ->
+        memberPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
                 .setId(memberId)
                 .build()

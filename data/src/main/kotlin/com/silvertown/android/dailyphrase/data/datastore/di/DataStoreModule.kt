@@ -10,8 +10,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.silvertown.android.dailyphrase.data.UserPreferences
-import com.silvertown.android.dailyphrase.data.datastore.UserPreferencesSerializer
+import com.silvertown.android.dailyphrase.data.MemberPreferences
+import com.silvertown.android.dailyphrase.data.datastore.MemberPreferencesSerializer
 import com.silvertown.android.dailyphrase.data.datastore.datasource.TokenDataSource
 import com.silvertown.android.dailyphrase.data.datastore.datasource.TokenDataSourceImpl
 import dagger.Module
@@ -33,16 +33,16 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun providesUserPreferencesDataStore(
+    fun providesMemberPreferencesDataStore(
         @ApplicationContext context: Context,
-        userPreferencesSerializer: UserPreferencesSerializer,
-    ): DataStore<UserPreferences> =
+        memberPreferencesSerializer: MemberPreferencesSerializer,
+    ): DataStore<MemberPreferences> =
         DataStoreFactory.create(
-            serializer = userPreferencesSerializer,
+            serializer = memberPreferencesSerializer,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             corruptionHandler = null
         ) {
-            context.dataStoreFile("user_preferences.pb")
+            context.dataStoreFile("member_preferences.pb")
         }
 
     @Singleton

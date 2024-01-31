@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-option java_package = "com.silvertown.android.dailyphrase.data";
 option java_multiple_files = true;
+option java_package = "com.silvertown.android.dailyphrase.data";
 
-message UserPreferences {
+message MemberPreferences {
   int64 id = 1;
   string name = 2;
   string imageUrl = 3;

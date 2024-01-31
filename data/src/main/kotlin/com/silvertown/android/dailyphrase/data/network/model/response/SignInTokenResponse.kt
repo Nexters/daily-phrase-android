@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName
 import com.silvertown.android.dailyphrase.domain.model.SignInToken
 
 data class SignInTokenResponse(
+    @SerializedName("memberId")
+    val memberId: Long?,
     @SerializedName("accessToken")
     val accessToken: String?,
     @SerializedName("refreshToken")
@@ -11,6 +13,7 @@ data class SignInTokenResponse(
 )
 
 fun SignInTokenResponse.toDomainModel() = SignInToken(
-    accessToken = this.accessToken ?: "",
-    refreshToken = this.refreshToken ?: ""
+    memberId = memberId ?: 0,
+    accessToken = accessToken.orEmpty(),
+    refreshToken = refreshToken.orEmpty()
 )
