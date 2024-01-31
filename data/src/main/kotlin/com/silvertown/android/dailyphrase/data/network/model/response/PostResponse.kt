@@ -6,49 +6,49 @@ import com.silvertown.android.dailyphrase.domain.model.Post
 
 data class PostResponse(
     @SerializedName("content")
-    val content: String,
+    val content: String?,
     @SerializedName("imageRatio")
-    val imageRatio: String,
+    val imageRatio: String?,
     @SerializedName("imageUrl")
-    val imageUrl: String,
+    val imageUrl: String?,
     @SerializedName("likeCount")
-    val likeCount: Int,
+    val likeCount: Int?,
     @SerializedName("phraseId")
-    val phraseId: Long,
+    val phraseId: Long?,
     @SerializedName("title")
-    val title: String,
+    val title: String?,
     @SerializedName("viewCount")
-    val viewCount: Int,
+    val viewCount: Int?,
     @SerializedName("isLike")
-    val isLike: Boolean,
+    val isLike: Boolean?,
     @SerializedName("isFavorite")
-    val isFavorite: Boolean,
+    val isFavorite: Boolean?,
 )
 
 fun PostResponse.toEntity(): PostEntity {
     return PostEntity(
-        phraseId = phraseId,
-        content = content,
-        title = title,
-        imageUrl = imageUrl,
-        imageRatio = imageRatio,
-        viewCount = viewCount,
-        likeCount = likeCount,
-        isLike = isLike,
-        isFavorite = isFavorite
+        phraseId = phraseId ?: 0,
+        content = content.orEmpty(),
+        title = title.orEmpty(),
+        imageUrl = imageUrl.orEmpty(),
+        imageRatio = imageRatio.orEmpty(),
+        viewCount = viewCount ?: 0,
+        likeCount = likeCount ?: 0,
+        isLike = isLike ?: false,
+        isFavorite = isFavorite ?: false
     )
 }
 
 fun PostResponse.toDomainModel(): Post {
     return Post(
-        content = content,
-        imageRatio = imageRatio,
-        imageUrl = imageUrl,
-        likeCount = likeCount,
-        phraseId = phraseId,
-        title = title,
-        viewCount = viewCount,
-        isLike = isLike,
-        isFavorite = isFavorite
+        content = content.orEmpty(),
+        imageRatio = imageRatio.orEmpty(),
+        imageUrl = imageUrl.orEmpty(),
+        likeCount = likeCount ?: 0,
+        phraseId = phraseId ?: 0,
+        title = title.orEmpty(),
+        viewCount = viewCount ?: 0,
+        isLike = isLike ?: false,
+        isFavorite = isFavorite ?: false
     )
 }

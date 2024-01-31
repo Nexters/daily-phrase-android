@@ -29,7 +29,7 @@ class PostMediator @Inject constructor(
 
         return try {
             val loadKey = when (loadType) {
-                LoadType.REFRESH -> 0
+                LoadType.REFRESH -> 1
 
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
@@ -53,7 +53,7 @@ class PostMediator @Inject constructor(
                 result =
                     isEndOfPagination(postsResult).let {
                         MediatorResult.Success(
-                            endOfPaginationReached = it
+                            endOfPaginationReached = it ?: true
                         )
                     }
             }.onException { e ->
@@ -74,12 +74,12 @@ class PostMediator @Inject constructor(
         loadType: LoadType,
     ) {
         response.let {
-            val entities = it.postList.map { item ->
+            val entities = it.postList?.map { item ->
                 item.toEntity()
             }
 
             postDao.savePostsAndDeleteIfRequired(
-                posts = entities,
+                posts = entities.orEmpty(),
                 shouldDelete = loadType == LoadType.REFRESH
             )
         }
