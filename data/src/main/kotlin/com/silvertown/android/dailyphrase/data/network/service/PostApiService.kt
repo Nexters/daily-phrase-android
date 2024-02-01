@@ -5,6 +5,7 @@ import com.silvertown.android.dailyphrase.data.network.model.request.FavoritesRe
 import com.silvertown.android.dailyphrase.data.network.model.request.LikeRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.BookmarkResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.FavoritesResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.LikeResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.PostResponse
@@ -42,7 +43,7 @@ interface PostApiService {
     @GET("/api/v1/favorites/members/{id}")
     suspend fun getFavorites(
         @Path("id") memberId: Long,
-    ): ApiResponse<BaseResponse<PostResponse>>
+    ): ApiResponse<BaseResponse<BookmarkResponse>>
 
     @POST("/api/v1/favorites")
     suspend fun saveFavorites(

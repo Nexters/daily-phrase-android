@@ -1,18 +1,23 @@
 package com.silvertown.android.dailyphrase.data.network.datasource
 
+import com.silvertown.android.dailyphrase.data.network.common.ApiFlow
 import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
 import com.silvertown.android.dailyphrase.data.network.model.request.FavoritesRequest
 import com.silvertown.android.dailyphrase.data.network.model.request.LikeRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.BookmarkResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.FavoritesResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.LikeResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.PostResponse
 import com.silvertown.android.dailyphrase.data.network.service.PostApiService
+import kotlinx.coroutines.flow.Flow
+import com.silvertown.android.dailyphrase.domain.model.Result
 import javax.inject.Inject
 
 class PostDataSourceImpl @Inject constructor(
     private val postApiService: PostApiService,
+    private val refreshIntervalMs: Long = 5000,
 ) : PostDataSource {
 
     override suspend fun getPosts(
@@ -37,10 +42,11 @@ class PostDataSourceImpl @Inject constructor(
     ): ApiResponse<BaseResponse<LikeResponse>> =
         postApiService.deleteLike(memberId, phraseId)
 
-    override suspend fun getFavorites(
+    override fun getFavorites(
         memberId: Long,
-    ): ApiResponse<BaseResponse<PostResponse>> =
+    ): Flow<Result<BaseResponse<BookmarkResponse>>> = ApiFlow {
         postApiService.getFavorites(memberId)
+    }
 
     override suspend fun saveFavorites(
         data: FavoritesRequest,
