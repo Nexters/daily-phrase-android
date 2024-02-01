@@ -9,7 +9,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 const val TIMEOUT_DURATION = 10000L
 
-fun <T : Any> apiRequestFlow(call: suspend () -> ApiResponse<T>): Flow<Result<T>> = flow {
+fun <T : Any> ApiFlow(call: suspend () -> ApiResponse<T>): Flow<Result<T>> = flow {
     emit(Result.Loading)
 
     withTimeoutOrNull(TIMEOUT_DURATION) {

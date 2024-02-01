@@ -47,11 +47,19 @@ fun <T> Flow<T>.asResult(): Flow<Result<T>> {
         .catch { emit(Result.Failure(it.message ?: "Throwable", -1)) }
 }
 
-inline fun <reified R, reified D> Flow<Result<R>>.mapResultModel(crossinline transform: (R) -> D): Flow<Result<D>> {
+inline fun <reified R, reified D> Flow<Result<R>>.mapResultModel(crossinline transform: (R) -> D?): Flow<Result<D>> {
     return this.map { apiResponse ->
         when (apiResponse) {
             is Result.Loading -> Result.Loading
-            is Result.Success -> Result.Success(transform(apiResponse.data))
+            is Result.Success -> {
+                val transformedResult = runCatching { transform(apiResponse.data) }.getOrNull()
+                if (transformedResult != null) {
+                    Result.Success(transformedResult)
+                } else {
+                    Result.Failure("Transformation resulted in null", -1)
+                }
+            }
+
             is Result.Failure -> Result.Failure(apiResponse.errorMessage, apiResponse.code)
             is Result.Empty -> Result.Empty
         }
