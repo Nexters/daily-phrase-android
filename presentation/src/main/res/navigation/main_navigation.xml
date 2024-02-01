@@ -34,6 +34,14 @@
         tools:layout="@layout/fragment_bookmark">
 
         <action
+            android:id="@+id/move_to_detailFragment"
+            app:destination="@id/detailFragment">
+            <argument
+                android:name="phraseId"
+                app:argType="long" />
+        </action>
+
+        <action
             android:id="@+id/move_to_myPageFragment"
             app:destination="@id/myPageFragment" />
     </fragment>

@@ -24,6 +24,7 @@
     <string name="close">닫기</string>
     <string name="confirm_logout">정말 로그아웃할까요?</string>
     <string name="keep_logged_in">로그인 유지하기</string>
+    <string name="bookmar_no_list">마음에 드는 글귀를 찾아서 저장해 보세요.</string>
     <string name="bookmark_snackbar_message">즐겨찾기에 추가되었습니다!</string>
     <string name="bookmark_snackbar_action_label">공유하기</string>
     <string name="success_logout">로그아웃 되었습니다.</string>
