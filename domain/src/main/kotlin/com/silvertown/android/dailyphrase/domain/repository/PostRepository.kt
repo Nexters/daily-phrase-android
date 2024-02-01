@@ -1,6 +1,7 @@
 package com.silvertown.android.dailyphrase.domain.repository
 
 import androidx.paging.PagingData
+import com.silvertown.android.dailyphrase.domain.model.Bookmark
 import com.silvertown.android.dailyphrase.domain.model.Favorites
 import com.silvertown.android.dailyphrase.domain.model.Like
 import com.silvertown.android.dailyphrase.domain.model.Post
@@ -22,7 +23,8 @@ interface PostRepository {
         phraseId: Long,
     ): Result<Like>
 
-    suspend fun getFavorites(): Result<Post>
+    suspend fun getFavorites(): Flow<Result<Bookmark>>
+
     suspend fun saveFavorites(
         phraseId: Long,
     ): Result<Favorites>

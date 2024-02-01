@@ -5,9 +5,12 @@ import com.silvertown.android.dailyphrase.data.network.model.request.FavoritesRe
 import com.silvertown.android.dailyphrase.data.network.model.request.LikeRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.BookmarkResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.FavoritesResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.LikeResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.PostResponse
+import kotlinx.coroutines.flow.Flow
+import com.silvertown.android.dailyphrase.domain.model.Result
 
 interface PostDataSource {
     suspend fun getPosts(
@@ -28,9 +31,9 @@ interface PostDataSource {
         phraseId: Long,
     ): ApiResponse<BaseResponse<LikeResponse>>
 
-    suspend fun getFavorites(
+    fun getFavorites(
         memberId: Long,
-    ): ApiResponse<BaseResponse<PostResponse>>
+    ): Flow<Result<BaseResponse<BookmarkResponse>>>
 
     suspend fun saveFavorites(
         data: FavoritesRequest,

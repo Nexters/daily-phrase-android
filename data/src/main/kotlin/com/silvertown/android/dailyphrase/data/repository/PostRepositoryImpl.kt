@@ -14,10 +14,12 @@ import com.silvertown.android.dailyphrase.data.network.mediator.PostMediator
 import com.silvertown.android.dailyphrase.data.network.model.request.FavoritesRequest
 import com.silvertown.android.dailyphrase.data.network.model.request.LikeRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
+import com.silvertown.android.dailyphrase.domain.model.Bookmark
 import com.silvertown.android.dailyphrase.domain.model.Favorites
 import com.silvertown.android.dailyphrase.domain.model.Like
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.domain.model.Result
+import com.silvertown.android.dailyphrase.domain.model.mapResultModel
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -71,13 +73,12 @@ class PostRepositoryImpl @Inject constructor(
                 memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
             ).toResultModel { it.result?.toDomainModel() }
-
-    override suspend fun getFavorites(): Result<Post> =
-        postDataSource
-            .getFavorites(
-                memberId = memberPreferencesDataSource.getMemberId()
-            )
-            .toResultModel { it.result?.toDomainModel() }
+    
+    override suspend fun getFavorites(): Flow<Result<Bookmark>> {
+        return postDataSource
+            .getFavorites(memberId = memberPreferencesDataSource.getMemberId())
+            .mapResultModel { it.result?.toDomainModel() }
+    }
 
     override suspend fun saveFavorites(phraseId: Long): Result<Favorites> =
         postDataSource
@@ -86,7 +87,8 @@ class PostRepositoryImpl @Inject constructor(
                     memberId = memberPreferencesDataSource.getMemberId(),
                     phraseId = phraseId
                 )
-            ).toResultModel { it.result?.toDomainModel() }
+            )
+            .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun deleteFavorites(phraseId: Long): Result<Favorites> =
         postDataSource
