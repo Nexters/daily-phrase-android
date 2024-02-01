@@ -10,4 +10,5 @@
     <color name="yellow">#FFF7E04C</color>
     <color name="kakao_container">#FEE500</color>
     <color name="kakao_text">#191919</color>
+    <color name="snackbar_text">#FFEF8031</color>
 </resources>

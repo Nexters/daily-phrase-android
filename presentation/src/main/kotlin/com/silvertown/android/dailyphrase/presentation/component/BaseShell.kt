@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -13,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.DailyPhraseTheme
 import com.silvertown.android.dailyphrase.presentation.base.theme.LocalBackgroundTheme
 
@@ -46,7 +49,12 @@ fun DailyPhraseBaseShell(
                         SnackbarHost(
                             hostState = snackbarHostState,
                             modifier = Modifier.padding(bottom = 70.dp)
-                        )
+                        ) { data ->
+                            Snackbar(
+                                actionColor = colorResource(id = R.color.snackbar_text),
+                                snackbarData = data
+                            )
+                        }
                     }
                 ) { paddingValues ->
                     Box(
