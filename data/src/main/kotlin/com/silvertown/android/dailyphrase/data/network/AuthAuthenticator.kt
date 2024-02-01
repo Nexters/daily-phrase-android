@@ -38,10 +38,10 @@ class AuthAuthenticator @Inject constructor(
                 return@runBlocking null
             } else {
                 newAccessToken.body()?.let {
-                    tokenDataSource.saveAccessToken(it.accessToken ?: "")
-                    tokenDataSource.saveRefreshToken(it.refreshToken ?: "")
+                    tokenDataSource.saveAccessToken(it.accessToken.orEmpty())
+                    tokenDataSource.saveRefreshToken(it.refreshToken.orEmpty())
                     response.request.newBuilder()
-                        .header("Authorization", it.accessToken ?: "")
+                        .header("Authorization", "Bearer ${it.accessToken}")
                         .build()
                 }
             }
