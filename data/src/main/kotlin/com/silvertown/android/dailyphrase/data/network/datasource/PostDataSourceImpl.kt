@@ -4,6 +4,7 @@ import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
 import com.silvertown.android.dailyphrase.data.network.model.request.FavoritesRequest
 import com.silvertown.android.dailyphrase.data.network.model.request.LikeRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.FavoritesResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.LikeResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.PostResponse
@@ -17,31 +18,39 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun getPosts(
         page: Int,
         size: Int,
-    ): ApiResponse<BasePostResponse> =
+    ): ApiResponse<BaseResponse<BasePostResponse>> =
         postApiService.getPosts(page, size)
 
-    override suspend fun getPost(phraseId: Long): ApiResponse<PostResponse> =
+    override suspend fun getPost(
+        phraseId: Long,
+    ): ApiResponse<BaseResponse<PostResponse>> =
         postApiService.getPost(phraseId)
 
-    override suspend fun saveLike(data: LikeRequest): ApiResponse<LikeResponse> =
+    override suspend fun saveLike(
+        data: LikeRequest,
+    ): ApiResponse<BaseResponse<LikeResponse>> =
         postApiService.saveLike(data)
 
     override suspend fun deleteLike(
         memberId: Long,
         phraseId: Long,
-    ): ApiResponse<LikeResponse> =
+    ): ApiResponse<BaseResponse<LikeResponse>> =
         postApiService.deleteLike(memberId, phraseId)
 
-    override suspend fun getFavorites(memberId: Long): ApiResponse<PostResponse> =
+    override suspend fun getFavorites(
+        memberId: Long,
+    ): ApiResponse<BaseResponse<PostResponse>> =
         postApiService.getFavorites(memberId)
 
-    override suspend fun saveFavorites(data: FavoritesRequest): ApiResponse<FavoritesResponse> =
+    override suspend fun saveFavorites(
+        data: FavoritesRequest,
+    ): ApiResponse<BaseResponse<FavoritesResponse>> =
         postApiService.saveFavorites(data)
 
     override suspend fun deleteFavorites(
         memberId: Long,
         phraseId: Long,
-    ): ApiResponse<FavoritesResponse> =
+    ): ApiResponse<BaseResponse<FavoritesResponse>> =
         postApiService.deleteFavorites(memberId, phraseId)
 
 }

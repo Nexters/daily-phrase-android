@@ -54,7 +54,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getPost(phraseId: Long): Result<Post> =
         postDataSource
             .getPost(phraseId)
-            .toResultModel { it.toDomainModel() }
+            .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun saveLike(phraseId: Long): Result<Like> =
         postDataSource
@@ -63,21 +63,21 @@ class PostRepositoryImpl @Inject constructor(
                     memberId = memberPreferencesDataSource.getMemberId(),
                     phraseId = phraseId
                 )
-            ).toResultModel { it.toDomainModel() }
+            ).toResultModel { it.result?.toDomainModel() }
 
     override suspend fun deleteLike(phraseId: Long): Result<Like> =
         postDataSource
             .deleteLike(
                 memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
-            ).toResultModel { it.toDomainModel() }
+            ).toResultModel { it.result?.toDomainModel() }
 
     override suspend fun getFavorites(): Result<Post> =
         postDataSource
             .getFavorites(
                 memberId = memberPreferencesDataSource.getMemberId()
             )
-            .toResultModel { it.toDomainModel() }
+            .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun saveFavorites(phraseId: Long): Result<Favorites> =
         postDataSource
@@ -86,7 +86,7 @@ class PostRepositoryImpl @Inject constructor(
                     memberId = memberPreferencesDataSource.getMemberId(),
                     phraseId = phraseId
                 )
-            ).toResultModel { it.toDomainModel() }
+            ).toResultModel { it.result?.toDomainModel() }
 
     override suspend fun deleteFavorites(phraseId: Long): Result<Favorites> =
         postDataSource
@@ -94,11 +94,11 @@ class PostRepositoryImpl @Inject constructor(
                 memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
             )
-            .toResultModel { it.toDomainModel() }
+            .toResultModel { it.result?.toDomainModel() }
 
     companion object {
-        private const val PAGING__PAGE_SIZE = 10
-        private const val PAGING__PREFETCH_DISTANCE = 5
-        private const val PAGING__INITIAL_LOAD_SIZE = 10
+        private const val PAGING__PAGE_SIZE = 3
+        private const val PAGING__PREFETCH_DISTANCE = 6
+        private const val PAGING__INITIAL_LOAD_SIZE = 3
     }
 }
