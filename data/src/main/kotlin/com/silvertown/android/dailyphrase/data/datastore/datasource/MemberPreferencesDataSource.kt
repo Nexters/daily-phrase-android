@@ -28,6 +28,20 @@ class MemberPreferencesDataSource @Inject constructor(
             }.firstOrNull() ?: -1
     }
 
+    suspend fun setMember(
+        memberId: Long,
+        name: String,
+        imageUrl: String,
+    ) {
+        memberPreferences.updateData { currentPreferences ->
+            currentPreferences.toBuilder()
+                .setId(memberId)
+                .setName(name)
+                .setImageUrl(imageUrl)
+                .build()
+        }
+    }
+
     suspend fun setName(name: String) {
         memberPreferences.updateData { currentPreferences ->
             currentPreferences.toBuilder()
@@ -51,4 +65,5 @@ class MemberPreferencesDataSource @Inject constructor(
                 .build()
         }
     }
+
 }
