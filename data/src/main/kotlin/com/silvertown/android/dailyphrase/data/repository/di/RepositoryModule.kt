@@ -1,6 +1,8 @@
 package com.silvertown.android.dailyphrase.data.repository.di
 
+import com.silvertown.android.dailyphrase.data.repository.MemberRepositoryImpl
 import com.silvertown.android.dailyphrase.data.repository.PostRepositoryImpl
+import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,11 @@ internal interface RepositoryModule {
     fun bindPostRepository(
         postRepository: PostRepositoryImpl,
     ): PostRepository
+
+    @Singleton
+    @Binds
+    fun bindMemberRepository(
+        memberRepository: MemberRepositoryImpl,
+    ): MemberRepository
+
 }

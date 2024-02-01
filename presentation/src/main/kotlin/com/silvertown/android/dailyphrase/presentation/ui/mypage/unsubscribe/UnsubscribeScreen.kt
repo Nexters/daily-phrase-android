@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +36,12 @@ import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFami
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
+import com.silvertown.android.dailyphrase.presentation.extensions.navigateToStart
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun UnsubscribeScreen(
@@ -37,13 +49,19 @@ fun UnsubscribeScreen(
     unsubscribeViewModel: UnsubscribeViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
 ) {
+    val snackbarScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Content(
         modifier = modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white)),
-        userName = "김춘배",
+        snackbarScope = snackbarScope,
+        snackbarHostState = snackbarHostState,
         navigateToBack = navigateToBack,
-        onClickUnsubscribed = {}
+        isDeletedEvent = unsubscribeViewModel.isDeleted,
+        getName = unsubscribeViewModel::getName,
+        onClickUnsubscribed = unsubscribeViewModel::deleteMember
     )
 }
 
@@ -51,8 +69,11 @@ fun UnsubscribeScreen(
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
-    userName: String,
     navigateToBack: () -> Unit,
+    snackbarScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    isDeletedEvent: SharedFlow<Boolean>,
+    getName: () -> String,
     onClickUnsubscribed: () -> Unit,
 ) {
     DailyPhraseBaseShell(
@@ -72,11 +93,15 @@ private fun Content(
                     )
                 },
             )
-        }
+        },
+        snackbarHostState = snackbarHostState
     ) {
         UnsubscribeBody(
             modifier = Modifier,
-            userName = userName + stringResource(id = R.string.user_name_suffix),
+            userName = getName() + stringResource(id = R.string.user_name_suffix),
+            snackbarScope = snackbarScope,
+            snackbarHostState = snackbarHostState,
+            isDeletedEvent = isDeletedEvent,
             onClickUnsubscribed = onClickUnsubscribed
         )
     }
@@ -87,7 +112,22 @@ private fun UnsubscribeBody(
     modifier: Modifier = Modifier,
     userName: String,
     onClickUnsubscribed: () -> Unit,
+    snackbarScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    isDeletedEvent: SharedFlow<Boolean>,
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        isDeletedEvent.collectLatest { isDeleted ->
+            if (isDeleted) {
+                context.navigateToStart(R.string.success_delete_member)
+            } else {
+                showSnackbar(snackbarScope, snackbarHostState, context)
+            }
+        }
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -190,4 +230,21 @@ fun InfoMessageSection(
         color = colorResource(id = R.color.gray),
         textAlign = TextAlign.Center
     )
+}
+
+private suspend fun showSnackbar(
+    snackbarScope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    context: Context,
+) {
+    snackbarScope.launch {
+        baseSnackbar(
+            snackbarHostState = snackbarHostState,
+            message = context.getString(R.string.failure_request),
+            actionLabel = context.getString(R.string.confirm),
+            actionPerformed = {
+                snackbarHostState.currentSnackbarData?.dismiss()
+            }
+        )
+    }
 }

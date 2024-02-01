@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.io.IOException
@@ -60,6 +61,10 @@ class TokenDataSourceImpl @Inject constructor(
         tokenDataStore.edit { preferences ->
             preferences[REFRESH_TOKEN_KEY] = refreshToken
         }
+    }
+
+    override suspend fun getLoginState(): Boolean {
+        return getAccessToken().first() != null
     }
 
     override suspend fun deleteAccessToken() {

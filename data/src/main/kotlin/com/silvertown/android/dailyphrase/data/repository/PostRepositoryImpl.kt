@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.silvertown.android.dailyphrase.data.database.dao.PostDao
 import com.silvertown.android.dailyphrase.data.database.model.toDomainModel
-import com.silvertown.android.dailyphrase.data.datastore.datasource.UserPreferencesDataSource
+import com.silvertown.android.dailyphrase.data.datastore.datasource.MemberPreferencesDataSource
 import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.PostDataSource
 import com.silvertown.android.dailyphrase.data.network.mediator.PostMediator
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class PostRepositoryImpl @Inject constructor(
     private val postDao: PostDao,
     private val postDataSource: PostDataSource,
-    private val userPreferencesDataSource: UserPreferencesDataSource,
+    private val memberPreferencesDataSource: MemberPreferencesDataSource,
 ) : PostRepository {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -60,7 +60,7 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource
             .saveLike(
                 LikeRequest(
-                    memberId = userPreferencesDataSource.getMemberId(),
+                    memberId = memberPreferencesDataSource.getMemberId(),
                     phraseId = phraseId
                 )
             ).toResultModel { it.result?.toDomainModel() }
@@ -68,14 +68,14 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun deleteLike(phraseId: Long): Result<Like> =
         postDataSource
             .deleteLike(
-                memberId = userPreferencesDataSource.getMemberId(),
+                memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
             ).toResultModel { it.result?.toDomainModel() }
 
     override suspend fun getFavorites(): Result<Post> =
         postDataSource
             .getFavorites(
-                memberId = userPreferencesDataSource.getMemberId()
+                memberId = memberPreferencesDataSource.getMemberId()
             )
             .toResultModel { it.result?.toDomainModel() }
 
@@ -83,7 +83,7 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource
             .saveFavorites(
                 FavoritesRequest(
-                    memberId = userPreferencesDataSource.getMemberId(),
+                    memberId = memberPreferencesDataSource.getMemberId(),
                     phraseId = phraseId
                 )
             ).toResultModel { it.result?.toDomainModel() }
@@ -91,7 +91,7 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun deleteFavorites(phraseId: Long): Result<Favorites> =
         postDataSource
             .deleteFavorites(
-                memberId = userPreferencesDataSource.getMemberId(),
+                memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
             )
             .toResultModel { it.result?.toDomainModel() }

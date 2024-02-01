@@ -4,7 +4,7 @@ import android.content.Context
 import com.silvertown.android.dailyphrase.data.Constants.BASE_URL
 import com.silvertown.android.dailyphrase.data.datastore.datasource.TokenDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.SignInTokenResponse
-import com.silvertown.android.dailyphrase.data.network.service.SignInApiService
+import com.silvertown.android.dailyphrase.data.network.service.MemberApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -38,10 +38,10 @@ class AuthAuthenticator @Inject constructor(
                 return@runBlocking null
             } else {
                 newAccessToken.body()?.let {
-                    tokenDataSource.saveAccessToken(it.accessToken ?: "")
-                    tokenDataSource.saveRefreshToken(it.refreshToken ?: "")
+                    tokenDataSource.saveAccessToken(it.accessToken.orEmpty())
+                    tokenDataSource.saveRefreshToken(it.refreshToken.orEmpty())
                     response.request.newBuilder()
-                        .header("Authorization", it.accessToken ?: "")
+                        .header("Authorization", "Bearer ${it.accessToken}")
                         .build()
                 }
             }
@@ -62,7 +62,7 @@ class AuthAuthenticator @Inject constructor(
             .client(okHttpClient)
             .build()
 
-        val service = retrofit.create(SignInApiService::class.java)
+        val service = retrofit.create(MemberApiService::class.java)
         return service.replaceToken("$refreshToken")
     }
 }

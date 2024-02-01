@@ -7,5 +7,7 @@ interface TokenDataSource {
     fun getRefreshToken(): Flow<String?>
     suspend fun saveAccessToken(accessToken: String)
     suspend fun saveRefreshToken(refreshToken: String)
+    suspend fun getLoginState(): Boolean
     suspend fun deleteAccessToken()
+
 }
