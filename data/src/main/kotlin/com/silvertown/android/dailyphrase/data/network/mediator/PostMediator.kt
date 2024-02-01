@@ -6,13 +6,13 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.silvertown.android.dailyphrase.data.database.dao.PostDao
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
-import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
 import com.silvertown.android.dailyphrase.data.network.common.onException
 import com.silvertown.android.dailyphrase.data.network.common.onSuccess
 import com.silvertown.android.dailyphrase.data.network.datasource.PostDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.toEntity
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -21,6 +21,8 @@ class PostMediator @Inject constructor(
     private val postDao: PostDao,
     private val postDataSource: PostDataSource,
 ) : RemoteMediator<Int, PostEntity>() {
+    private var loadKey = 0
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, PostEntity>,
@@ -28,17 +30,17 @@ class PostMediator @Inject constructor(
         var result: MediatorResult? = null
 
         return try {
-            val loadKey = when (loadType) {
-                LoadType.REFRESH -> 1
+            when (loadType) {
+                LoadType.REFRESH -> {
+                    loadKey = 1
+                }
 
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
                 )
 
                 LoadType.APPEND -> {
-                    state.lastItemOrNull()?.let { lastItem ->
-                        (lastItem.phraseId.toInt() / state.config.pageSize) + 1
-                    } ?: 1
+                    loadKey++
                 }
             }
 
@@ -48,14 +50,12 @@ class PostMediator @Inject constructor(
             )
 
             postsResult.onSuccess { response ->
-                savePosts(response, loadType)
+                val basePostResponse = response.result
+                basePostResponse?.let { savePosts(it, loadType) }
 
-                result =
-                    isEndOfPagination(postsResult).let {
-                        MediatorResult.Success(
-                            endOfPaginationReached = it ?: true
-                        )
-                    }
+                result = MediatorResult.Success(
+                    endOfPaginationReached = isEndOfPagination(basePostResponse)
+                )
             }.onException { e ->
                 result = MediatorResult.Error(e)
             }
@@ -85,10 +85,7 @@ class PostMediator @Inject constructor(
         }
     }
 
-    private fun isEndOfPagination(result: ApiResponse<BasePostResponse>) =
-        if (result is ApiResponse.Success) {
-            result.result.hasNext
-        } else {
-            true
-        }
+    private fun isEndOfPagination(result: BasePostResponse?): Boolean {
+        return !(result?.hasNext ?: false)
+    }
 }
