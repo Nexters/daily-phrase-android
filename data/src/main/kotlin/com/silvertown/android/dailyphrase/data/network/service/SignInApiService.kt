@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.data.network.service
 
 import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
 import com.silvertown.android.dailyphrase.data.network.model.request.KakaoTokenRequest
+import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.SignInTokenResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -13,7 +14,7 @@ interface SignInApiService {
     @POST("/api/auth")
     suspend fun signInWithKaKaoTokenViaServer(
         @Body body: KakaoTokenRequest,
-    ): ApiResponse<SignInTokenResponse>
+    ): ApiResponse<BaseResponse<SignInTokenResponse>>
 
     @POST("/api/auth/access")
     suspend fun replaceToken(

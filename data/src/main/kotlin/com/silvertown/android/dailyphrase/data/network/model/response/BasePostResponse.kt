@@ -14,4 +14,3 @@ data class BasePostResponse(
     @SerializedName("total")
     val total: Int?,
 )
-

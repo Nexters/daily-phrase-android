@@ -17,12 +17,12 @@ fun <T : Any> apiRequestFlow(call: suspend () -> ApiResponse<T>): Flow<Result<T>
             onSuccess { data ->
                 emit(Result.Success(data))
             }
-            onError { status, code, message ->
-                if (status == 204) {
+            onError { code, message ->
+                if (code == 204) {
                     emit(Result.Empty)
                 } else {
                     val errorMessage = message ?: "Error"
-                    emit(Result.Failure(errorMessage, status))
+                    emit(Result.Failure(errorMessage, code))
                 }
             }
             onException { e ->

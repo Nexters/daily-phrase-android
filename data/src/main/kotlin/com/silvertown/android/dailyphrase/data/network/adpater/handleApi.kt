@@ -13,28 +13,15 @@ fun <T : Any> handleApi(
         val body = response.body()
         if (response.isSuccessful && body != null) {
             Timber.tag("network").e("handleApi : response.isSuccessful && body not null")
-            ApiResponse.Success(
-                isSuccess = response.isSuccessful,
-                code = response.code().toString(),
-                message = response.message(),
-                result = body
-            )
+            ApiResponse.Success(body)
         } else {
             Timber.tag("network").e("handleApi : response not Successful or body is null ")
-            ApiResponse.Error(
-                status = response.code(),
-                code = response.code().toString(),
-                reason = response.message()
-            )
+            ApiResponse.Error(code = response.code(), message = response.message())
         }
     } catch (e: HttpException) {
         Timber.tag("network")
             .e("handleApi : Error HttpException code : ${e.code()} message : ${e.message}")
-        ApiResponse.Error(
-            status = e.code(),
-            code = e.code().toString(),
-            reason = e.message()
-        )
+        ApiResponse.Error(code = e.code(), message = e.message())
     } catch (e: Throwable) {
         Timber.tag("network").e("handleApi : Exception message :  ${e.message}")
         ApiResponse.Exception(e)
