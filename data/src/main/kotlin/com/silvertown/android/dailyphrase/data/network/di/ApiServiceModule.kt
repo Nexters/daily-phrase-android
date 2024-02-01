@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.data.network.di
 
+import com.silvertown.android.dailyphrase.data.network.service.MemberApiService
 import com.silvertown.android.dailyphrase.data.network.service.PostApiService
 import dagger.Module
 import dagger.Provides
@@ -22,5 +23,16 @@ object ApiServiceModule {
             .client(okHttpclient)
             .build()
             .create(PostApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideMemberApiService(
+        @AuthOkHttpClient okHttpclient: OkHttpClient,
+        retrofit: Retrofit.Builder,
+    ): MemberApiService =
+        retrofit
+            .client(okHttpclient)
+            .build()
+            .create(MemberApiService::class.java)
 
 }
