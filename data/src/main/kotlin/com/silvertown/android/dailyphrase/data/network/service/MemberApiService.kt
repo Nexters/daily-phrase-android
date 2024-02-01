@@ -28,11 +28,11 @@ interface MemberApiService {
     @DELETE("/api/v1/members/{id}")
     suspend fun deleteMember(
         @Path("id") memberId: Long,
-    ): ApiResponse<MemberResponse>
+    ): ApiResponse<BaseResponse<MemberResponse>>
 
     @GET("api/v1/members/{id}")
     suspend fun getMemberData(
         @Path("id") memberId: Long,
-    ): ApiResponse<MemberResponse>
+    ): ApiResponse<BaseResponse<MemberResponse>>
 
 }
