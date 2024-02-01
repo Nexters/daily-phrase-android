@@ -13,8 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,13 +26,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
+import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.component.GroupDivider
 import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
+import com.silvertown.android.dailyphrase.presentation.component.LogoutDialog
 import com.silvertown.android.dailyphrase.presentation.component.ProfileContent
+import com.silvertown.android.dailyphrase.presentation.extensions.navigateToStart
 
 @Composable
 fun MyPageScreen(
@@ -39,10 +45,15 @@ fun MyPageScreen(
     navigateToBack: () -> Unit,
     navigateToUnsubscribe: () -> Unit,
 ) {
+    val myPageUiState by myPageViewModel.myPageUiState.collectAsStateWithLifecycle()
+
     Content(
         modifier = modifier,
         navigateToBack = navigateToBack,
-        navigateToUnsubscribe = navigateToUnsubscribe
+        navigateToUnsubscribe = navigateToUnsubscribe,
+        onClickLogout = myPageViewModel::logout,
+        showLogoutDialog = myPageViewModel::showLogoutDialog,
+        myPageUiState = myPageUiState,
     )
 }
 
@@ -52,7 +63,27 @@ private fun Content(
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,
     navigateToUnsubscribe: () -> Unit,
+    onClickLogout: () -> Unit,
+    showLogoutDialog: (Boolean) -> Unit,
+    myPageUiState: MyPageUiState,
 ) {
+    val context = LocalContext.current
+
+    if (myPageUiState.showLogoutDialog) {
+        BaseDialog(
+            modifier = Modifier,
+            onDismissRequest = { showLogoutDialog(false) }
+        ) {
+            LogoutDialog(
+                onClickLogout = {
+                    onClickLogout()
+                    context.navigateToStart(R.string.success_logout)
+                },
+                onDismissRequest = { showLogoutDialog(false) }
+            )
+        }
+    }
+
     DailyPhraseBaseShell(
         modifier = modifier,
         topBar = {
@@ -75,6 +106,7 @@ private fun Content(
     ) {
         MyPageBody(
             navigateToUnsubscribe = navigateToUnsubscribe,
+            showLogoutDialog = showLogoutDialog,
         )
     }
 }
@@ -83,6 +115,7 @@ private fun Content(
 private fun MyPageBody(
     modifier: Modifier = Modifier,
     navigateToUnsubscribe: () -> Unit,
+    showLogoutDialog: (Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -120,7 +153,7 @@ private fun MyPageBody(
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.logout),
-                action = {}
+                action = { showLogoutDialog(true) }
             )
             UnsubscribeTextItem(
                 modifier = Modifier,
