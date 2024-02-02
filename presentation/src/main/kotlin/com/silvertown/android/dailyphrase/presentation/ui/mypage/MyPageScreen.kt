@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.silvertown.android.dailyphrase.domain.model.Member
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
@@ -46,6 +47,7 @@ fun MyPageScreen(
     navigateToUnsubscribe: () -> Unit,
 ) {
     val myPageUiState by myPageViewModel.myPageUiState.collectAsStateWithLifecycle()
+    val memberData by myPageViewModel.memberData.collectAsStateWithLifecycle()
 
     Content(
         modifier = modifier,
@@ -54,6 +56,7 @@ fun MyPageScreen(
         onClickLogout = myPageViewModel::logout,
         showLogoutDialog = myPageViewModel::showLogoutDialog,
         myPageUiState = myPageUiState,
+        memberData = memberData,
     )
 }
 
@@ -66,6 +69,7 @@ private fun Content(
     onClickLogout: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
     myPageUiState: MyPageUiState,
+    memberData: Member,
 ) {
     val context = LocalContext.current
 
@@ -107,6 +111,7 @@ private fun Content(
         MyPageBody(
             navigateToUnsubscribe = navigateToUnsubscribe,
             showLogoutDialog = showLogoutDialog,
+            memberData = memberData
         )
     }
 }
@@ -116,6 +121,7 @@ private fun MyPageBody(
     modifier: Modifier = Modifier,
     navigateToUnsubscribe: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
+    memberData: Member,
 ) {
     Column(
         modifier = modifier
@@ -127,9 +133,9 @@ private fun MyPageBody(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
-            userName = "TEST",
-            userProfile = "https://cdn.pixabay.com/photo/2015/06/25/04/50/hand-print-820913_1280.jpg",
-            email = "test@naver.com"
+            userName = memberData.name,
+            userProfile = memberData.imageUrl,
+            email = memberData.email
         )
 
         Column(
