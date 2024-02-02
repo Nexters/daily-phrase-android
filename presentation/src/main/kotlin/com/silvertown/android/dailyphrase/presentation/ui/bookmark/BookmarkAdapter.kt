@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBinding
+import com.silvertown.android.dailyphrase.presentation.extensions.formatNumberWithComma
 
 class BookmarkAdapter(
     private val onClickBookmark: (Long) -> Unit,
@@ -27,8 +28,8 @@ class BookmarkAdapter(
             this@BookmarkViewHolder.post = post
             tvTitle.text = post.title
             tvContent.text = post.content
-            tvView.text = post.viewCount.toString()
-            tvLike.text = post.likeCount.toString()
+            tvView.text = post.viewCount.formatNumberWithComma()
+            tvLike.text = post.likeCount.formatNumberWithComma()
         }
     }
 
