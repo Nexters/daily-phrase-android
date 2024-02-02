@@ -10,6 +10,9 @@
     <string name="leave_review">앱 리뷰 남기기</string>
     <string name="logout">로그아웃</string>
     <string name="login_and_share_message">로그인하고\n글귀를 공유해 보세요.</string>
+    <string name="login_and_like_message">로그인하고\n글귀에 관심을 표현하세요.</string>
+    <string name="login_and_bookmark_message">로그인하고\n글귀를 관리해 보세요.</string>
+    <string name="non_login_description">로그인하고\n내 정보를 관리해 보세요.</string>
     <string name="unsubscribe_service">서비스 탈퇴</string>
     <string name="message_before_leaving">탈퇴하기 전에 꼭 확인해주세요.</string>
     <string name="unsubscribe_message_title_1">즐겨찾는 글귀가 모두 사라져요.</string>
