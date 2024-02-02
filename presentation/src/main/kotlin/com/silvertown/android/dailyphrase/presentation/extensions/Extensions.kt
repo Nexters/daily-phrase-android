@@ -6,6 +6,8 @@ import android.content.Intent
 import android.widget.Toast
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
+import java.text.NumberFormat
+import java.util.Locale
 
 fun Int.dpToPx(context: Context): Int {
     val density = context.resources.displayMetrics.density
@@ -19,4 +21,14 @@ fun Context.navigateToStart(
     val intent = Intent(this, MainActivity::class.java)
     this.startActivity(intent)
     (this as? Activity)?.finish()
+}
+
+fun Int.formatNumberWithComma(): String {
+    val formatter = NumberFormat.getNumberInstance(Locale.KOREA)
+    return formatter.format(this)
+}
+
+fun Long.formatNumberWithComma(): String {
+    val formatter = NumberFormat.getNumberInstance(Locale.KOREA)
+    return formatter.format(this)
 }
