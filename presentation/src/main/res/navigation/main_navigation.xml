@@ -40,10 +40,12 @@
                 android:name="phraseId"
                 app:argType="long" />
         </action>
-
         <action
             android:id="@+id/move_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/move_to_NonLoginFragment"
+            app:destination="@id/nonLoginFragment" />
     </fragment>
 
     <fragment
