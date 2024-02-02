@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkBinding::inflate) {
-
     private lateinit var adapter: BookmarkAdapter
     private val viewModel by viewModels<BookmarkViewModel>()
+    private var isLoggedIn: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,9 +33,13 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
             findNavController().popBackStack() // TODO: 주환 Dev 수정 예정
         }
         binding.ivProfile.setOnClickListener {
-            BookmarkFragmentDirections
-                .moveToMyPageFragment()
-                .also { findNavController().navigate(it) }
+            if (isLoggedIn) {
+                val action = BookmarkFragmentDirections.moveToMyPageFragment()
+                findNavController().navigate(action)
+            } else {
+                val action = BookmarkFragmentDirections.moveToNonLoginFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -57,6 +61,14 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
                             emptyView.visibility = if (isEmpty) View.VISIBLE else View.GONE
                         }
                     }
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isLoggedIn
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { state ->
+                    isLoggedIn = state
                 }
         }
     }
