@@ -26,6 +26,9 @@ interface MemberRepository {
     ): Result<SignInToken>
 
     suspend fun getLoginStatus(): Boolean
+
+    fun getLoginStateFlow(): Flow<Boolean>
+
     suspend fun deleteAccessToken()
 
 }
