@@ -34,4 +34,6 @@
     <string name="success_delete_member">탈퇴 되었습니다.</string>
     <string name="failure_request">문제가 발생했어요.\n잠시 후에 다시 시도해주세요.</string>
     <string name="confirm">확인</string>
+    <string name="speak_tts">음성으로 듣기</string>
+    <string name="test_speak_tts">음성으로 듣기</string>
 </resources>
