@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBinding
+import com.silvertown.android.dailyphrase.presentation.extensions.formatNumberWithComma
 
 class PostAdapter(
     private val onPostClick: (Long) -> Unit,
@@ -37,8 +38,8 @@ class PostAdapter(
             this@PostViewHolder.post = post
             tvTitle.text = post.title
             tvContent.text = post.content
-            tvView.text = post.viewCount.toString()
-            tvLike.text = post.likeCount.toString()
+            tvView.text = post.viewCount.formatNumberWithComma()
+            tvLike.text = post.likeCount.formatNumberWithComma()
             binding.ivImage.isGone = post.imageUrl.isEmpty()
 
             Glide.with(itemView)
