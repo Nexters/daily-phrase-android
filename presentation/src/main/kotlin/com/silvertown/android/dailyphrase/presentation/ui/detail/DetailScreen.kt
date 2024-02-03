@@ -147,7 +147,12 @@ fun DetailBody(
                             snackbarHostState = snackbarHostState,
                             message = context.getString(R.string.bookmark_snackbar_message),
                             actionLabel = context.getString(R.string.bookmark_snackbar_action_label),
-                            actionPerformed = {}
+                            actionPerformed = {
+                                sendKakaoLink(
+                                    context = context,
+                                    uiState = uiState,
+                                )
+                            }
                         )
                     }
                 }
