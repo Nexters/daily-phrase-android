@@ -35,6 +35,7 @@ import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
 import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
+import com.silvertown.android.dailyphrase.presentation.component.SpeakButton
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
@@ -52,6 +53,7 @@ fun DetailScreen(
     val detailUiState by detailViewModel.detailUiState.collectAsStateWithLifecycle()
     val snackbarScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     DailyPhraseBaseShell(
         modifier = modifier,
@@ -59,12 +61,19 @@ fun DetailScreen(
             BaseTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 navigateToBack = { navigateToBack() },
+                actionsContent = {
+                    SpeakButton(
+                        context = context,
+                        message = context.getString(R.string.test_speak_tts)
+                    )
+                },
             )
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) {
         DetailBody(
             modifier = Modifier,
+            context = context,
             snackbarScope = snackbarScope,
             snackbarHostState = snackbarHostState,
             uiState = detailUiState,
@@ -78,6 +87,7 @@ fun DetailScreen(
 @Composable
 fun DetailBody(
     modifier: Modifier,
+    context: Context,
     snackbarScope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     uiState: DetailUiState,
@@ -85,8 +95,6 @@ fun DetailBody(
     onClickBookmark: () -> Unit,
     showLoingDialog: (Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val actionState = rememberSaveable {
         mutableStateOf(ActionType.NONE.name)
     }
