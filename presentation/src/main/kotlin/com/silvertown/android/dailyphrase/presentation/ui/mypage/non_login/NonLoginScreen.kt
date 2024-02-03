@@ -1,6 +1,5 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,8 +35,7 @@ fun NonLoginScreen(
 ) {
     Content(
         modifier = modifier
-            .fillMaxSize()
-            .background(color = colorResource(id = R.color.white)),
+            .fillMaxSize(),
         navigateToBack = navigateToBack,
         onClickKaKaoLogin = onClickKaKaoLogin
     )

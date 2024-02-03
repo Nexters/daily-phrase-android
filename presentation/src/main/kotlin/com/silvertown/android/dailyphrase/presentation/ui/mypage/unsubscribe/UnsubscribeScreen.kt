@@ -1,7 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,8 +53,7 @@ fun UnsubscribeScreen(
 
     Content(
         modifier = modifier
-            .fillMaxSize()
-            .background(color = colorResource(id = R.color.white)),
+            .fillMaxSize(),
         snackbarScope = snackbarScope,
         snackbarHostState = snackbarHostState,
         navigateToBack = navigateToBack,
