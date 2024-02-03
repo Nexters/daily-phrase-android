@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
+import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val memberRepository: MemberRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -27,6 +29,10 @@ class DetailViewModel @Inject constructor(
     val detailUiState = _detailUiState.asStateFlow()
 
     init {
+        getPosts()
+    }
+
+    private fun getPosts() {
         viewModelScope.launch {
             postRepository
                 .getPost(detailUiState.value.phraseId)
@@ -53,25 +59,33 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun saveLike() = viewModelScope.launch {
-        updateLikeState(true)
+        if (getLoginState()) {
+            updateLikeState(true)
 
-        postRepository
-            .saveLike(phraseId = _detailUiState.value.phraseId)
-            .onFailure { errorMessage, code ->
-                updateLikeState(false)
-                Timber.e(errorMessage, code)
-            }
+            postRepository
+                .saveLike(phraseId = _detailUiState.value.phraseId)
+                .onFailure { errorMessage, code ->
+                    updateLikeState(false)
+                    Timber.e(errorMessage, code)
+                }
+        } else {
+            showLoginDialog(true)
+        }
     }
 
     private fun deleteLike() = viewModelScope.launch {
-        updateLikeState(false)
+        if (getLoginState()) {
+            updateLikeState(false)
 
-        postRepository
-            .deleteLike(phraseId = _detailUiState.value.phraseId)
-            .onFailure { errorMessage, code ->
-                updateLikeState(true)
-                Timber.e("$errorMessage, $code")
-            }
+            postRepository
+                .deleteLike(phraseId = _detailUiState.value.phraseId)
+                .onFailure { errorMessage, code ->
+                    updateLikeState(true)
+                    Timber.e("$errorMessage, $code")
+                }
+        } else {
+            showLoginDialog(true)
+        }
     }
 
     /**
@@ -86,26 +100,37 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun saveBookmark() = viewModelScope.launch {
-        updateBookmarkState(true)
+        if (getLoginState()) {
+            updateBookmarkState(true)
 
-        postRepository
-            .saveFavorites(phraseId = _detailUiState.value.phraseId)
-            .onFailure { errorMessage, code ->
-                updateBookmarkState(false)
-                Timber.e("$errorMessage, $code")
-            }
+            postRepository
+                .saveFavorites(phraseId = _detailUiState.value.phraseId)
+                .onFailure { errorMessage, code ->
+                    updateBookmarkState(false)
+                    Timber.e("$errorMessage, $code")
+                }
+        } else {
+            showLoginDialog(true)
+        }
     }
 
     private fun deleteBookmark() = viewModelScope.launch {
-        updateBookmarkState(false)
+        if (getLoginState()) {
+            updateBookmarkState(false)
 
-        postRepository
-            .deleteFavorites(phraseId = _detailUiState.value.phraseId)
-            .onFailure { errorMessage, code ->
-                updateBookmarkState(true)
-                Timber.e(errorMessage, code)
-            }
+            postRepository
+                .deleteFavorites(phraseId = _detailUiState.value.phraseId)
+                .onFailure { errorMessage, code ->
+                    updateBookmarkState(true)
+                    Timber.e(errorMessage, code)
+                }
+        } else {
+            showLoginDialog(true)
+        }
     }
+
+    suspend fun getLoginState() =
+        memberRepository.getLoginStatus()
 
     private fun updateLikeState(
         isLike: Boolean,
@@ -126,4 +151,15 @@ class DetailViewModel @Inject constructor(
             )
         }
     }
+
+    fun showLoginDialog(action: Boolean) {
+        viewModelScope.launch {
+            _detailUiState.update { state ->
+                state.copy(
+                    showLoginDialog = action
+                )
+            }
+        }
+    }
+
 }

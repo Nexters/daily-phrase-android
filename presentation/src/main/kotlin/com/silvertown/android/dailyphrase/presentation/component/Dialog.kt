@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,6 +70,7 @@ fun DialogContent(
 @Composable
 fun KakaoLoginDialog(
     modifier: Modifier = Modifier,
+    @StringRes message: Int,
     onClickKaKaoLogin: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -83,7 +85,7 @@ fun KakaoLoginDialog(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.login_and_share_message),
+            text = stringResource(id = message),
             style = TextStyle(
                 fontSize = 16.sp,
                 fontFamily = pretendardFamily,

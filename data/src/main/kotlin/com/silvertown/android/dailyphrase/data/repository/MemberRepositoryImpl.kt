@@ -11,6 +11,7 @@ import com.silvertown.android.dailyphrase.domain.model.SignInToken
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MemberRepositoryImpl @Inject constructor(
@@ -53,6 +54,12 @@ class MemberRepositoryImpl @Inject constructor(
 
     override suspend fun getLoginStatus(): Boolean =
         tokenDataSource.getLoginState()
+
+    override fun getLoginStateFlow(): Flow<Boolean> {
+        return tokenDataSource.getAccessToken().map { accessToken ->
+            !accessToken.isNullOrEmpty()
+        }
+    }
 
     override suspend fun deleteAccessToken() =
         tokenDataSource.deleteAccessToken()

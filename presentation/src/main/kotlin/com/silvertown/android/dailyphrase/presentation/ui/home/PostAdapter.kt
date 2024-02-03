@@ -14,17 +14,23 @@ import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBindi
 
 class PostAdapter(
     private val onPostClick: (Long) -> Unit,
+    private val onClickBookmark: (Long) -> Unit,
+    private val onClickLike: (Long) -> Unit,
 ) : PagingDataAdapter<Post, PostAdapter.PostViewHolder>(diffUtil) {
 
     class PostViewHolder(
         private val binding: ItemPostBinding,
         onPostClick: (Long) -> Unit,
+        onClickBookmark: (Long) -> Unit,
+        onClickLike: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var post: Post
 
         init {
             binding.root.setOnClickListener { onPostClick(post.phraseId) }
+            binding.clLike.setOnClickListener { onClickLike(post.phraseId) }
+            binding.clBookmark.setOnClickListener { onClickBookmark(post.phraseId) }
         }
 
         fun bind(post: Post) = with(binding) {
@@ -46,6 +52,8 @@ class PostAdapter(
         return PostViewHolder(
             ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onPostClick,
+            onClickBookmark,
+            onClickLike,
         )
     }
 

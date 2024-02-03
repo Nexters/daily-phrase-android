@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
+import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,10 +22,20 @@ import javax.inject.Inject
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val memberRepository: MemberRepository,
 ) : ViewModel() {
 
     private val _bookmarkList = MutableStateFlow<List<Post>>(emptyList())
     val bookmarkList = _bookmarkList.asStateFlow()
+
+    val isLoggedIn: StateFlow<Boolean> =
+        memberRepository
+            .getLoginStateFlow()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(1000L),
+                initialValue = false
+            )
 
     init {
         getBookmarks()

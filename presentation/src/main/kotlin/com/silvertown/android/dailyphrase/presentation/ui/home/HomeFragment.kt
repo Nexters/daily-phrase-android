@@ -4,8 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,8 +17,12 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
+import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
+import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
+import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -28,6 +35,8 @@ import kotlin.coroutines.resumeWithException
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private lateinit var adapter: PostAdapter
     private val viewModel by viewModels<HomeViewModel>()
+    private var isLoggedIn: Boolean = false
+    private var actionState: ActionType = ActionType.NONE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,6 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         initListeners()
         initViews()
         initObserve()
+        initComposeView()
     }
 
     private fun initListeners() {
@@ -43,15 +53,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 .moveToBookmarkFragment()
                 .also { findNavController().navigate(it) }
         }
+
         binding.ivProfile.setOnClickListener {
-            HomeFragmentDirections
-                .moveToMyPageFragment()
-                .also { findNavController().navigate(it) }
+            if (isLoggedIn) {
+                val action = HomeFragmentDirections.moveToMyPageFragment()
+                findNavController().navigate(action)
+            } else {
+                val action = HomeFragmentDirections.moveToNonLoginFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 
     private fun initViews() {
-        adapter = PostAdapter { moveToDetail(it) }
+        adapter = PostAdapter(
+            onPostClick = { moveToDetail(it) },
+            onClickBookmark = { phraseId ->
+                if (isLoggedIn) {
+                    viewModel.saveBookmark(phraseId)
+                } else {
+                    actionState = ActionType.BOOKMARK
+                    viewModel.showLoginDialog(true)
+                }
+            },
+            onClickLike = { phraseId ->
+                if (isLoggedIn) {
+                    viewModel.saveLike(phraseId)
+                } else {
+                    actionState = ActionType.LIKE
+                    viewModel.showLoginDialog(true)
+                }
+            }
+        )
         binding.rvPost.adapter = adapter
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
     }
@@ -72,6 +105,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     adapter.submitData(pagingData)
                 }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isLoggedIn
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { state ->
+                    isLoggedIn = state
+                }
+        }
+
     }
 
     private fun moveToDetail(phraseId: Long) {
@@ -150,6 +192,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     else -> {
                         continuation.resumeWithException(RuntimeException("kakao access token 받기 실패"))
                     }
+                }
+            }
+        }
+    }
+
+    private fun initComposeView() {
+        binding.composeView.setContent {
+            val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
+
+            val messageRes = when (ActionType.valueOf(actionState.name)) {
+                ActionType.LIKE -> R.string.login_and_like_message
+                ActionType.BOOKMARK -> R.string.login_and_bookmark_message
+                ActionType.SHARE -> R.string.login_and_share_message
+                ActionType.NONE -> R.string.login_and_share_message
+            }
+
+            if (showDialog) {
+                BaseDialog(
+                    modifier = Modifier,
+                    onDismissRequest = {
+                        viewModel.showLoginDialog(false)
+                    }
+                ) {
+                    KakaoLoginDialog(
+                        message = messageRes,
+                        onClickKaKaoLogin = {
+
+                        },
+                        onDismissRequest = {
+                            viewModel.showLoginDialog(false)
+                        }
+                    )
                 }
             }
         }

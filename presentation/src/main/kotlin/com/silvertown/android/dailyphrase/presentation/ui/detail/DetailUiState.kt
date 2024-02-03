@@ -1,6 +1,7 @@
 package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 data class DetailUiState(
+    val showLoginDialog: Boolean = false,
     val phraseId: Long = 0,
     val title: String = "",
     val content: String = "",
@@ -12,4 +13,3 @@ data class DetailUiState(
     val isLike: Boolean = false,
     val isBookmark: Boolean = false,
 )
-

@@ -64,4 +64,10 @@
         app:layout_constraintTop_toBottomOf="@id/cl_tool_bar"
         tools:itemCount="6"
         tools:listitem="@layout/item_post" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

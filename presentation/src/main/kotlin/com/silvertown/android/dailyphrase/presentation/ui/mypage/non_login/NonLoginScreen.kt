@@ -86,7 +86,7 @@ private fun NonLoginBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.login_and_share_message),
+            text = stringResource(id = R.string.non_login_description),
             style = TextStyle(
                 fontSize = 28.sp,
                 fontFamily = pretendardFamily,

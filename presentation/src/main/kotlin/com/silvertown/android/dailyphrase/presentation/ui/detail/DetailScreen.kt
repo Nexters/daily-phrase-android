@@ -11,8 +11,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -27,11 +29,14 @@ import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.Social
 import com.silvertown.android.dailyphrase.presentation.R
+import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
 import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
+import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -65,6 +70,7 @@ fun DetailScreen(
             uiState = detailUiState,
             onClickLike = detailViewModel::onClickLike,
             onClickBookmark = detailViewModel::onClickBookmark,
+            showLoingDialog = detailViewModel::showLoginDialog,
         )
     }
 }
@@ -77,8 +83,35 @@ fun DetailBody(
     uiState: DetailUiState,
     onClickLike: () -> Unit,
     onClickBookmark: () -> Unit,
+    showLoingDialog: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
+
+    val actionState = rememberSaveable {
+        mutableStateOf(ActionType.NONE.name)
+    }
+
+    val messageRes = when (ActionType.valueOf(actionState.value)) {
+        ActionType.LIKE -> R.string.login_and_like_message
+        ActionType.BOOKMARK -> R.string.login_and_bookmark_message
+        ActionType.SHARE -> R.string.login_and_share_message
+        ActionType.NONE -> R.string.login_and_share_message
+    }
+
+    if (uiState.showLoginDialog) {
+        BaseDialog(
+            modifier = Modifier,
+            onDismissRequest = { showLoingDialog(false) }
+        ) {
+            KakaoLoginDialog(
+                message = messageRes,
+                onClickKaKaoLogin = {
+
+                },
+                onDismissRequest = { showLoingDialog(false) }
+            )
+        }
+    }
 
     Column(
         modifier = modifier
@@ -100,13 +133,15 @@ fun DetailBody(
             isLike = uiState.isLike,
             isBookmark = uiState.isBookmark,
             onClickLike = {
+                actionState.value = ActionType.LIKE.name
                 onClickLike()
                 vibrateSingle(context)
             },
             onClickBookmark = {
+                actionState.value = ActionType.BOOKMARK.name
                 onClickBookmark()
                 vibrateSingle(context)
-                if (!uiState.isBookmark) {
+                if (!uiState.isBookmark && uiState.showLoginDialog) {
                     snackbarScope.launch {
                         baseSnackbar(
                             snackbarHostState = snackbarHostState,
@@ -118,6 +153,7 @@ fun DetailBody(
                 }
             },
             onClickShare = {
+                actionState.value = ActionType.SHARE.name
                 sendKakaoLink(
                     context = context,
                     uiState = uiState,
