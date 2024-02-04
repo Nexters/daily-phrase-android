@@ -151,6 +151,6 @@ class HomeFragment :
 
     override fun onLoginSuccess() {
         viewModel.showLoginDialog(false)
-        Toast.makeText(requireContext(), "로그인 성공! 다시 시도 해보세요.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), R.string.login_success_desc, Toast.LENGTH_SHORT).show()
     }
 }

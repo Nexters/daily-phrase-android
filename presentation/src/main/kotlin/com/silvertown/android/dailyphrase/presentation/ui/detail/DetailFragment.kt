@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.ui.Modifier
 import androidx.navigation.fragment.findNavController
 import com.silvertown.android.dailyphrase.presentation.MainActivity
+import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentDetailBinding
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
@@ -28,6 +29,6 @@ class DetailFragment :
     }
 
     override fun onLoginSuccess() {
-        Toast.makeText(requireContext(), "로그인 성공! 다시 시도 해보세요.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), R.string.login_success_desc, Toast.LENGTH_SHORT).show()
     }
 }
