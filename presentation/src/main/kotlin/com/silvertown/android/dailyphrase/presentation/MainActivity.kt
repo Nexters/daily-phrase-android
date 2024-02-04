@@ -14,6 +14,8 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
+import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -24,19 +26,23 @@ import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val viewModel by viewModels<MainViewModel>()
     private var loginResultListener: LoginResultListener? = null
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         navController =
             (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
 
+        loadingDialog = LoadingDialog(this)
     }
 
     fun setLoginResultListener(
@@ -54,10 +60,13 @@ class MainActivity : AppCompatActivity() {
     fun kakaoLogin() {
         lifecycleScope.launch {
             kotlin.runCatching {
+                loadingDialog.show()
                 loginWithKakaoOrThrow(this@MainActivity)
             }.onSuccess { oAuthToken ->
                 onSuccessKaKaoLogin(oAuthToken)
+                loadingDialog.dismiss()
             }.onFailure { throwable ->
+                loadingDialog.dismiss()
                 if (throwable is ClientError && throwable.reason == ClientErrorCause.Cancelled) {
                     Timber.d("사용자가 명시적으로 카카오 로그인 취소")
                 } else {
