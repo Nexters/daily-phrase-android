@@ -39,6 +39,7 @@ class DetailViewModel @Inject constructor(
                 .onSuccess {
                     _detailUiState.update { state ->
                         state.copy(
+                            phraseId = it.phraseId,
                             title = it.title,
                             content = it.content,
                             imageUrl = it.imageUrl,
