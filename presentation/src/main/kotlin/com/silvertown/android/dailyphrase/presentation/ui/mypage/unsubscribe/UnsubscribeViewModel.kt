@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
@@ -39,6 +40,7 @@ class UnsubscribeViewModel @Inject constructor(
     }
 
     fun deleteMember() = viewModelScope.launch {
+        kakaoLogout()
         memberRepository
             .deleteMember()
             .onSuccess {
@@ -50,4 +52,13 @@ class UnsubscribeViewModel @Inject constructor(
             }
     }
 
+    private fun kakaoLogout() {
+        UserApiClient.instance.logout { error ->
+            if (error != null) {
+                Timber.e("로그아웃 실패이지만 SDK에서 토큰 삭제됨 $error")
+            } else {
+                Timber.e("로그아웃 성공. SDK에서 토큰 삭제됨")
+            }
+        }
+    }
 }
