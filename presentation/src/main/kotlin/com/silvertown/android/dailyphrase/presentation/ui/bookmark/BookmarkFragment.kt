@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentBookmarkBinding
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
+import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.home.PostItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,17 +35,25 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
         }
         binding.ivProfile.setOnClickListener {
             if (isLoggedIn) {
-                val action = BookmarkFragmentDirections.moveToMyPageFragment()
-                findNavController().navigate(action)
+                BookmarkFragmentDirections.moveToMyPageFragment()
+                    .also { findNavController().navigate(it) }
             } else {
-                val action = BookmarkFragmentDirections.moveToNonLoginFragment()
-                findNavController().navigate(action)
+                BookmarkFragmentDirections.moveToNonLoginFragment()
+                    .also { findNavController().navigate(it) }
             }
         }
     }
 
     private fun initViews() {
-        adapter = BookmarkAdapter { moveToDetail(it) }
+        adapter = BookmarkAdapter(
+            onPostClick = { moveToDetail(it) },
+            onClickBookmark = { phraseId ->
+                viewModel.deleteBookmark(phraseId)
+            },
+            onClickLike = { phraseId, state ->
+                viewModel.onClickLike(phraseId, state)
+            }
+        )
         binding.rvPost.adapter = adapter
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
     }
