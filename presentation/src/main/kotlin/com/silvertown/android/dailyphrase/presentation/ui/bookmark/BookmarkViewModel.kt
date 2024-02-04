@@ -52,4 +52,51 @@ class BookmarkViewModel @Inject constructor(
                     }
             }
     }
+
+    fun onClickLike(
+        phraseId: Long,
+        state: Boolean,
+    ) {
+        if (state) {
+            deleteLike(phraseId)
+        } else {
+            saveLike(phraseId)
+        }
+    }
+
+    fun deleteBookmark(phraseId: Long) = viewModelScope.launch {
+        postRepository
+            .deleteFavorites(phraseId = phraseId)
+            .onSuccess {
+                getBookmarks()
+                postRepository.updateFavoriteState(phraseId, false)
+            }
+            .onFailure { errorMessage, code ->
+                Timber.e(errorMessage, code)
+            }
+    }
+
+    private fun saveLike(phraseId: Long) = viewModelScope.launch {
+        postRepository
+            .saveLike(phraseId = phraseId)
+            .onSuccess {
+                getBookmarks()
+                postRepository.updateLikeState(phraseId, true, it.likeCount)
+            }
+            .onFailure { errorMessage, code ->
+                Timber.e(errorMessage, code)
+            }
+    }
+
+    private fun deleteLike(phraseId: Long) = viewModelScope.launch {
+        postRepository
+            .deleteLike(phraseId = phraseId)
+            .onSuccess {
+                getBookmarks()
+                postRepository.updateLikeState(phraseId, false, it.likeCount)
+            }
+            .onFailure { errorMessage, code ->
+                Timber.e(errorMessage, code)
+            }
+    }
 }
