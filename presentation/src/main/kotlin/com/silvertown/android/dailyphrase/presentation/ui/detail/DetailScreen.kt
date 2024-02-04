@@ -35,7 +35,6 @@ import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
 import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
-import com.silvertown.android.dailyphrase.presentation.component.SpeakButton
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
@@ -61,12 +60,6 @@ fun DetailScreen(
             BaseTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 navigateToBack = { navigateToBack() },
-                actionsContent = {
-                    SpeakButton(
-                        context = context,
-                        message = context.getString(R.string.test_speak_tts)
-                    )
-                },
             )
         },
         snackbarHostState = snackbarHostState,
@@ -175,11 +168,8 @@ private fun sendKakaoLink(
     context: Context,
     uiState: DetailUiState,
 ) {
-    /**
-     * TODO: Url 수정 예정
-     */
-    val webUrl = "https://www.naver.com/${uiState.phraseId}"
-    val mobileWebUrl = "https://www.naver.com/${uiState.phraseId}"
+    val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/${uiState.phraseId}"
+    val mobileWebUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/${uiState.phraseId}"
 
     val phraseFeed = FeedTemplate(
         content = Content(
