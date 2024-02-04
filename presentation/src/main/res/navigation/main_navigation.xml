@@ -69,7 +69,13 @@
     <fragment
         android:id="@+id/nonLoginFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.non_login.NonLoginFragment"
-        tools:layout="@layout/fragment_non_login" />
+        tools:layout="@layout/fragment_non_login">
+        <action
+            android:id="@+id/move_to_myPageFragment"
+            app:destination="@id/myPageFragment"
+            app:popUpTo="@id/nonLoginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/unsubscribeFragment"

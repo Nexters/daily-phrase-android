@@ -35,6 +35,11 @@ class MemberRepositoryImpl @Inject constructor(
         memberPreferencesDataSource.setMember(memberId, name, imageUrl)
     }
 
+    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        tokenDataSource.saveAccessToken(accessToken)
+        tokenDataSource.saveRefreshToken(refreshToken)
+    }
+
     override suspend fun getMemberData(): Result<Member> =
         memberDataSource
             .getMemberData(memberPreferencesDataSource.getMemberId())
@@ -47,9 +52,9 @@ class MemberRepositoryImpl @Inject constructor(
             .toResultModel { it.result?.toDomainModel() }
     }
 
-    override suspend fun signInWithKaKaoTokenViaServer(identityToken: String): Result<SignInToken> =
+    override suspend fun signInWithKaKaoTokenViaServer(token: String): Result<SignInToken> =
         memberDataSource
-            .getSignInToken(token = identityToken)
+            .getSignInToken(token = token)
             .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun getLoginStatus(): Boolean =
