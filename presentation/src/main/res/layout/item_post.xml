@@ -60,8 +60,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_bookmark"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_bookmark"
-            app:tint="@color/gray" />
+            app:layout_constraintTop_toTopOf="@id/tv_bookmark" />
 
         <TextView
             android:id="@+id/tv_bookmark"
@@ -139,8 +138,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_like"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_like"
-            app:tint="@color/gray" />
+            app:layout_constraintTop_toTopOf="@id/tv_like" />
 
         <TextView
             android:id="@+id/tv_like"
