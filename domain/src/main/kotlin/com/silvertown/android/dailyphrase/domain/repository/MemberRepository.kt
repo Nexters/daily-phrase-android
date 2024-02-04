@@ -17,12 +17,14 @@ interface MemberRepository {
         imageUrl: String,
     )
 
+    suspend fun saveTokens(accessToken: String, refreshToken: String)
+
     suspend fun getMemberData(): Result<Member>
 
     suspend fun deleteMember(): Result<Member>
 
     suspend fun signInWithKaKaoTokenViaServer(
-        identityToken: String,
+        token: String,
     ): Result<SignInToken>
 
     suspend fun getLoginStatus(): Boolean
