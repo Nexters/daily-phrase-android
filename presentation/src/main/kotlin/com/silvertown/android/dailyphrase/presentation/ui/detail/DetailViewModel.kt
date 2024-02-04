@@ -49,6 +49,12 @@ class DetailViewModel @Inject constructor(
                             isBookmark = it.isFavorite
                         )
                     }
+                    /** 로컬 싱크 **/
+                    postRepository.updateCounts(
+                        phraseId = it.phraseId,
+                        likeCount = it.likeCount,
+                        viewCount = it.viewCount
+                    )
                 }
                 .onFailure { errorMessage, code ->
                     Timber.e("$errorMessage, $code")
@@ -61,6 +67,17 @@ class DetailViewModel @Inject constructor(
             deleteLike()
         } else {
             saveLike()
+        }
+    }
+
+    /**
+     * TODO: Bookmark, farvorite 메소드명 통일 필요
+     */
+    fun onClickBookmark() {
+        if (_detailUiState.value.isBookmark) {
+            deleteBookmark()
+        } else {
+            saveBookmark()
         }
     }
 
@@ -94,17 +111,6 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    /**
-     * TODO: Bookmark, farvorite 메소드명 통일 필요
-     */
-    fun onClickBookmark() {
-        if (_detailUiState.value.isBookmark) {
-            deleteBookmark()
-        } else {
-            saveBookmark()
-        }
-    }
-
     private fun saveBookmark() = viewModelScope.launch {
         if (getLoginState()) {
             updateBookmarkState(true)
@@ -135,7 +141,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun getLoginState() =
+    private suspend fun getLoginState() =
         memberRepository.getLoginStatus()
 
     private fun updateLikeState(
