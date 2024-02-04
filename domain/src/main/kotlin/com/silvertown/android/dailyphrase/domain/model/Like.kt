@@ -6,4 +6,5 @@ data class Like(
     val canceledAt: String?,
     val memberId: Long,
     val phraseId: Long,
+    val likeCount: Int,
 )
