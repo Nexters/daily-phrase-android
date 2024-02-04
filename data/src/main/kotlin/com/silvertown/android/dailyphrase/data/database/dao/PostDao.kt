@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
+import java.util.concurrent.CountDownLatch
 
 @Dao
 interface PostDao {
@@ -26,4 +27,14 @@ interface PostDao {
         if (shouldDelete) deletePosts()
         upsertPosts(posts)
     }
+
+    @Query("UPDATE post_source SET isLike = :isLike, likeCount = :count WHERE phraseId = :phraseId")
+    suspend fun updateLikeState(phraseId: Long, isLike: Boolean, count: Int)
+
+    @Query("UPDATE post_source SET isFavorite = :isFavorite WHERE phraseId = :phraseId")
+    suspend fun updateFavoriteState(phraseId: Long, isFavorite: Boolean)
+
+    @Query("UPDATE post_source SET likeCount = :likeCount, viewCount = :viewCount WHERE phraseId = :phraseId")
+    suspend fun updateCounts(phraseId: Long, likeCount: Int, viewCount: Int)
+
 }
