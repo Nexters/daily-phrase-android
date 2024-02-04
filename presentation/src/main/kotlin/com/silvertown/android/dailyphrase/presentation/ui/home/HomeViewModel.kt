@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -49,6 +48,7 @@ class HomeViewModel @Inject constructor(
                 initialValue = false
             )
 
+    /** TODO: 주환 작업부 **/
     fun createMember(socialToken: String) {
         // TODO: Api call
 
@@ -57,25 +57,69 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun saveBookmark(phraseId: Long) = viewModelScope.launch {
+    fun onClickLike(
+        phraseId: Long,
+        state: Boolean,
+    ) {
+        if (state) {
+            deleteLike(phraseId)
+        } else {
+            saveLike(phraseId)
+        }
+    }
+
+    fun onClickBookmark(
+        phraseId: Long,
+        state: Boolean,
+    ) {
+        if (state) {
+            deleteBookmark(phraseId)
+        } else {
+            saveBookmark(phraseId)
+        }
+    }
+
+    private fun saveBookmark(phraseId: Long) = viewModelScope.launch {
         postRepository
-            .saveFavorites(phraseId)
+            .saveFavorites(phraseId = phraseId)
             .onSuccess {
-                // TODO: TEST
+                postRepository.updateFavoriteState(phraseId, true)
             }
             .onFailure { errorMessage, code ->
-                // TODO: TEST
+                Timber.e("$errorMessage, $code")
             }
     }
 
-    fun saveLike(phraseId: Long) = viewModelScope.launch {
+    private fun deleteBookmark(phraseId: Long) = viewModelScope.launch {
+        postRepository
+            .deleteFavorites(phraseId = phraseId)
+            .onSuccess {
+                postRepository.updateFavoriteState(phraseId, false)
+            }
+            .onFailure { errorMessage, code ->
+                Timber.e(errorMessage, code)
+            }
+    }
+
+    private fun saveLike(phraseId: Long) = viewModelScope.launch {
         postRepository
             .saveLike(phraseId = phraseId)
             .onSuccess {
-
+                postRepository.updateLikeState(phraseId, true, it.likeCount)
             }
             .onFailure { errorMessage, code ->
+                Timber.e("$errorMessage, $code")
+            }
+    }
 
+    private fun deleteLike(phraseId: Long) = viewModelScope.launch {
+        postRepository
+            .deleteLike(phraseId = phraseId)
+            .onSuccess {
+                postRepository.updateLikeState(phraseId, false, it.likeCount)
+            }
+            .onFailure { errorMessage, code ->
+                Timber.e(errorMessage, code)
             }
     }
 
