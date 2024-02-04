@@ -42,6 +42,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+object Url {
+    const val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/"
+    const val mobileWebUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/"
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
@@ -123,7 +128,7 @@ fun DetailBody(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            BaseWebView(url = "https://m.blog.naver.com/woo762658/221790330636")
+            BaseWebView(url = Url.mobileWebUrl + uiState.phraseId)
         }
 
         DetailBottomAction(
@@ -168,8 +173,8 @@ private fun sendKakaoLink(
     context: Context,
     uiState: DetailUiState,
 ) {
-    val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/${uiState.phraseId}"
-    val mobileWebUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/${uiState.phraseId}"
+    val webUrl = Url.webUrl + uiState.phraseId
+    val mobileWebUrl = Url.mobileWebUrl + uiState.phraseId
 
     val phraseFeed = FeedTemplate(
         content = Content(
