@@ -147,7 +147,7 @@ fun DetailBody(
                 actionState.value = ActionType.BOOKMARK.name
                 onClickBookmark()
                 vibrateSingle(context)
-                if (!uiState.isBookmark && uiState.showLoginDialog) {
+                if (!uiState.isBookmark && !uiState.showLoginDialog) {
                     snackbarScope.launch {
                         baseSnackbar(
                             snackbarHostState = snackbarHostState,

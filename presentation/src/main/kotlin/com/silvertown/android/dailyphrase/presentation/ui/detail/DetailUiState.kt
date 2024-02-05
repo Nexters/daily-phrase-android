@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 data class DetailUiState(
     val showLoginDialog: Boolean = false,
+    val isLoggedIn: Boolean = false,
     val phraseId: Long = 0,
     val title: String = "",
     val content: String = "",
