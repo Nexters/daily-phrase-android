@@ -73,7 +73,7 @@ class PostRepositoryImpl @Inject constructor(
                 memberId = memberPreferencesDataSource.getMemberId(),
                 phraseId = phraseId
             ).toResultModel { it.result?.toDomainModel() }
-    
+
     override suspend fun getFavorites(): Flow<Result<Bookmark>> {
         return postDataSource
             .getFavorites(memberId = memberPreferencesDataSource.getMemberId())
@@ -97,6 +97,22 @@ class PostRepositoryImpl @Inject constructor(
                 phraseId = phraseId
             )
             .toResultModel { it.result?.toDomainModel() }
+
+    override suspend fun updateLikeState(
+        phraseId: Long,
+        isLike: Boolean,
+        count: Int,
+    ) {
+        postDao.updateLikeState(phraseId, isLike, count)
+    }
+
+    override suspend fun updateFavoriteState(phraseId: Long, isFavorite: Boolean) {
+        postDao.updateFavoriteState(phraseId, isFavorite)
+    }
+
+    override suspend fun updateCounts(phraseId: Long, likeCount: Int, viewCount: Int) {
+        postDao.updateCounts(phraseId, likeCount, viewCount)
+    }
 
     companion object {
         private const val PAGING__PAGE_SIZE = 3

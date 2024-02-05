@@ -33,4 +33,21 @@ interface PostRepository {
         phraseId: Long,
     ): Result<Favorites>
 
+    suspend fun updateCounts(
+        phraseId: Long,
+        likeCount: Int,
+        viewCount: Int,
+    )
+
+    suspend fun updateLikeState(
+        phraseId: Long,
+        isLike: Boolean,
+        count: Int,
+    )
+
+    suspend fun updateFavoriteState(
+        phraseId: Long,
+        isFavorite: Boolean,
+    )
+
 }

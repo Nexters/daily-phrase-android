@@ -14,6 +14,8 @@ data class LikeResponse(
     val memberId: Long?,
     @SerializedName("phraseId")
     val phraseId: Long?,
+    @SerializedName("likeCount")
+    val likeCount: Int?,
 )
 
 fun LikeResponse.toDomainModel(): Like =
@@ -22,5 +24,6 @@ fun LikeResponse.toDomainModel(): Like =
         likedAt = likedAt.orEmpty(),
         canceledAt = canceledAt.orEmpty(),
         memberId = memberId ?: 0,
-        phraseId = phraseId ?: 0
+        phraseId = phraseId ?: 0,
+        likeCount = likeCount ?: 0
     )

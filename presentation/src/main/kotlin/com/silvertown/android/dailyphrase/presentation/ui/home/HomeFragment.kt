@@ -72,17 +72,17 @@ class HomeFragment :
     private fun initViews() {
         adapter = PostAdapter(
             onPostClick = { moveToDetail(it) },
-            onClickBookmark = { phraseId ->
+            onClickBookmark = { phraseId, state ->
                 if (isLoggedIn) {
-                    viewModel.saveBookmark(phraseId)
+                    viewModel.onClickBookmark(phraseId, state)
                 } else {
                     actionState = ActionType.BOOKMARK
                     viewModel.showLoginDialog(true)
                 }
             },
-            onClickLike = { phraseId ->
+            onClickLike = { phraseId, state ->
                 if (isLoggedIn) {
-                    viewModel.saveLike(phraseId)
+                    viewModel.onClickLike(phraseId, state)
                 } else {
                     actionState = ActionType.LIKE
                     viewModel.showLoginDialog(true)
