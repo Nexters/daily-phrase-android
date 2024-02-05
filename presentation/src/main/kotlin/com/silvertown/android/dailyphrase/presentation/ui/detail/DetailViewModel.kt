@@ -30,6 +30,7 @@ class DetailViewModel @Inject constructor(
 
     init {
         getPosts()
+        updateLoginState()
     }
 
     private fun getPosts() {
@@ -141,8 +142,15 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getLoginState() =
-        memberRepository.getLoginStatus()
+    private fun getLoginState() = _detailUiState.value.isLoggedIn
+
+    fun updateLoginState() = viewModelScope.launch {
+        _detailUiState.update { state ->
+            state.copy(
+                isLoggedIn = memberRepository.getLoginStatus()
+            )
+        }
+    }
 
     private fun updateLikeState(
         isLike: Boolean,
