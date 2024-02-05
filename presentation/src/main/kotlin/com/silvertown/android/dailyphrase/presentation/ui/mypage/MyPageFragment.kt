@@ -21,6 +21,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     MyPageFragmentDirections
                         .moveToUnsubscribeFragment()
                         .also { findNavController().navigate(it) }
+                },
+                navigateToPolicy = {
+                    MyPageFragmentDirections
+                        .moveToPolicyFragment()
+                        .also { findNavController().navigate(it) }
                 }
             )
         }

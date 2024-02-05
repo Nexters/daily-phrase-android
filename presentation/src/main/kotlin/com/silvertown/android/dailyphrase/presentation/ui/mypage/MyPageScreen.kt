@@ -45,6 +45,7 @@ fun MyPageScreen(
     myPageViewModel: MyPageViewModel = hiltViewModel(),
     navigateToBack: () -> Unit,
     navigateToUnsubscribe: () -> Unit,
+    navigateToPolicy: () -> Unit,
 ) {
     val myPageUiState by myPageViewModel.myPageUiState.collectAsStateWithLifecycle()
     val memberData by myPageViewModel.memberData.collectAsStateWithLifecycle()
@@ -53,6 +54,7 @@ fun MyPageScreen(
         modifier = modifier,
         navigateToBack = navigateToBack,
         navigateToUnsubscribe = navigateToUnsubscribe,
+        navigateToPolicy = navigateToPolicy,
         onClickLogout = myPageViewModel::logout,
         showLogoutDialog = myPageViewModel::showLogoutDialog,
         myPageUiState = myPageUiState,
@@ -66,6 +68,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     navigateToBack: () -> Unit,
     navigateToUnsubscribe: () -> Unit,
+    navigateToPolicy: () -> Unit,
     onClickLogout: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
     myPageUiState: MyPageUiState,
@@ -110,6 +113,7 @@ private fun Content(
     ) {
         MyPageBody(
             navigateToUnsubscribe = navigateToUnsubscribe,
+            navigateToPolicy = navigateToPolicy,
             showLogoutDialog = showLogoutDialog,
             memberData = memberData
         )
@@ -120,6 +124,7 @@ private fun Content(
 private fun MyPageBody(
     modifier: Modifier = Modifier,
     navigateToUnsubscribe: () -> Unit,
+    navigateToPolicy: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
     memberData: Member,
 ) {
@@ -154,7 +159,11 @@ private fun MyPageBody(
                 title = stringResource(id = R.string.leave_review),
                 action = {}
             )
-
+            MyPageItem(
+                modifier = Modifier,
+                title = stringResource(id = R.string.privacy_policy_title),
+                action = { navigateToPolicy() }
+            )
             GroupDivider()
             MyPageItem(
                 modifier = Modifier,

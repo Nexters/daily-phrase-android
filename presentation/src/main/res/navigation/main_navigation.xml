@@ -64,6 +64,9 @@
         <action
             android:id="@+id/move_to_unsubscribeFragment"
             app:destination="@id/unsubscribeFragment" />
+        <action
+            android:id="@+id/move_to_policyFragment"
+            app:destination="@id/policyFragment" />
     </fragment>
 
     <fragment
@@ -81,4 +84,9 @@
         android:id="@+id/unsubscribeFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.unsubscribe.UnsubscribeFragment"
         tools:layout="@layout/fragment_unsubscribe" />
+
+    <fragment
+        android:id="@+id/policyFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.policy.PolicyFragment"
+        tools:layout="@layout/fragment_policy" />
 </navigation>
