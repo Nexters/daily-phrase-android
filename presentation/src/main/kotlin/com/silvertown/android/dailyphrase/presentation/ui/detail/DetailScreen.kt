@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.detail
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.Social
+import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
@@ -112,7 +114,7 @@ fun DetailBody(
             KakaoLoginDialog(
                 message = messageRes,
                 onClickKaKaoLogin = {
-
+                    (context as? Activity as? MainActivity)?.kakaoLogin()
                 },
                 onDismissRequest = { showLoingDialog(false) }
             )
@@ -147,7 +149,7 @@ fun DetailBody(
                 actionState.value = ActionType.BOOKMARK.name
                 onClickBookmark()
                 vibrateSingle(context)
-                if (!uiState.isBookmark && !uiState.showLoginDialog) {
+                if (!uiState.isBookmark && uiState.isLoggedIn) {
                     snackbarScope.launch {
                         baseSnackbar(
                             snackbarHostState = snackbarHostState,
