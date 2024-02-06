@@ -30,6 +30,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
+            buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
         }
         debug {
             manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
