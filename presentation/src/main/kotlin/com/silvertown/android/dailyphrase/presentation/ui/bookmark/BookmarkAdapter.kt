@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPostBinding
@@ -30,7 +33,7 @@ class BookmarkAdapter(
             binding.clLike.setOnClickListener {
                 onClickLike(
                     post.phraseId,
-                    post.isLike
+                    post.isLike,
                 )
             }
             binding.clBookmark.setOnClickListener {
@@ -45,6 +48,10 @@ class BookmarkAdapter(
             tvView.text = post.viewCount.formatNumberWithComma()
             tvLike.text = post.likeCount.formatNumberWithComma()
 
+            Glide.with(itemView)
+                .load(post.imageUrl)
+                .transform(CenterCrop(), RoundedCorners(16))
+                .into(binding.ivImage)
 
             val bookmarkRes =
                 if (post.isFavorite) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
