@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -189,7 +188,8 @@ fun MyPageItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp),
+            .clickable { action() }
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -202,13 +202,11 @@ fun MyPageItem(
             ),
             color = colorResource(id = R.color.black)
         )
-        IconButton(onClick = { action() }) {
-            Icon(
-                modifier = Modifier.size(12.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
-                contentDescription = null
-            )
-        }
+        Icon(
+            modifier = Modifier.size(12.dp),
+            painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
+            contentDescription = null
+        )
     }
 }
 
