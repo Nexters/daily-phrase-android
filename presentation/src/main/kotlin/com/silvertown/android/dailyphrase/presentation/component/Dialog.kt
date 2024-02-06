@@ -141,9 +141,9 @@ fun LogoutDialog(
             .width(270.dp)
             .padding(
                 top = 32.dp,
-                bottom = 16.dp,
-                start = 16.dp,
-                end = 16.dp
+                bottom = 20.dp,
+                start = 20.dp,
+                end = 20.dp
             ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -157,11 +157,12 @@ fun LogoutDialog(
             ),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Button(
             onClick = { onDismissRequest() },
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.orange),
@@ -169,7 +170,6 @@ fun LogoutDialog(
             ),
             contentPadding = PaddingValues(
                 vertical = 9.dp,
-                horizontal = 40.dp
             )
         ) {
             Text(
