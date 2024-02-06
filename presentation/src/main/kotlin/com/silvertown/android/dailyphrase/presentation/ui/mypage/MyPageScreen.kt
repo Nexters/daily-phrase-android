@@ -1,5 +1,7 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -111,6 +113,7 @@ private fun Content(
         }
     ) {
         MyPageBody(
+            context = context,
             navigateToUnsubscribe = navigateToUnsubscribe,
             navigateToPolicy = navigateToPolicy,
             showLogoutDialog = showLogoutDialog,
@@ -122,11 +125,13 @@ private fun Content(
 @Composable
 private fun MyPageBody(
     modifier: Modifier = Modifier,
+    context: Context,
     navigateToUnsubscribe: () -> Unit,
     navigateToPolicy: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
     memberData: Member,
 ) {
+
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -151,12 +156,18 @@ private fun MyPageBody(
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.share_app),
-                action = {}
+                action = {
+                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
+                        .show()
+                }
             )
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.leave_review),
-                action = {}
+                action = {
+                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
+                        .show()
+                }
             )
             MyPageItem(
                 modifier = Modifier,
