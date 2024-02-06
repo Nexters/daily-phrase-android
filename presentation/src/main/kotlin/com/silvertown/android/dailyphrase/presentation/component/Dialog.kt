@@ -131,6 +131,60 @@ fun KakaoLoginDialog(
 }
 
 @Composable
+fun UnderConstructionDialog(
+    modifier: Modifier = Modifier,
+    @StringRes message: Int = R.string.feature_under_construction,
+    onDismissRequest: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .widthIn(max = 270.dp)
+            .padding(
+                vertical = 20.dp,
+                horizontal = 15.dp
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = message),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = pretendardFamily,
+                fontWeight = FontWeight.SemiBold
+            ),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+
+        Button(
+            onClick = { onDismissRequest() },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.orange),
+                contentColor = colorResource(id = R.color.white)
+            ),
+            contentPadding = PaddingValues(
+                vertical = 9.dp,
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.close),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = pretendardFamily,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = colorResource(id = R.color.white)
+            )
+        }
+    }
+}
+
+@Composable
 fun LogoutDialog(
     modifier: Modifier = Modifier,
     onClickLogout: () -> Unit,
@@ -141,9 +195,9 @@ fun LogoutDialog(
             .width(270.dp)
             .padding(
                 top = 32.dp,
-                bottom = 16.dp,
-                start = 16.dp,
-                end = 16.dp
+                bottom = 20.dp,
+                start = 20.dp,
+                end = 20.dp
             ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -157,11 +211,12 @@ fun LogoutDialog(
             ),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Button(
             onClick = { onDismissRequest() },
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.orange),
@@ -169,7 +224,6 @@ fun LogoutDialog(
             ),
             contentPadding = PaddingValues(
                 vertical = 9.dp,
-                horizontal = 40.dp
             )
         ) {
             Text(

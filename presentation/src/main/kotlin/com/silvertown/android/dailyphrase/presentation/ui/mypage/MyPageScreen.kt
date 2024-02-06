@@ -1,5 +1,7 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -112,6 +113,7 @@ private fun Content(
         }
     ) {
         MyPageBody(
+            context = context,
             navigateToUnsubscribe = navigateToUnsubscribe,
             navigateToPolicy = navigateToPolicy,
             showLogoutDialog = showLogoutDialog,
@@ -123,11 +125,13 @@ private fun Content(
 @Composable
 private fun MyPageBody(
     modifier: Modifier = Modifier,
+    context: Context,
     navigateToUnsubscribe: () -> Unit,
     navigateToPolicy: () -> Unit,
     showLogoutDialog: (Boolean) -> Unit,
     memberData: Member,
 ) {
+
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -152,12 +156,18 @@ private fun MyPageBody(
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.share_app),
-                action = {}
+                action = {
+                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
+                        .show()
+                }
             )
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.leave_review),
-                action = {}
+                action = {
+                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
+                        .show()
+                }
             )
             MyPageItem(
                 modifier = Modifier,
@@ -189,7 +199,8 @@ fun MyPageItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp),
+            .clickable { action() }
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -202,13 +213,11 @@ fun MyPageItem(
             ),
             color = colorResource(id = R.color.black)
         )
-        IconButton(onClick = { action() }) {
-            Icon(
-                modifier = Modifier.size(12.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
-                contentDescription = null
-            )
-        }
+        Icon(
+            modifier = Modifier.size(12.dp),
+            painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
+            contentDescription = null
+        )
     }
 }
 
