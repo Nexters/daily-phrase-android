@@ -69,7 +69,7 @@ fun DetailBottomAction(
                     onClickBookmark()
                 },
             painter = painterResource(
-                if (isBookmark) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
+                if (isBookmark) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_60
             ),
             tint = Color.Unspecified,
             contentDescription = null,
