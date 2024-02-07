@@ -88,6 +88,13 @@ class DetailViewModel @Inject constructor(
 
             postRepository
                 .saveLike(phraseId = _detailUiState.value.phraseId)
+                .onSuccess {
+                    postRepository.updateLikeState(
+                        it.phraseId,
+                        it.isLike,
+                        it.likeCount
+                    )
+                }
                 .onFailure { errorMessage, code ->
                     updateLikeState(false)
                     Timber.e(errorMessage, code)
@@ -103,6 +110,13 @@ class DetailViewModel @Inject constructor(
 
             postRepository
                 .deleteLike(phraseId = _detailUiState.value.phraseId)
+                .onSuccess {
+                    postRepository.updateLikeState(
+                        it.phraseId,
+                        it.isLike,
+                        it.likeCount
+                    )
+                }
                 .onFailure { errorMessage, code ->
                     updateLikeState(true)
                     Timber.e("$errorMessage, $code")
@@ -118,6 +132,12 @@ class DetailViewModel @Inject constructor(
 
             postRepository
                 .saveFavorites(phraseId = _detailUiState.value.phraseId)
+                .onSuccess {
+                    postRepository.updateFavoriteState(
+                        it.phraseId,
+                        it.isFavorite,
+                    )
+                }
                 .onFailure { errorMessage, code ->
                     updateBookmarkState(false)
                     Timber.e("$errorMessage, $code")
@@ -133,6 +153,12 @@ class DetailViewModel @Inject constructor(
 
             postRepository
                 .deleteFavorites(phraseId = _detailUiState.value.phraseId)
+                .onSuccess {
+                    postRepository.updateFavoriteState(
+                        it.phraseId,
+                        it.isFavorite,
+                    )
+                }
                 .onFailure { errorMessage, code ->
                     updateBookmarkState(true)
                     Timber.e(errorMessage, code)

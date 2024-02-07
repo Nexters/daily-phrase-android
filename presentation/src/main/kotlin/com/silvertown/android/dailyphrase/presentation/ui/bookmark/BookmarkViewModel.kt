@@ -37,11 +37,7 @@ class BookmarkViewModel @Inject constructor(
                 initialValue = false
             )
 
-    init {
-        getBookmarks()
-    }
-
-    private fun getBookmarks() = viewModelScope.launch {
+    fun getBookmarks() = viewModelScope.launch {
         postRepository.getFavorites()
             .catch { exception -> Timber.e(exception) }
             .collectLatest { result ->

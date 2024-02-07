@@ -144,7 +144,6 @@ private fun MyPageBody(
                 .padding(vertical = 16.dp),
             userName = memberData.name,
             userProfile = memberData.imageUrl,
-            email = memberData.email
         )
 
         Column(
@@ -201,7 +200,7 @@ fun MyPageItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { action() }
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

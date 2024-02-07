@@ -3,11 +3,9 @@ package com.silvertown.android.dailyphrase.presentation.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +28,6 @@ fun ProfileContent(
     modifier: Modifier = Modifier,
     userName: String,
     userProfile: String,
-    email: String,
 ) {
     Column(
         modifier = modifier,
@@ -42,7 +39,6 @@ fun ProfileContent(
         )
         ProfileHeader(
             userName = userName,
-            email = email
         )
     }
 }
@@ -50,12 +46,11 @@ fun ProfileContent(
 @Composable
 private fun ProfileHeader(
     userName: String,
-    email: String,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp),
+            .padding(top = 20.dp, bottom = 5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -68,17 +63,6 @@ private fun ProfileHeader(
                 fontWeight = FontWeight.SemiBold
             ),
             color = colorResource(id = R.color.black),
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            modifier = Modifier,
-            text = email,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = pretendardFamily,
-                fontWeight = FontWeight.Normal
-            ),
-            color = colorResource(id = R.color.gray),
         )
     }
 }
