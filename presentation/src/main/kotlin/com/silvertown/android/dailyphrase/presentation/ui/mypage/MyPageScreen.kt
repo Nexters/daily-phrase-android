@@ -169,6 +169,7 @@ private fun MyPageBody(
                         .show()
                 }
             )
+            GroupDivider()
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.privacy_policy_title),

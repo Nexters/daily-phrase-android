@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object Url {
-    const val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/"
+    const val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-web/"
     const val mobileWebUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/"
 }
 
@@ -181,7 +181,6 @@ private fun sendKakaoLink(
     uiState: DetailUiState,
 ) {
     val webUrl = Url.webUrl + uiState.phraseId
-    val mobileWebUrl = Url.mobileWebUrl + uiState.phraseId
 
     val phraseFeed = FeedTemplate(
         content = Content(
@@ -190,7 +189,7 @@ private fun sendKakaoLink(
             imageUrl = uiState.imageUrl,
             link = Link(
                 webUrl = webUrl,
-                mobileWebUrl = mobileWebUrl
+                mobileWebUrl = webUrl
             )
         ),
         social = Social(
@@ -204,7 +203,7 @@ private fun sendKakaoLink(
                 title = context.resources.getString(R.string.more_see),
                 Link(
                     webUrl = webUrl,
-                    mobileWebUrl = mobileWebUrl
+                    mobileWebUrl = webUrl
                 )
             )
         )
