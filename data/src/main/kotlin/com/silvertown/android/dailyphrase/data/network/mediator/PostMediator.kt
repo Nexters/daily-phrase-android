@@ -12,7 +12,6 @@ import com.silvertown.android.dailyphrase.data.network.datasource.PostDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.BasePostResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.toEntity
 import retrofit2.HttpException
-import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -27,7 +26,7 @@ class PostMediator @Inject constructor(
         loadType: LoadType,
         state: PagingState<Int, PostEntity>,
     ): MediatorResult {
-        var result: MediatorResult? = null
+        lateinit var result: MediatorResult
 
         return try {
             when (loadType) {
@@ -61,7 +60,6 @@ class PostMediator @Inject constructor(
             }
 
             return result
-                ?: throw IllegalStateException("Unexpected scenario in PostMediator.load")
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
