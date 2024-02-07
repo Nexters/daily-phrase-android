@@ -87,4 +87,9 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
             .moveToDetailFragment(phraseId)
             .also { findNavController().navigate(it) }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getBookmarks()
+    }
 }
