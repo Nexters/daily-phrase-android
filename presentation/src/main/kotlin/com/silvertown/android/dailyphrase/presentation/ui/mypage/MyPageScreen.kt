@@ -144,7 +144,6 @@ private fun MyPageBody(
                 .padding(vertical = 16.dp),
             userName = memberData.name,
             userProfile = memberData.imageUrl,
-            email = memberData.email
         )
 
         Column(
