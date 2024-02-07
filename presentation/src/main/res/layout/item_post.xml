@@ -19,12 +19,14 @@
 
     <TextView
         android:id="@+id/tv_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/pretendard_regular"
         android:textColor="@color/gray"
         android:textSize="16sp"
+        android:maxLines="3"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         tools:text="어느날 시계를 보다가 문득 이런 생각을 한 적이 있습니다. 성급한 사람, 무덤덤한 사람, 아무 생각이 없는 사람" />
