@@ -50,7 +50,7 @@ fun ProfileContent(
 @Composable
 private fun ProfileHeader(
     userName: String,
-    email: String,
+    email: String? = null,
 ) {
     Column(
         modifier = Modifier
@@ -69,17 +69,19 @@ private fun ProfileHeader(
             ),
             color = colorResource(id = R.color.black),
         )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            modifier = Modifier,
-            text = email,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = pretendardFamily,
-                fontWeight = FontWeight.Normal
-            ),
-            color = colorResource(id = R.color.gray),
-        )
+        email?.let {
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                modifier = Modifier,
+                text = email,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = pretendardFamily,
+                    fontWeight = FontWeight.Normal
+                ),
+                color = colorResource(id = R.color.gray),
+            )
+        }
     }
 }
 
