@@ -26,7 +26,7 @@ class PostMediator @Inject constructor(
         loadType: LoadType,
         state: PagingState<Int, PostEntity>,
     ): MediatorResult {
-        lateinit var result: MediatorResult
+        var result: MediatorResult = MediatorResult.Error(Throwable()) // TODO: 다른 방법 생각해보기
 
         return try {
             when (loadType) {
@@ -35,7 +35,7 @@ class PostMediator @Inject constructor(
                 }
 
                 LoadType.PREPEND -> return MediatorResult.Success(
-                    endOfPaginationReached = true
+                    endOfPaginationReached = true,
                 )
 
                 LoadType.APPEND -> {
@@ -45,7 +45,7 @@ class PostMediator @Inject constructor(
 
             val postsResult = postDataSource.getPosts(
                 page = loadKey,
-                size = state.config.pageSize
+                size = state.config.pageSize,
             )
 
             postsResult.onSuccess { response ->
@@ -53,13 +53,13 @@ class PostMediator @Inject constructor(
                 basePostResponse?.let { savePosts(it, loadType) }
 
                 result = MediatorResult.Success(
-                    endOfPaginationReached = isEndOfPagination(basePostResponse)
+                    endOfPaginationReached = isEndOfPagination(basePostResponse),
                 )
             }.onException { e ->
                 result = MediatorResult.Error(e)
             }
 
-            return result
+            result
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
@@ -78,7 +78,7 @@ class PostMediator @Inject constructor(
 
             postDao.savePostsAndDeleteIfRequired(
                 posts = entities.orEmpty(),
-                shouldDelete = loadType == LoadType.REFRESH
+                shouldDelete = loadType == LoadType.REFRESH,
             )
         }
     }
