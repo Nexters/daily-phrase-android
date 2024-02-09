@@ -1,6 +1,5 @@
 package com.silvertown.android.dailyphrase.data.database
 
-import com.silvertown.android.dailyphrase.data.database.PostDatabase
 import com.silvertown.android.dailyphrase.data.database.dao.PostDao
 import dagger.Module
 import dagger.Provides

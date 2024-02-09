@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_title">매일 글귀</string>
     <string name="favorite">좋아요</string>
     <string name="bookmark">즐겨찾기</string>
     <string name="kakao_link_share">카카오톡으로 공유하기</string>
@@ -9,10 +10,9 @@
     <string name="share_app">앱 공유하기</string>
     <string name="leave_review">앱 리뷰 남기기</string>
     <string name="logout">로그아웃</string>
-    <string name="login_and_share_message">로그인하고\n글귀를 공유해 보세요.</string>
+    <string name="login_and_share_message">로그인하고\n글귀를 공유해 보세요</string>
     <string name="login_and_like_message">로그인하고\n글귀에 관심을 표현하세요.</string>
     <string name="login_and_bookmark_message">로그인하고\n글귀를 관리해 보세요.</string>
-    <string name="non_login_description">로그인하고\n내 정보를 관리해 보세요.</string>
     <string name="unsubscribe_service">서비스 탈퇴</string>
     <string name="message_before_leaving">탈퇴하기 전에 꼭 확인해주세요.</string>
     <string name="unsubscribe_message_title_1">즐겨찾는 글귀가 모두 사라져요.</string>
@@ -39,4 +39,5 @@
     <string name="login_success_desc">로그인 성공! 다시 시도 해보세요.</string>
     <string name="privacy_policy_title">개인정보 처리방침</string>
     <string name="feature_under_construction">준비 중인 기능입니다.</string>
+    <string name="app_download">앱 다운로드</string>
 </resources>

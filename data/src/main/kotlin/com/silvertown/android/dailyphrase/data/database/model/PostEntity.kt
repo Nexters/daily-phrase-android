@@ -8,7 +8,8 @@ import com.silvertown.android.dailyphrase.domain.model.Post
     tableName = "post_source"
 )
 data class PostEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val postId: Long = 0,
     val phraseId: Long,
     val title: String,
     val content: String,

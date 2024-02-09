@@ -37,7 +37,7 @@ fun NonLoginScreen(
         modifier = modifier
             .fillMaxSize(),
         navigateToBack = navigateToBack,
-        onClickKaKaoLogin = onClickKaKaoLogin
+        onClickKaKaoLogin = onClickKaKaoLogin,
     )
 }
 
@@ -60,17 +60,17 @@ private fun Content(
                         style = TextStyle(
                             fontSize = 22.sp,
                             fontFamily = pretendardFamily,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         ),
-                        color = colorResource(id = R.color.black)
+                        color = colorResource(id = R.color.black),
                     )
                 },
             )
-        }
+        },
     ) {
         NonLoginBody(
             modifier = Modifier,
-            onClickKaKaoLogin = onClickKaKaoLogin
+            onClickKaKaoLogin = onClickKaKaoLogin,
         )
     }
 }
@@ -83,22 +83,23 @@ private fun NonLoginBody(
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stringResource(id = R.string.non_login_description),
+            text = stringResource(id = R.string.login_and_share_message),
             style = TextStyle(
                 fontSize = 28.sp,
                 fontFamily = pretendardFamily,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 36.sp,
             ),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         KaKaoLoginButton(
             modifier = Modifier.widthIn(max = 240.dp),
-            onClickKaKaoLogin = onClickKaKaoLogin
+            onClickKaKaoLogin = onClickKaKaoLogin,
         )
     }
 }
