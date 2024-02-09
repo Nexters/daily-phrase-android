@@ -48,7 +48,7 @@ class PostAdapter(
         fun bind(post: Post) = with(binding) {
             this@PostViewHolder.post = post
             tvTitle.text = post.title
-            tvContent.text = post.content
+            tvContent.text = post.content.replace("\n", " ")
             tvView.text = post.viewCount.formatNumberWithComma()
             tvLike.text = post.likeCount.formatNumberWithComma()
             binding.ivImage.isGone = post.imageUrl.isEmpty()

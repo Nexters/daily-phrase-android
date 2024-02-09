@@ -10,7 +10,7 @@ import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
 class PostItemDecoration(val context: Context) : RecyclerView.ItemDecoration() {
     private val dividerHeight = 1.dpToPx(context)
     private val dividerMargin = 16.dpToPx(context)
-    private val headerMargin = 16.dpToPx(context)
+    private val headerMargin = 0.dpToPx(context)
     private val footerMargin = 16.dpToPx(context)
     private val dividerColor = 0xFFF2F3F6.toInt() // color.xml 생기면 수정
 
@@ -32,13 +32,11 @@ class PostItemDecoration(val context: Context) : RecyclerView.ItemDecoration() {
 
         if (position == 0) {
             outRect.top = headerMargin
-        }
-
-        if (position == itemCount - 1) {
+        } else if (position == itemCount - 1) {
             outRect.bottom = footerMargin
+        } else {
+            outRect.bottom = dividerHeight
         }
-
-        outRect.bottom = dividerHeight
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
