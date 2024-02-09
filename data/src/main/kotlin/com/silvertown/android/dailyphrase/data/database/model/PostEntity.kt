@@ -9,7 +9,7 @@ import com.silvertown.android.dailyphrase.domain.model.Post
 )
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    val postId: Long? = null,
     val phraseId: Long,
     val title: String,
     val content: String,

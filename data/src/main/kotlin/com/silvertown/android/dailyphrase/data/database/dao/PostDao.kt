@@ -2,16 +2,16 @@ package com.silvertown.android.dailyphrase.data.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
-import java.util.concurrent.CountDownLatch
 
 @Dao
 interface PostDao {
-    @Upsert
-    suspend fun upsertPosts(posts: List<PostEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPosts(posts: List<PostEntity>)
 
     @Query("SELECT * FROM post_source")
     fun pagingSource(): PagingSource<Int, PostEntity>
@@ -25,7 +25,7 @@ interface PostDao {
         shouldDelete: Boolean,
     ) {
         if (shouldDelete) deletePosts()
-        upsertPosts(posts)
+        insertPosts(posts)
     }
 
     @Query("UPDATE post_source SET isLike = :isLike, likeCount = :count WHERE phraseId = :phraseId")
