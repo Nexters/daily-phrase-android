@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation.component
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,7 @@ fun BaseWebView(
             WebView(it).apply {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+                    ViewGroup.LayoutParams.MATCH_PARENT,
                 )
                 webViewClient = WebViewClient()
                 webChromeClient = WebChromeClient()
@@ -31,12 +32,13 @@ fun BaseWebView(
                 settings.useWideViewPort = true
                 settings.domStorageEnabled = true
                 settings.setSupportZoom(true)
+                settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
                 loadUrl(url)
             }
         },
         update = {
             it.loadUrl(url)
-        }
+        },
     )
 }
