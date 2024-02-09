@@ -1,6 +1,8 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +34,8 @@ import com.silvertown.android.dailyphrase.domain.model.Member
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
-import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
 import com.silvertown.android.dailyphrase.presentation.component.GroupDivider
 import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
 import com.silvertown.android.dailyphrase.presentation.component.LogoutDialog
@@ -80,14 +82,14 @@ private fun Content(
     if (myPageUiState.showLogoutDialog) {
         BaseDialog(
             modifier = Modifier,
-            onDismissRequest = { showLogoutDialog(false) }
+            onDismissRequest = { showLogoutDialog(false) },
         ) {
             LogoutDialog(
                 onClickLogout = {
                     onClickLogout()
                     context.navigateToStart(R.string.success_logout)
                 },
-                onDismissRequest = { showLogoutDialog(false) }
+                onDismissRequest = { showLogoutDialog(false) },
             )
         }
     }
@@ -104,20 +106,20 @@ private fun Content(
                         style = TextStyle(
                             fontSize = 22.sp,
                             fontFamily = pretendardFamily,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         ),
-                        color = colorResource(id = R.color.black)
+                        color = colorResource(id = R.color.black),
                     )
-                }
+                },
             )
-        }
+        },
     ) {
         MyPageBody(
             context = context,
             navigateToUnsubscribe = navigateToUnsubscribe,
             navigateToPolicy = navigateToPolicy,
             showLogoutDialog = showLogoutDialog,
-            memberData = memberData
+            memberData = memberData,
         )
     }
 }
@@ -131,12 +133,11 @@ private fun MyPageBody(
     showLogoutDialog: (Boolean) -> Unit,
     memberData: Member,
 ) {
-
     Column(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ProfileContent(
             modifier = Modifier
@@ -149,7 +150,7 @@ private fun MyPageBody(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
         ) {
             GroupDivider()
             MyPageItem(
@@ -158,7 +159,7 @@ private fun MyPageBody(
                 action = {
                     Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
                         .show()
-                }
+                },
             )
             MyPageItem(
                 modifier = Modifier,
@@ -175,18 +176,18 @@ private fun MyPageBody(
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.privacy_policy_title),
-                action = { navigateToPolicy() }
+                action = { navigateToPolicy() },
             )
             GroupDivider()
             MyPageItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.logout),
-                action = { showLogoutDialog(true) }
+                action = { showLogoutDialog(true) },
             )
             UnsubscribeTextItem(
                 modifier = Modifier,
                 title = stringResource(id = R.string.unsubscribe_service),
-                action = { navigateToUnsubscribe() }
+                action = { navigateToUnsubscribe() },
             )
         }
     }
@@ -205,21 +206,21 @@ fun MyPageItem(
             .clickable { action() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = title,
             style = TextStyle(
                 fontSize = 16.sp,
                 fontFamily = pretendardFamily,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             ),
-            color = colorResource(id = R.color.black)
+            color = colorResource(id = R.color.black),
         )
         Icon(
             modifier = Modifier.size(12.dp),
             painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
@@ -240,7 +241,7 @@ fun UnsubscribeTextItem(
         style = TextStyle(
             fontSize = 14.sp,
             fontFamily = pretendardFamily,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
         ),
         color = colorResource(id = R.color.gray),
         textDecoration = TextDecoration.Underline,
