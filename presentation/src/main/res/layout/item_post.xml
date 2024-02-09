@@ -14,6 +14,8 @@
         android:text="자식사랑 내리사랑"
         android:textColor="@color/black"
         android:textSize="20sp"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:lineSpacingExtra="3.5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
