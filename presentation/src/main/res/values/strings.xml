@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_title">매일 글귀</string>
     <string name="favorite">좋아요</string>
     <string name="bookmark">즐겨찾기</string>
     <string name="kakao_link_share">카카오톡으로 공유하기</string>
@@ -38,4 +39,5 @@
     <string name="login_success_desc">로그인 성공! 다시 시도 해보세요.</string>
     <string name="privacy_policy_title">개인정보 처리방침</string>
     <string name="feature_under_construction">준비 중인 기능입니다.</string>
+    <string name="app_download">앱 다운로드</string>
 </resources>

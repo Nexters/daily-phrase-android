@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.mypage
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -28,6 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.share.ShareClient
+import com.kakao.sdk.share.WebSharerClient
+import com.kakao.sdk.template.model.Button
+import com.kakao.sdk.template.model.Link
+import com.kakao.sdk.template.model.TextTemplate
 import com.silvertown.android.dailyphrase.domain.model.Member
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
@@ -39,6 +46,7 @@ import com.silvertown.android.dailyphrase.presentation.component.ItemDivider
 import com.silvertown.android.dailyphrase.presentation.component.LogoutDialog
 import com.silvertown.android.dailyphrase.presentation.component.ProfileContent
 import com.silvertown.android.dailyphrase.presentation.extensions.navigateToStart
+import timber.log.Timber
 
 @Composable
 fun MyPageScreen(
@@ -156,8 +164,7 @@ private fun MyPageBody(
                 modifier = Modifier,
                 title = stringResource(id = R.string.share_app),
                 action = {
-                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
-                        .show()
+                    sendKakaoLink(context)
                 }
             )
             MyPageItem(
@@ -242,4 +249,56 @@ fun UnsubscribeTextItem(
         color = colorResource(id = R.color.gray),
         textDecoration = TextDecoration.Underline,
     )
+}
+
+private fun sendKakaoLink(
+    context: Context,
+) {
+    val webUrl = "https://play.google.com/store/apps/details?id=com.silvertown.android.dailyphrase"
+
+    val phraseFeed = TextTemplate(
+        text = context.getString(R.string.app_title),
+        link = Link(
+            webUrl = webUrl,
+            mobileWebUrl = webUrl
+        ),
+        buttons = listOf(
+            Button(
+                title = context.getString(R.string.app_download),
+                Link(
+                    webUrl = webUrl,
+                    mobileWebUrl = webUrl
+                )
+            )
+        )
+    )
+
+    if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
+        ShareClient.instance.shareDefault(context, phraseFeed) { sharingResult, error ->
+            if (error != null) {
+                Timber.e(error)
+                Timber.e("카카오톡 공유 실패", error)
+            } else if (sharingResult != null) {
+                Timber.d("카카오톡 공유 성공 ${sharingResult.intent}")
+                context.startActivity(sharingResult.intent)
+
+                Timber.w("Warning Msg: ${sharingResult.warningMsg}")
+                Timber.w("Argument Msg: ${sharingResult.argumentMsg}")
+            }
+        }
+    } else {
+        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(phraseFeed)
+
+        try {
+            KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
+        } catch (e: UnsupportedOperationException) {
+            // CustomTabsServiceConnection 지원 브라우저가 없을 때 예외처리
+        }
+
+        try {
+            KakaoCustomTabsClient.open(context, sharerUrl)
+        } catch (e: ActivityNotFoundException) {
+            // 디바이스에 설치된 인터넷 브라우저가 없을 때 예외처리
+        }
+    }
 }
