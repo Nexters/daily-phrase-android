@@ -164,9 +164,12 @@ private fun MyPageBody(
                 modifier = Modifier,
                 title = stringResource(id = R.string.leave_review),
                 action = {
-                    Toast.makeText(context, R.string.feature_under_construction, Toast.LENGTH_SHORT)
-                        .show()
-                }
+                    Intent(Intent.ACTION_VIEW)
+                        .setData(Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}"))
+                        .also { intent ->
+                            context.startActivity(intent)
+                        }
+                },
             )
             GroupDivider()
             MyPageItem(
