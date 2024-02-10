@@ -68,6 +68,40 @@
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/load_state_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:text="@string/failure_message"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/orange"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="5dp"
+            android:text="@string/retry"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

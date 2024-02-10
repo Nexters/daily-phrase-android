@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
@@ -29,6 +30,7 @@ class HomeFragment :
     LoginResultListener {
 
     private lateinit var adapter: PostAdapter
+    private val postFooterAdapter = PostFooterLoadStateAdapter { adapter.retry() }
     private val viewModel by viewModels<HomeViewModel>()
     private var isLoggedIn: Boolean = false
     private var actionState: ActionType = ActionType.NONE
@@ -89,8 +91,11 @@ class HomeFragment :
                 }
             }
         )
-        binding.rvPost.adapter = adapter
+        binding.rvPost.adapter = adapter.withLoadStateFooter(postFooterAdapter)
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
+        binding.retryButton.setOnClickListener {
+            adapter.retry()
+        }
     }
 
     private fun initObserve() {
@@ -108,6 +113,14 @@ class HomeFragment :
                 .collectLatest { state ->
                     isLoggedIn = state
                 }
+        }
+
+        adapter.addLoadStateListener { loadStates ->
+            if (loadStates.refresh is LoadState.Error) {
+                binding.loadStateLayout.visibility = View.VISIBLE
+            } else {
+                binding.loadStateLayout.visibility = View.GONE
+            }
         }
     }
 
