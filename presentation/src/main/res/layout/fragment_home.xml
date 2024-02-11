@@ -61,7 +61,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_tool_bar"
+        app:layout_constraintTop_toBottomOf="@id/load_state_layout"
         tools:itemCount="6"
         tools:listitem="@layout/item_post" />
 
@@ -73,11 +73,15 @@
     <LinearLayout
         android:id="@+id/load_state_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingHorizontal="30dp"
-        android:visibility="gone">
+        android:paddingBottom="30dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_tool_bar">
 
         <TextView
             android:id="@+id/errorMsg"
@@ -85,8 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/pretendard_semi_bold"
-            android:text="@string/failure_message"
+            android:text="@string/failure_load_message"
             android:textColor="@color/black"
+            android:gravity="center"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -97,8 +102,8 @@
             android:background="@drawable/rounded_button"
             android:backgroundTint="@color/orange"
             android:fontFamily="@font/pretendard_semi_bold"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="5dp"
+            android:paddingHorizontal="25dp"
+            android:paddingVertical="3dp"
             android:text="@string/retry"
             android:textColor="@color/white"
             android:textSize="16sp" />
