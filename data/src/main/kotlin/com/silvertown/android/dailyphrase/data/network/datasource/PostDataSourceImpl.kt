@@ -23,7 +23,7 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun getPosts(
         page: Int,
         size: Int,
-    ): ApiResponse<BaseResponse<BasePostResponse>> =
+    ): BaseResponse<BasePostResponse> =
         postApiService.getPosts(page, size)
 
     override suspend fun getPost(

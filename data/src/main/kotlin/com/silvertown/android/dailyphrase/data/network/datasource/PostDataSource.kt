@@ -16,7 +16,7 @@ interface PostDataSource {
     suspend fun getPosts(
         page: Int,
         size: Int,
-    ): ApiResponse<BaseResponse<BasePostResponse>>
+    ): BaseResponse<BasePostResponse>
 
     suspend fun getPost(
         phraseId: Long,
