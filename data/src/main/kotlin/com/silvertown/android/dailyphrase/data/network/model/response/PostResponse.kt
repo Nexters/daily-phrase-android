@@ -1,8 +1,10 @@
 package com.silvertown.android.dailyphrase.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.silvertown.android.dailyphrase.data.util.DateTimeUtils.localDateTimeFormatter
 import com.silvertown.android.dailyphrase.data.database.model.PostEntity
 import com.silvertown.android.dailyphrase.domain.model.Post
+import java.time.LocalDateTime
 
 data class PostResponse(
     @SerializedName("content")
@@ -23,9 +25,13 @@ data class PostResponse(
     val isLike: Boolean?,
     @SerializedName("isFavorite")
     val isFavorite: Boolean?,
+    @SerializedName("createdAt")
+    val createdAt: String?,
 )
 
 fun PostResponse.toEntity(): PostEntity {
+    val parsedCreatedAt = this.createdAt?.let { LocalDateTime.parse(it, localDateTimeFormatter) }
+
     return PostEntity(
         phraseId = phraseId ?: 0,
         content = content.orEmpty(),
@@ -35,7 +41,8 @@ fun PostResponse.toEntity(): PostEntity {
         viewCount = viewCount ?: 0,
         likeCount = likeCount ?: 0,
         isLike = isLike ?: false,
-        isFavorite = isFavorite ?: false
+        isFavorite = isFavorite ?: false,
+        createdAt = parsedCreatedAt ?: LocalDateTime.now()
     )
 }
 
