@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -115,12 +116,8 @@ class HomeFragment :
                 }
         }
 
-        adapter.addLoadStateListener { loadStates ->
-            if (loadStates.refresh is LoadState.Error) {
-                binding.loadStateLayout.visibility = View.VISIBLE
-            } else {
-                binding.loadStateLayout.visibility = View.GONE
-            }
+        adapter.addLoadStateListener { loadState ->
+            binding.loadStateLayout.isVisible = loadState.refresh is LoadState.Error
         }
     }
 
