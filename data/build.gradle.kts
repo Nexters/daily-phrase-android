@@ -59,6 +59,9 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
 }
 
 protobuf {
@@ -116,4 +119,6 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
+    
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
