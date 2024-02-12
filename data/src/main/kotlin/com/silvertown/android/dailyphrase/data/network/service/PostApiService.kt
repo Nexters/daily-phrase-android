@@ -22,7 +22,7 @@ interface PostApiService {
     suspend fun getPosts(
         @Query("page") page: Int,
         @Query("size") size: Int,
-    ): ApiResponse<BaseResponse<BasePostResponse>>
+    ): BaseResponse<BasePostResponse>
 
     @GET("/api/v1/phrases/{id}")
     suspend fun getPost(

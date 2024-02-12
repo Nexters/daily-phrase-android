@@ -35,9 +35,9 @@ class PostRepositoryImpl @Inject constructor(
     override fun getPosts(): Flow<PagingData<Post>> {
         val pager = Pager(
             config = PagingConfig(
-                pageSize = PAGING__PAGE_SIZE,
-                prefetchDistance = PAGING__PREFETCH_DISTANCE,
-                initialLoadSize = PAGING__INITIAL_LOAD_SIZE
+                pageSize = PAGING_PAGE_SIZE,
+                prefetchDistance = PAGING_PREFETCH_DISTANCE,
+                initialLoadSize = PAGING_INITIAL_LOAD_SIZE
             ),
             remoteMediator = PostMediator(
                 postDao = postDao,
@@ -115,8 +115,8 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val PAGING__PAGE_SIZE = 3
-        private const val PAGING__PREFETCH_DISTANCE = 6
-        private const val PAGING__INITIAL_LOAD_SIZE = 3
+        private const val PAGING_PAGE_SIZE = 6
+        private const val PAGING_PREFETCH_DISTANCE = 3
+        private const val PAGING_INITIAL_LOAD_SIZE = 12
     }
 }

@@ -40,6 +40,6 @@
     <string name="privacy_policy_title">개인정보 처리방침</string>
     <string name="feature_under_construction">준비 중인 기능입니다.</string>
     <string name="app_download">앱 다운로드</string>
-    <string name="failure_message">문제가 발생했어요!</string>
+    <string name="failure_load_message">새로운 글귀를 가져올 수 없어요.\n네트워크 상태를 확인해주세요.</string>
     <string name="retry">재시도</string>
 </resources>

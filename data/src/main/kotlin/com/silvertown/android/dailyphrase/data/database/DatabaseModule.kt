@@ -15,8 +15,11 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesPostDatabase(@ApplicationContext context: Context): PostDatabase =
-        Room.inMemoryDatabaseBuilder(
+        Room.databaseBuilder(
             context,
             PostDatabase::class.java,
-        ).build()
+            "post-database"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
 }
