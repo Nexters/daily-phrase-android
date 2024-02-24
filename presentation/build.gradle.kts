@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,12 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = File(rootProject.rootDir, "local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -19,11 +28,23 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
+            )
+            buildConfigField(
+                "String",
+                "BANNER_UNIT_ID",
+                "\"${localProperties["BANNER_UNIT_ID"] as String?}\""
+            )
+        }
+        getByName("debug") {
+            buildConfigField(
+                "String",
+                "BANNER_UNIT_ID",
+                "\"${localProperties["BANNER_TEST_UNIT_ID"] as String?}\""
             )
         }
     }
@@ -37,6 +58,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
@@ -73,6 +95,7 @@ dependencies {
 
     implementation(libs.paging.compose)
     implementation(libs.paging.ktx)
+    implementation(libs.play.services.ads)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

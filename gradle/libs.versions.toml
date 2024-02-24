@@ -20,6 +20,7 @@ coil = "2.5.0"
 hilt = "2.50"
 hilt-navigation-fragment = "1.1.0"
 javax-inject = "1"
+playServicesAds = "22.6.0"
 timber = "5.0.1"
 junit = "4.13.2"
 kotlinx-serialization-json = "1.5.1"
@@ -92,10 +93,11 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 paging-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
-lifecycle-compose = {group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleCompose"}
+lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleCompose" }
 
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
