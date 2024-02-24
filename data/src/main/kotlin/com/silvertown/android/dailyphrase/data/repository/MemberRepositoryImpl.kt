@@ -46,7 +46,6 @@ class MemberRepositoryImpl @Inject constructor(
             .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun deleteMember(): Result<Member> {
-        deleteAccessToken()
         return memberDataSource
             .deleteMember(memberPreferencesDataSource.getMemberId())
             .toResultModel { it.result?.toDomainModel() }
