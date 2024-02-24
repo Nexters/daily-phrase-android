@@ -44,6 +44,7 @@ class UnsubscribeViewModel @Inject constructor(
         memberRepository
             .deleteMember()
             .onSuccess {
+                memberRepository.deleteAccessToken()
                 _isDeleted.emit(true)
             }
             .onFailure { errorMessage, code ->

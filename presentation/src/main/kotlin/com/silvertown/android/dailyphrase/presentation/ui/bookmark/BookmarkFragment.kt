@@ -2,14 +2,17 @@ package com.silvertown.android.dailyphrase.presentation.ui.bookmark
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentBookmarkBinding
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
-import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.home.PostItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -90,6 +93,19 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
 
     override fun onResume() {
         super.onResume()
+        setStatusBarColor(R.color.home_app_bar)
         viewModel.getBookmarks()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        setStatusBarColor(R.color.white)
+    }
+
+    private fun setStatusBarColor(@ColorRes colorRes: Int) {
+        activity?.window?.let { window ->
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(requireContext(), colorRes)
+        }
     }
 }
