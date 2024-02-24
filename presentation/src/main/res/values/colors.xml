@@ -14,4 +14,5 @@
     <color name="snackbar_text">#FFEF8031</color>
     <color name="group_divider">#64696B</color>
     <color name="home_app_bar">#F4F1EA</color>
+    <color name="splash_background">#F4F1EA</color>
 </resources>
