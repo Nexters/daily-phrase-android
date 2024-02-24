@@ -50,8 +50,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object Url {
-    const val webUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-web/"
-    const val mobileWebUrl = "https://daily-phrase-web-web-kappa.vercel.app/phrase-webview/"
+    const val webUrl = "www.daily-phrase.com/phrase-web/"
+    const val mobileWebUrl = "www.daily-phrase.com/phrase-webview/"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

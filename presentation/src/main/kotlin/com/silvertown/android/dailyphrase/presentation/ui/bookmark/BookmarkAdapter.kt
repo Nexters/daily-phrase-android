@@ -49,7 +49,7 @@ class BookmarkAdapter(
         fun bind(post: Post) = with(binding) {
             this@BookmarkViewHolder.post = post
             val context = itemView.context
-            
+
             tvTitle.text = post.title.replace("\n", " ")
             tvContent.text = post.content.replace("\n", " ")
             tvView.text = post.viewCount.formatNumberWithComma()
