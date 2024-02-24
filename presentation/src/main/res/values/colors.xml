@@ -7,8 +7,11 @@
     <color name="gray">#FF64696B</color>
     <color name="divider">#F2F3F6</color>
     <color name="orange">#FF7900</color>
+    <color name="orange_text">#EF8031</color>
     <color name="yellow">#FFF7E04C</color>
     <color name="kakao_container">#FEE500</color>
     <color name="kakao_text">#191919</color>
     <color name="snackbar_text">#FFEF8031</color>
+    <color name="group_divider">#64696B</color>
+    <color name="home_app_bar">#F4F1EA</color>
 </resources>
