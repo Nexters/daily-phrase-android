@@ -172,8 +172,8 @@ class HomeFragment :
         setStatusBarColor(R.color.home_app_bar)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         setStatusBarColor(R.color.white)
     }
 

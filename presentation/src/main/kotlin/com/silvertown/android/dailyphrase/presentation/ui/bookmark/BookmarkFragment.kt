@@ -97,8 +97,8 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
         viewModel.getBookmarks()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         setStatusBarColor(R.color.white)
     }
 
