@@ -48,31 +48,45 @@ class BookmarkAdapter(
 
         fun bind(post: Post) = with(binding) {
             this@BookmarkViewHolder.post = post
+            val context = itemView.context
+            
             tvTitle.text = post.title.replace("\n", " ")
             tvContent.text = post.content.replace("\n", " ")
             tvView.text = post.viewCount.formatNumberWithComma()
             tvLike.text = post.likeCount.formatNumberWithComma()
-            tvBookmark.setTextColor(
-                if (post.isFavorite) {
-                    ContextCompat.getColor(itemView.context, R.color.black)
-                } else {
-                    ContextCompat.getColor(itemView.context, R.color.gray)
-                }
-            )
-            tvBookmark.typeface = if (post.isFavorite) {
-                ResourcesCompat.getFont(itemView.context, R.font.pretendard_medium)
+            if (post.isFavorite) {
+                R.color.black
             } else {
-                ResourcesCompat.getFont(itemView.context, R.font.pretendard_regular)
+                R.color.gray
+            }.also { colorResId ->
+                tvBookmark.setTextColor(ContextCompat.getColor(context, colorResId))
             }
+
+            if (post.isFavorite) {
+                ResourcesCompat.getFont(context, R.font.pretendard_medium)
+            } else {
+                ResourcesCompat.getFont(context, R.font.pretendard_regular)
+            }.also { typeface ->
+                tvBookmark.typeface = typeface
+            }
+
+            if (post.isFavorite) {
+                R.drawable.ic_bookmark_fill_60
+            } else {
+                R.drawable.ic_bookmark_24
+            }.also { drawableRes ->
+                ivBookmark.setImageResource(drawableRes)
+            }
+
+            if (post.isLike) {
+                R.drawable.ic_like_fill_60
+            } else {
+                R.drawable.ic_like_60
+            }.also { drawableRes ->
+                ivLike.setImageResource(drawableRes)
+            }
+
             ivImage.isGone = post.imageUrl.isEmpty()
-
-            val bookmarkRes =
-                if (post.isFavorite) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
-            ivBookmark.setImageResource(bookmarkRes)
-
-            val likeRes = if (post.isLike) R.drawable.ic_like_fill_60 else R.drawable.ic_like_60
-            ivLike.setImageResource(likeRes)
-
             Glide.with(itemView)
                 .load(post.imageUrl)
                 .transform(CenterCrop(), RoundedCorners(16))
