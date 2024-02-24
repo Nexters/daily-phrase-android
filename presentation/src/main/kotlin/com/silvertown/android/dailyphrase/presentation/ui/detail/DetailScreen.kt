@@ -19,8 +19,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient
@@ -29,6 +33,7 @@ import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.kakao.sdk.template.model.Social
+import com.silvertown.android.dailyphrase.presentation.BuildConfig
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
@@ -133,6 +138,7 @@ fun DetailBody(
             BaseWebView(url = Url.mobileWebUrl + uiState.phraseId)
         }
 
+        AdmobBanner(modifier = Modifier.fillMaxWidth())
         DetailBottomAction(
             modifier = Modifier
                 .padding(16.dp)
@@ -237,4 +243,23 @@ private fun sendKakaoLink(
             // 디바이스에 설치된 인터넷 브라우저가 없을 때 예외처리
         }
     }
+}
+
+@Composable
+fun AdmobBanner(
+    modifier: Modifier = Modifier,
+) {
+    AndroidView(
+        modifier = modifier.fillMaxWidth(),
+        factory = { context ->
+            AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                adUnitId = BuildConfig.BANNER_UNIT_ID
+                loadAd(AdRequest.Builder().build())
+            }
+        },
+        update = { adView ->
+            adView.loadAd(AdRequest.Builder().build())
+        }
+    )
 }
