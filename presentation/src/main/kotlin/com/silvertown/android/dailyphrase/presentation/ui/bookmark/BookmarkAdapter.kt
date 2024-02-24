@@ -2,6 +2,9 @@ package com.silvertown.android.dailyphrase.presentation.ui.bookmark
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,26 +42,55 @@ class BookmarkAdapter(
             binding.clBookmark.setOnClickListener {
                 onClickBookmark(post.phraseId)
             }
+            // View 아이콘 클릭 시 root영역에 대한 클릭리스너와 중복을 피하기 위한 임시 리스너 활성
+            binding.clView.setOnClickListener { }
         }
 
         fun bind(post: Post) = with(binding) {
             this@BookmarkViewHolder.post = post
-            tvTitle.text = post.title
-            tvContent.text = post.content
+            val context = itemView.context
+            
+            tvTitle.text = post.title.replace("\n", " ")
+            tvContent.text = post.content.replace("\n", " ")
             tvView.text = post.viewCount.formatNumberWithComma()
             tvLike.text = post.likeCount.formatNumberWithComma()
+            if (post.isFavorite) {
+                R.color.black
+            } else {
+                R.color.gray
+            }.also { colorResId ->
+                tvBookmark.setTextColor(ContextCompat.getColor(context, colorResId))
+            }
 
+            if (post.isFavorite) {
+                ResourcesCompat.getFont(context, R.font.pretendard_medium)
+            } else {
+                ResourcesCompat.getFont(context, R.font.pretendard_regular)
+            }.also { typeface ->
+                tvBookmark.typeface = typeface
+            }
+
+            if (post.isFavorite) {
+                R.drawable.ic_bookmark_fill_60
+            } else {
+                R.drawable.ic_bookmark_24
+            }.also { drawableRes ->
+                ivBookmark.setImageResource(drawableRes)
+            }
+
+            if (post.isLike) {
+                R.drawable.ic_like_fill_60
+            } else {
+                R.drawable.ic_like_60
+            }.also { drawableRes ->
+                ivLike.setImageResource(drawableRes)
+            }
+
+            ivImage.isGone = post.imageUrl.isEmpty()
             Glide.with(itemView)
                 .load(post.imageUrl)
                 .transform(CenterCrop(), RoundedCorners(16))
-                .into(binding.ivImage)
-
-            val bookmarkRes =
-                if (post.isFavorite) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
-            binding.ivBookmark.setImageResource(bookmarkRes)
-
-            val likeRes = if (post.isLike) R.drawable.ic_like_fill_60 else R.drawable.ic_like_60
-            binding.ivLike.setImageResource(likeRes)
+                .into(ivImage)
         }
     }
 

@@ -52,7 +52,9 @@ private fun Content(
         modifier = modifier,
         topBar = {
             BaseTopAppBar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp),
                 navigateToBack = { navigateToBack() },
                 titleContent = {
                     Text(

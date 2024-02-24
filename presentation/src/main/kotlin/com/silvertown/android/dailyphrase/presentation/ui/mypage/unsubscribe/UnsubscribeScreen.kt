@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -95,7 +97,8 @@ private fun Content(
         snackbarHostState = snackbarHostState
     ) {
         UnsubscribeBody(
-            modifier = Modifier,
+            modifier = Modifier
+                .verticalScroll(rememberScrollState()),
             userName = getName() + stringResource(id = R.string.user_name_suffix),
             snackbarScope = snackbarScope,
             snackbarHostState = snackbarHostState,
@@ -127,14 +130,17 @@ private fun UnsubscribeBody(
     }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(bottom = 160.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             text = userName + stringResource(id = R.string.message_before_leaving),
             style = TextStyle(
                 fontSize = 28.sp,
@@ -144,14 +150,12 @@ private fun UnsubscribeBody(
             color = colorResource(id = R.color.black),
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(52.dp))
 
-        Spacer(modifier = Modifier.height(30.dp))
         InfoMessageBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
         )
-
         Spacer(modifier = Modifier.height(80.dp))
 
         Text(
@@ -163,7 +167,7 @@ private fun UnsubscribeBody(
                 fontFamily = pretendardFamily,
                 fontWeight = FontWeight.SemiBold
             ),
-            color = colorResource(id = R.color.orange),
+            color = colorResource(id = R.color.orange_text),
             textDecoration = TextDecoration.Underline,
         )
     }
@@ -183,11 +187,7 @@ fun InfoMessageBox(
             titleId = R.string.unsubscribe_message_title_1,
             subtitleId = R.string.unsubscribe_message_subtitle_1
         )
-
-        ItemDivider(
-            modifier = Modifier.padding(40.dp)
-        )
-
+        Spacer(modifier = Modifier.height(40.dp))
         InfoMessageSection(
             iconId = R.drawable.ic_sad_60,
             titleId = R.string.unsubscribe_message_title_2,
