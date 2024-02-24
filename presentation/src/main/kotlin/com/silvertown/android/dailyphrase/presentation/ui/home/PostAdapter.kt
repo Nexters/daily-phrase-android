@@ -2,6 +2,8 @@ package com.silvertown.android.dailyphrase.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -43,6 +45,7 @@ class PostAdapter(
                     post.isFavorite
                 )
             }
+            binding.clView.setOnClickListener { }
         }
 
         fun bind(post: Post) = with(binding) {
@@ -51,19 +54,31 @@ class PostAdapter(
             tvContent.text = post.content.replace("\n", " ")
             tvView.text = post.viewCount.formatNumberWithComma()
             tvLike.text = post.likeCount.formatNumberWithComma()
-            binding.ivImage.isGone = post.imageUrl.isEmpty()
+            tvBookmark.setTextColor(
+                if (post.isFavorite) {
+                    ContextCompat.getColor(itemView.context, R.color.black)
+                } else {
+                    ContextCompat.getColor(itemView.context, R.color.gray)
+                }
+            )
+            tvBookmark.typeface = if (post.isFavorite) {
+                ResourcesCompat.getFont(itemView.context, R.font.pretendard_medium)
+            } else {
+                ResourcesCompat.getFont(itemView.context, R.font.pretendard_regular)
+            }
+            ivImage.isGone = post.imageUrl.isEmpty()
 
             val bookmarkRes =
                 if (post.isFavorite) R.drawable.ic_bookmark_fill_60 else R.drawable.ic_bookmark_24
-            binding.ivBookmark.setImageResource(bookmarkRes)
+            ivBookmark.setImageResource(bookmarkRes)
 
             val likeRes = if (post.isLike) R.drawable.ic_like_fill_60 else R.drawable.ic_like_60
-            binding.ivLike.setImageResource(likeRes)
+            ivLike.setImageResource(likeRes)
 
             Glide.with(itemView)
                 .load(post.imageUrl)
                 .transform(CenterCrop(), RoundedCorners(16))
-                .into(binding.ivImage)
+                .into(ivImage)
         }
     }
 
