@@ -116,7 +116,7 @@ class PostRepositoryImpl @Inject constructor(
 
     companion object {
         private const val PAGING_PAGE_SIZE = 6
-        private const val PAGING_PREFETCH_DISTANCE = 3
+        private const val PAGING_PREFETCH_DISTANCE = 6
         private const val PAGING_INITIAL_LOAD_SIZE = 12
     }
 }
