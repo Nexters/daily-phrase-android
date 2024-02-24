@@ -51,13 +51,11 @@ android {
             manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
             buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
             manifestPlaceholders["BANNER_APP_ID"] = getKey("banner_app_id")
-            buildConfigField("String", "BANNER_APP_ID", getKey("banner_app_id"))
         }
         debug {
             manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
             buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
             manifestPlaceholders["BANNER_APP_ID"] = getKey("banner_test_app_id")
-            buildConfigField("String", "BANNER_APP_ID", getKey("banner_test_app_id"))
         }
     }
     compileOptions {
