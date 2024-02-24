@@ -42,6 +42,7 @@ class BookmarkAdapter(
             binding.clBookmark.setOnClickListener {
                 onClickBookmark(post.phraseId)
             }
+            // View 아이콘 클릭 시 root영역에 대한 클릭리스너와 중복을 피하기 위한 임시 리스너 활성
             binding.clView.setOnClickListener { }
         }
 
