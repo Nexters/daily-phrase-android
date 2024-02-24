@@ -2,9 +2,12 @@ package com.silvertown.android.dailyphrase.presentation.ui.home
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -163,4 +166,22 @@ class HomeFragment :
         viewModel.showLoginDialog(false)
         Toast.makeText(requireContext(), R.string.login_success_desc, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onResume() {
+        super.onResume()
+        setStatusBarColor(R.color.home_app_bar)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setStatusBarColor(R.color.white)
+    }
+
+    private fun setStatusBarColor(@ColorRes colorRes: Int) {
+        activity?.window?.let { window ->
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(requireContext(), colorRes)
+        }
+    }
+
 }
