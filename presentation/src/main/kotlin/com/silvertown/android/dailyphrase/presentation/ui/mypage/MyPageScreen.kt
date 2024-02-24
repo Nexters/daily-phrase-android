@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -150,7 +149,7 @@ private fun MyPageBody(
         ProfileContent(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(top = 16.dp, bottom = 24.dp),
             userName = memberData.name,
             userProfile = memberData.imageUrl,
         )
@@ -211,7 +210,7 @@ fun MyPageItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { action() }
-            .padding(16.dp),
+            .padding(vertical = 14.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -225,9 +224,10 @@ fun MyPageItem(
             color = colorResource(id = R.color.black),
         )
         Icon(
-            modifier = Modifier.size(12.dp),
+            modifier = Modifier.size(24.dp),
             painter = painterResource(id = R.drawable.ic_arrow_forward_ios_24),
             contentDescription = null,
+            tint = colorResource(id = R.color.group_divider)
         )
     }
 }
