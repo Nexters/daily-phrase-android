@@ -249,11 +249,20 @@ private fun sendKakaoLink(
 fun AdmobBanner(
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val adSize = remember {
+        val displayMetrics = context.resources.displayMetrics
+        val widthPixels = displayMetrics.widthPixels.toFloat()
+        val density = displayMetrics.density
+        val adWidth = (widthPixels / density).toInt()
+        AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
+    }
+
     AndroidView(
         modifier = modifier.fillMaxWidth(),
         factory = { context ->
             AdView(context).apply {
-                setAdSize(AdSize.BANNER)
+                setAdSize(adSize)
                 adUnitId = BuildConfig.BANNER_UNIT_ID
                 loadAd(AdRequest.Builder().build())
             }
