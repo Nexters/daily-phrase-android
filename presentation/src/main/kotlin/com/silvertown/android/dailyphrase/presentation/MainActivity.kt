@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
 
         loadingDialog = LoadingDialog(this)
+
     }
 
     fun setLoginResultListener(

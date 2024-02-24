@@ -50,10 +50,12 @@ android {
             )
             manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
             buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
+            manifestPlaceholders["BANNER_APP_ID"] = getKey("banner_app_id")
         }
         debug {
             manifestPlaceholders["KAKAO_APP_KEY"] = getKey("kakao.app-key")
             buildConfigField("String", "KAKAO_APP_KEY", getKey("kakao.app-key"))
+            manifestPlaceholders["BANNER_APP_ID"] = getKey("banner_test_app_id")
         }
     }
     compileOptions {
@@ -80,7 +82,6 @@ dependencies {
     implementation(project(":presentation"))
 
     implementation(libs.bundles.coroutines)
-
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
     implementation(libs.timber)
@@ -88,7 +89,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.kakao)
     implementation(libs.hilt.navigation)
-
+    implementation(libs.play.services.ads)
     implementation(libs.kakao.link)
 
     kapt(libs.hilt.compiler)
