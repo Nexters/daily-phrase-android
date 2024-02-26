@@ -37,10 +37,10 @@ import com.silvertown.android.dailyphrase.presentation.BuildConfig
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
-import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
-import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
-import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.BaseTopAppBar
+import com.silvertown.android.dailyphrase.presentation.component.BaseWebView
+import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBaseShell
+import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.ui.ActionType
@@ -50,8 +50,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object Url {
-    const val webUrl = "www.daily-phrase.com/phrase-web/"
-    const val mobileWebUrl = "www.daily-phrase.com/phrase-webview/"
+    const val webUrl = "https://www.daily-phrase.com/phrase-web/"
+    const val mobileWebUrl = "https://www.daily-phrase.com/phrase-webview/"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
