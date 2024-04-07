@@ -1,11 +1,17 @@
 package com.silvertown.android.dailyphrase.presentation
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -32,12 +38,26 @@ class MainActivity : AppCompatActivity() {
     private var loginResultListener: LoginResultListener? = null
     private lateinit var loadingDialog: LoadingDialog
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val allGranted = permissions.values.all { it }
+            if (allGranted) { // 모든 권한이 승인되었을 때
+                Timber.tag("MainActivity").d("권한 승인")
+            } else {
+                Timber.tag("MainActivity").d("일부 권한이 거부되었습니다.")
+                // 거부된 권한에 대한 처리
+            }
+        }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        askPermissions()
 
         navController =
             (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
@@ -152,6 +172,21 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun askPermissions() {
+        val hasForegroundServicePermission = PackageManager.PERMISSION_GRANTED ==
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+
+        val permissionsToRequest = mutableListOf<String>()
+        if (!hasForegroundServicePermission) {
+            permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
         }
     }
 }
