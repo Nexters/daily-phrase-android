@@ -8,6 +8,7 @@ import androidx.core.app.NotificationCompat
 import com.silvertown.android.dailyphrase.messaging.R
 
 const val TOPIC_SENDER = "/topics/update_phrase"
+const val TEST_TOPIC_SENDER = "/topics/test"
 private const val MESSAGING_NOTIFICATION_CHANNEL_ID = "MessagingNotificationChannel"
 
 fun Context.messagingNotification(): NotificationCompat.Builder {

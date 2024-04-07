@@ -2,9 +2,11 @@ package com.silvertown.android.dailyphrase.messaging.services
 
 import android.app.NotificationManager
 import android.content.Context
+import com.google.firebase.messaging.BuildConfig
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.silvertown.android.dailyphrase.messaging.component.MessagingManager
+import com.silvertown.android.dailyphrase.messaging.initializers.TEST_TOPIC_SENDER
 import com.silvertown.android.dailyphrase.messaging.initializers.TOPIC_SENDER
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -16,7 +18,7 @@ internal class MessagingNotificationsService : FirebaseMessagingService() {
     lateinit var messagingManager: MessagingManager
 
     override fun onMessageReceived(message: RemoteMessage) {
-        if (TOPIC_SENDER == message.from) {
+        if (TOPIC_MESSAGE_SENDER == message.from) {
             message.notification?.let { notification ->
                 val notificationManager: NotificationManager? =
                     getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
@@ -37,5 +39,10 @@ internal class MessagingNotificationsService : FirebaseMessagingService() {
                 notificationManager = notificationManager
             )
         }
+    }
+
+    companion object {
+        private val TOPIC_MESSAGE_SENDER =
+            if (BuildConfig.DEBUG) TEST_TOPIC_SENDER else TOPIC_SENDER
     }
 }
