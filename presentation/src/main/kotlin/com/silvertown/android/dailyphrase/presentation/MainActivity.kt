@@ -40,13 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val allGranted = permissions.values.all { it }
-            if (allGranted) { // 모든 권한이 승인되었을 때
-                Timber.tag("MainActivity").d("권한 승인")
-            } else {
-                Timber.tag("MainActivity").d("일부 권한이 거부되었습니다.")
-                // 거부된 권한에 대한 처리
-            }
+            handlePermissionsResult(permissions)
         }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -187,6 +181,18 @@ class MainActivity : AppCompatActivity() {
 
         if (permissionsToRequest.isNotEmpty()) {
             requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
+        }
+    }
+
+    private fun handlePermissionsResult(
+        permissions: Map<String, @JvmSuppressWildcards Boolean>,
+    ) {
+        val allGranted = permissions.values.all { it }
+        if (allGranted) { // 모든 권한이 승인되었을 때
+            Timber.tag("MainActivity").d("권한 승인")
+        } else {
+            Timber.tag("MainActivity").d("일부 권한이 거부되었습니다.")
+            // 거부된 권한에 대한 처리
         }
     }
 }
