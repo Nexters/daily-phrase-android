@@ -84,6 +84,7 @@ fun DetailScreen(
             uiState = detailUiState,
             onClickLike = detailViewModel::onClickLike,
             onClickBookmark = detailViewModel::onClickBookmark,
+            logShareEvent = detailViewModel::logShareEvent,
             showLoingDialog = detailViewModel::showLoginDialog,
         )
     }
@@ -98,6 +99,7 @@ fun DetailBody(
     uiState: DetailUiState,
     onClickLike: () -> Unit,
     onClickBookmark: () -> Unit,
+    logShareEvent: () -> Unit,
     showLoingDialog: (Boolean) -> Unit,
 ) {
     val actionState = rememberSaveable {
@@ -164,7 +166,8 @@ fun DetailBody(
                             actionPerformed = {
                                 sendKakaoLink(
                                     context = context,
-                                    uiState = uiState
+                                    uiState = uiState,
+                                    logShareEvent = logShareEvent
                                 )
                             }
                         )
@@ -176,6 +179,7 @@ fun DetailBody(
                 sendKakaoLink(
                     context = context,
                     uiState = uiState,
+                    logShareEvent = logShareEvent
                 )
             }
         )
@@ -185,6 +189,7 @@ fun DetailBody(
 private fun sendKakaoLink(
     context: Context,
     uiState: DetailUiState,
+    logShareEvent: () -> Unit,
 ) {
     val webUrl = Url.webUrl + uiState.phraseId
 
@@ -226,6 +231,7 @@ private fun sendKakaoLink(
 
                 Timber.w("Warning Msg: ${sharingResult.warningMsg}")
                 Timber.w("Argument Msg: ${sharingResult.argumentMsg}")
+                logShareEvent()
             }
         }
     } else {
