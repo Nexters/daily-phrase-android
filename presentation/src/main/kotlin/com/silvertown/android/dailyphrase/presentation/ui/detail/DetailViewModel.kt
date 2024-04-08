@@ -84,6 +84,12 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun onClickShare() {
+        if (!getLoginState()) {
+            showLoginDialog(true)
+        }
+    }
+
     private fun saveLike() = viewModelScope.launch {
         if (getLoginState()) {
             updateLikeState(true)

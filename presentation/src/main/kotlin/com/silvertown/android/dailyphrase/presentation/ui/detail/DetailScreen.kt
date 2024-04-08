@@ -85,6 +85,7 @@ fun DetailScreen(
             onClickLike = detailViewModel::onClickLike,
             onClickBookmark = detailViewModel::onClickBookmark,
             logShareEvent = detailViewModel::logShareEvent,
+            onClickShare = detailViewModel::onClickShare,
             showLoingDialog = detailViewModel::showLoginDialog,
         )
     }
@@ -100,6 +101,7 @@ fun DetailBody(
     onClickLike: () -> Unit,
     onClickBookmark: () -> Unit,
     logShareEvent: () -> Unit,
+    onClickShare: () -> Unit,
     showLoingDialog: (Boolean) -> Unit,
 ) {
     val actionState = rememberSaveable {
@@ -176,11 +178,14 @@ fun DetailBody(
             },
             onClickShare = {
                 actionState.value = ActionType.SHARE.name
-                sendKakaoLink(
-                    context = context,
-                    uiState = uiState,
-                    logShareEvent = logShareEvent
-                )
+                onClickShare()
+                if (uiState.isLoggedIn) {
+                    sendKakaoLink(
+                        context = context,
+                        uiState = uiState,
+                        logShareEvent = logShareEvent
+                    )
+                }
             }
         )
     }
