@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":presentation"))
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     ksp(libs.hilt.ext.compiler)

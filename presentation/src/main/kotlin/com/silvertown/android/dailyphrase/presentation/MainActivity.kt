@@ -22,6 +22,7 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
 import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
+import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -56,8 +57,9 @@ class MainActivity : AppCompatActivity() {
         navController =
             (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
 
-        loadingDialog = LoadingDialog(this)
+        redirectToDetailOnMessageReceived()
 
+        loadingDialog = LoadingDialog(this)
     }
 
     fun setLoginResultListener(
@@ -193,6 +195,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             Timber.tag("MainActivity").d("일부 권한이 거부되었습니다.")
             // 거부된 권한에 대한 처리
+        }
+    }
+
+    private fun redirectToDetailOnMessageReceived() {
+        if (viewModel.phraseId != null) {
+            val bundle = Bundle().apply {
+                viewModel.phraseId?.toLong()?.let { phraseId ->
+                    putLong(PHRASE_ID, phraseId)
+                }
+            }
+
+            navController.navigate(R.id.detailFragment, bundle)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.messaging.initializers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -11,7 +12,9 @@ const val TOPIC_SENDER = "/topics/update_phrase"
 const val TEST_TOPIC_SENDER = "/topics/test"
 private const val MESSAGING_NOTIFICATION_CHANNEL_ID = "MessagingNotificationChannel"
 
-fun Context.messagingNotification(): NotificationCompat.Builder {
+fun Context.messagingNotification(
+    pendingIntent: PendingIntent? = null,
+): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channel = NotificationChannel(
             MESSAGING_NOTIFICATION_CHANNEL_ID,
@@ -32,6 +35,7 @@ fun Context.messagingNotification(): NotificationCompat.Builder {
         this,
         MESSAGING_NOTIFICATION_CHANNEL_ID,
     )
+        .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.logo)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 }

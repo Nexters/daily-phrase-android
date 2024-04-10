@@ -7,5 +7,6 @@ interface MessagingManager {
         title: String,
         body: String,
         notificationManager: NotificationManager,
+        phraseId: String?
     )
 }
