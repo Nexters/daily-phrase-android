@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        askPermissions()
+        requestPermissions()
 
         navController =
             (supportFragmentManager.findFragmentById(R.id.fcv_nav_host) as NavHostFragment).navController
@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun askPermissions() {
+    private fun requestPermissions() {
         val hasForegroundServicePermission = PackageManager.PERMISSION_GRANTED ==
                 ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
 
