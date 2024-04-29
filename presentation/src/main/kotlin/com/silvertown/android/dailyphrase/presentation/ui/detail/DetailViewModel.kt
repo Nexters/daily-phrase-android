@@ -8,6 +8,7 @@ import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
+import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
+    private val shareRepository: ShareRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -50,14 +52,14 @@ class DetailViewModel @Inject constructor(
                             likeCount = it.likeCount,
                             viewCount = it.viewCount,
                             isLike = it.isLike,
-                            isBookmark = it.isFavorite
+                            isBookmark = it.isFavorite,
                         )
                     }
                     /** 로컬 싱크 **/
                     postRepository.updateCounts(
                         phraseId = it.phraseId,
                         likeCount = it.likeCount,
-                        viewCount = it.viewCount
+                        viewCount = it.viewCount,
                     )
                 }
                 .onFailure { errorMessage, code ->
@@ -85,6 +87,12 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun onClickShare() {
+        if (!getLoginState()) {
+            showLoginDialog(true)
+        }
+    }
+
     private fun saveLike() = viewModelScope.launch {
         if (getLoginState()) {
             updateLikeState(true)
@@ -95,7 +103,7 @@ class DetailViewModel @Inject constructor(
                     postRepository.updateLikeState(
                         it.phraseId,
                         it.isLike,
-                        it.likeCount
+                        it.likeCount,
                     )
                 }
                 .onFailure { errorMessage, code ->
@@ -117,7 +125,7 @@ class DetailViewModel @Inject constructor(
                     postRepository.updateLikeState(
                         it.phraseId,
                         it.isLike,
-                        it.likeCount
+                        it.likeCount,
                     )
                 }
                 .onFailure { errorMessage, code ->
@@ -176,7 +184,7 @@ class DetailViewModel @Inject constructor(
     fun updateLoginState() = viewModelScope.launch {
         _detailUiState.update { state ->
             state.copy(
-                isLoggedIn = memberRepository.getLoginStatus()
+                isLoggedIn = memberRepository.getLoginStatus(),
             )
         }
     }
@@ -205,10 +213,15 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             _detailUiState.update { state ->
                 state.copy(
-                    showLoginDialog = action
+                    showLoginDialog = action,
                 )
             }
         }
     }
 
+    fun logShareEvent() {
+        viewModelScope.launch {
+            shareRepository.logShareEvent(_detailUiState.value.phraseId)
+        }
+    }
 }
