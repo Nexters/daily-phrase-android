@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -199,14 +200,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redirectToDetailOnMessageReceived() {
-        if (viewModel.phraseId != null) {
-            val bundle = Bundle().apply {
-                viewModel.phraseId?.toLong()?.let { phraseId ->
-                    putLong(PHRASE_ID, phraseId)
-                }
-            }
+        val phraseId = runCatching {
+            viewModel.phraseId?.toLong()
+        }.getOrNull() ?: return
 
-            navController.navigate(R.id.detailFragment, bundle)
-        }
+        navController.navigate(
+            R.id.detailFragment,
+            bundleOf(PHRASE_ID to phraseId)
+        )
     }
 }
