@@ -23,6 +23,7 @@ internal class MessagingNotificationsService : FirebaseMessagingService() {
             message.notification?.let { notification ->
                 val notificationManager: NotificationManager? =
                     getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+
                 val phraseId = message.data[PHRASE_ID]
 
                 requestMessagingNotification(
@@ -39,9 +40,13 @@ internal class MessagingNotificationsService : FirebaseMessagingService() {
         notification: RemoteMessage.Notification,
         phraseId: String?,
     ) {
+        val title = notification.title
+
+        if (title.isNullOrEmpty()) return
+
         notificationManager?.let {
             messagingManager.requestMessagingNotification(
-                title = notification.title.orEmpty(),
+                title = title,
                 body = notification.body.orEmpty(),
                 notificationManager = notificationManager,
                 phraseId = phraseId
