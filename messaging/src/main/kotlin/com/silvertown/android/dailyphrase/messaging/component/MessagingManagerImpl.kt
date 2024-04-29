@@ -33,14 +33,16 @@ class MessagingManagerImpl @Inject constructor(
     }
 
     private fun handlePendingIntent(phraseId: String?): PendingIntent? {
-        val intent = Intent(context, MainActivity::class.java)
-        intent.putExtra(PHRASE_ID, phraseId)
+        val intent = Intent(context, MainActivity::class.java).apply {
+            putExtra(PHRASE_ID, phraseId)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
 
         return PendingIntent.getActivity(
             context,
             UUID.randomUUID().hashCode(),
             intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 }
