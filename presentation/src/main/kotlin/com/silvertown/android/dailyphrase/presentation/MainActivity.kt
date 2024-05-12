@@ -16,13 +16,13 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
 import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
+import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         loadingDialog = LoadingDialog(this)
 
+        initObserve()
     }
 
     fun setLoginResultListener(
@@ -56,6 +57,23 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         navController.handleDeepLink(intent)
+    }
+
+    private fun initObserve() {
+        // TODO : API 완성된 이후 나머지 작업 예정. 임시로 토스트를 띄워둠
+        lifecycleScope.launch {
+            viewModel.uiEvent.collect { event ->
+                when (event) {
+                    MainViewModel.UiEvent.ForceUpdate -> {
+                        Toast.makeText(this@MainActivity, "강제 업데이트", Toast.LENGTH_SHORT).show()
+                    }
+
+                    MainViewModel.UiEvent.NeedUpdate -> {
+                        Toast.makeText(this@MainActivity, "업데이트 필요", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     fun kakaoLogin() {
@@ -132,18 +150,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun onSuccessKaKaoLogin(oAuthToken: OAuthToken) {
         UserApiClient.instance.me { user, _ ->
             if (user != null) {
                 viewModel.signInWithKaKaoTokenViaServer(
-                    token = oAuthToken.accessToken
+                    token = oAuthToken.accessToken,
                 ) { result, memberId ->
                     if (result) {
                         viewModel.setMemberData(
                             id = memberId,
                             name = user.kakaoAccount?.profile?.nickname,
-                            imageUrl = user.kakaoAccount?.profile?.profileImageUrl
+                            imageUrl = user.kakaoAccount?.profile?.profileImageUrl,
                         )
                         loginResultListener?.onLoginSuccess()
                     } else {
