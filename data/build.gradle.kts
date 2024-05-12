@@ -27,6 +27,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-proguard-rules.pro")
+        buildConfigField("String", "APP_VERSION", "\"${Configuration.versionName}\"")
     }
 
     compileOptions {
