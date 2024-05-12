@@ -1,6 +1,7 @@
 package com.silvertown.android.dailyphrase.data.network.di
 
 import com.silvertown.android.dailyphrase.data.network.service.MemberApiService
+import com.silvertown.android.dailyphrase.data.network.service.ModalApiService
 import com.silvertown.android.dailyphrase.data.network.service.PostApiService
 import com.silvertown.android.dailyphrase.data.network.service.ShareApiService
 import dagger.Module
@@ -47,4 +48,14 @@ object ApiServiceModule {
             .build()
             .create(ShareApiService::class.java)
 
+    @Singleton
+    @Provides
+    fun provideModalApiService(
+        @AuthOkHttpClient okHttpclient: OkHttpClient,
+        retrofit: Retrofit.Builder,
+    ): ModalApiService =
+        retrofit
+            .client(okHttpclient)
+            .build()
+            .create(ModalApiService::class.java)
 }
