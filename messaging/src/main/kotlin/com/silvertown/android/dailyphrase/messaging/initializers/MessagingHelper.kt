@@ -36,6 +36,6 @@ fun Context.messagingNotification(
         MESSAGING_NOTIFICATION_CHANNEL_ID,
     )
         .setContentIntent(pendingIntent)
-        .setSmallIcon(R.drawable.logo)
+        .setSmallIcon(R.drawable.push_icon)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 }
