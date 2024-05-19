@@ -11,6 +11,12 @@ class ModalRepositoryImpl @Inject constructor(
     private val modalDataSource: ModalDataSource,
 ) : ModalRepository {
     override suspend fun getModals(): Result<List<Modal>> {
-        return modalDataSource.getModals().toResultModel { it.result?.map { it.toDomainModel() } }
+        return modalDataSource
+            .getModals()
+            .toResultModel { data ->
+                data.result?.map { modal ->
+                    modal.toDomainModel()
+                }
+            }
     }
 }
