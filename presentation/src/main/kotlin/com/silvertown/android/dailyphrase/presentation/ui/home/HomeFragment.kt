@@ -95,19 +95,19 @@ class HomeFragment :
             }
         )
         binding.rvPost.apply {
-            this.adapter = postAdapter.run {
+            adapter = postAdapter.run {
                 withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
             }
             var firstLoad = true
             postAdapter.addOnPagesUpdatedListener {
                 if (postAdapter.itemCount > 0 && firstLoad) {
-                    this.scrollToPosition(0)
+                    scrollToPosition(0)
                     firstLoad = false
                 }
             }
-            this.setHasFixedSize(true)
+            setHasFixedSize(true)
+            addItemDecoration(PostItemDecoration(requireContext()))
         }
-        binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
         binding.retryButton.setOnClickListener {
             postAdapter.retry()
         }
