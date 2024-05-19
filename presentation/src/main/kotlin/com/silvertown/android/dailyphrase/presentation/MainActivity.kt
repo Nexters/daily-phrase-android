@@ -2,10 +2,12 @@ package com.silvertown.android.dailyphrase.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -15,6 +17,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
+import com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet
 import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         loadingDialog = LoadingDialog(this)
 
         initObserve()
+        setFragmentResultListeners()
     }
 
     fun setLoginResultListener(
@@ -68,10 +72,40 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "강제 업데이트", Toast.LENGTH_SHORT).show()
                     }
 
-                    MainViewModel.UiEvent.NeedUpdate -> {
-                        Toast.makeText(this@MainActivity, "업데이트 필요", Toast.LENGTH_SHORT).show()
+                    is MainViewModel.UiEvent.NeedUpdate -> {
+                        navController.navigate(
+                            resId = R.id.action_global_twoButtonBottomSheet,
+                            args = bundleOf(
+                                "twoButtonBottomSheetArg" to TwoButtonBottomSheet.TwoButtonBottomSheetArg(
+                                    imageUrl = event.imageUrl,
+                                    leftButtonMessage = event.leftButtonMessage,
+                                    rightButtonMessage = event.rightButtonMessage,
+                                    requestKey = REQUEST_KEY_MOVE_TO_UPDATE,
+                                ),
+                            ),
+                        )
                     }
                 }
+            }
+        }
+    }
+
+    private fun setFragmentResultListeners() {
+        // TODO JH: activity에서 사용시 방법 검토
+        supportFragmentManager.setFragmentResultListener(REQUEST_KEY_MOVE_TO_UPDATE, this) { _, _ ->
+            moveToUpdate()
+        }
+    }
+
+    private fun moveToUpdate() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            val webIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+            if (webIntent.resolveActivity(packageManager) != null) {
+                startActivity(webIntent)
             }
         }
     }
@@ -170,5 +204,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val REQUEST_KEY_MOVE_TO_UPDATE = "REQUEST_KEY_MOVE_TO_UPDATE"
     }
 }

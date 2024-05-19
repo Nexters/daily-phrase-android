@@ -8,6 +8,7 @@ import com.silvertown.android.dailyphrase.domain.repository.FirebaseRemoteConfig
 import com.silvertown.android.dailyphrase.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_FORCE_UPDATE_APP_VERSION
 import com.silvertown.android.dailyphrase.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_NEED_UPDATE_APP_VERSION
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
+import com.silvertown.android.dailyphrase.domain.repository.ModalRepository
 import com.silvertown.android.dailyphrase.domain.usecase.CompareVersionUseCase
 import com.silvertown.android.dailyphrase.domain.usecase.GetSignInTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ class MainViewModel @Inject constructor(
     private val getSignInTokenUseCase: GetSignInTokenUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
     private val compareVersionUseCase: CompareVersionUseCase,
+    private val modalRepository: ModalRepository,
 ) : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -41,10 +43,29 @@ class MainViewModel @Inject constructor(
                 }.collect { updateStatus ->
                     when (updateStatus) {
                         CompareVersionUseCase.UpdateStatus.NOT_NEED_UPDATE -> Unit
-                        CompareVersionUseCase.UpdateStatus.NEED_UPDATE -> _uiEvent.emit(UiEvent.NeedUpdate)
-                        CompareVersionUseCase.UpdateStatus.FORCE_UPDATE -> _uiEvent.emit(UiEvent.ForceUpdate)
+                        CompareVersionUseCase.UpdateStatus.NEED_UPDATE -> getNeedUpdateModal()
+                        CompareVersionUseCase.UpdateStatus.FORCE_UPDATE -> Unit
                     }
                 }
+        }
+    }
+
+    private fun getNeedUpdateModal() {
+        viewModelScope.launch {
+            modalRepository.getModals().onSuccess { modals ->
+                modals
+                    .find { it.type == "UPDATE" }
+                    ?.let {
+                        UiEvent.NeedUpdate(
+                            imageUrl = it.imageUrl,
+                            leftButtonMessage = it.leftButtonMessage,
+                            rightButtonMessage = it.rightButtonMessage,
+                        )
+                    }
+                    ?.also { _uiEvent.emit(it) }
+            }.onFailure { errorMessage, code ->
+                Timber.e(errorMessage)
+            }
         }
     }
 
@@ -78,7 +99,12 @@ class MainViewModel @Inject constructor(
     }
 
     sealed interface UiEvent {
-        data object NeedUpdate : UiEvent
+        data class NeedUpdate(
+            val imageUrl: String,
+            val leftButtonMessage: String?,
+            val rightButtonMessage: String?,
+        ) : UiEvent
+
         data object ForceUpdate : UiEvent
     }
 }
