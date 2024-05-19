@@ -94,6 +94,7 @@ class HomeFragment :
                 }
             }
         )
+
         binding.rvPost.apply {
             adapter = postAdapter.run {
                 withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
@@ -108,6 +109,7 @@ class HomeFragment :
             setHasFixedSize(true)
             addItemDecoration(PostItemDecoration(requireContext()))
         }
+
         binding.retryButton.setOnClickListener {
             postAdapter.retry()
         }
