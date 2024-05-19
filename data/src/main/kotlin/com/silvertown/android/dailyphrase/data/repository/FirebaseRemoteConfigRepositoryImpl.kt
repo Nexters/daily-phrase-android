@@ -12,7 +12,7 @@ class FirebaseRemoteConfigRepositoryImpl(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
 ) : FirebaseRemoteConfigRepository {
 
-    override suspend fun getFirebaseRemoteConfigValue(key: String): Flow<String> =
+    override fun getFirebaseRemoteConfigValue(key: String): Flow<String> =
         flow {
             suspendCoroutine { continuation ->
                 firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
