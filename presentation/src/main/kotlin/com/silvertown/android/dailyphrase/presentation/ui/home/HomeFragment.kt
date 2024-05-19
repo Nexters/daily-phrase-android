@@ -117,9 +117,7 @@ class HomeFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.postList
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest { pagingData ->
-                    postAdapter.submitData(pagingData)
-                }
+                .collectLatest(postAdapter::submitData)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
