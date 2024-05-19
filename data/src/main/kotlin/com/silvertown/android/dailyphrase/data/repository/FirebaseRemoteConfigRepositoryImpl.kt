@@ -23,7 +23,7 @@ class FirebaseRemoteConfigRepositoryImpl(
                     }
                 }
             }.let { remoteConfigValue ->
-                remoteConfigValue?.asString() ?: ""
+                remoteConfigValue?.asString().orEmpty()
             }.also { version ->
                 emit(version)
             }
