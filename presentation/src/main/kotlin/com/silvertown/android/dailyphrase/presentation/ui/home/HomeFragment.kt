@@ -33,8 +33,7 @@ class HomeFragment :
     BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     LoginResultListener {
 
-    private lateinit var adapter: PostAdapter
-    private val postFooterAdapter = PostFooterLoadStateAdapter { adapter.retry() }
+    private lateinit var postAdapter: PostAdapter
     private val viewModel by viewModels<HomeViewModel>()
     private var isLoggedIn: Boolean = false
     private var actionState: ActionType = ActionType.NONE
@@ -76,7 +75,7 @@ class HomeFragment :
     }
 
     private fun initViews() {
-        adapter = PostAdapter(
+        postAdapter = PostAdapter(
             onPostClick = { moveToDetail(it) },
             onClickBookmark = { phraseId, state ->
                 if (isLoggedIn) {
@@ -95,10 +94,22 @@ class HomeFragment :
                 }
             }
         )
-        binding.rvPost.adapter = adapter.withLoadStateFooter(postFooterAdapter)
+        binding.rvPost.apply {
+            this.adapter = postAdapter.run {
+                withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
+            }
+            var firstLoad = true
+            postAdapter.addOnPagesUpdatedListener {
+                if (postAdapter.itemCount > 0 && firstLoad) {
+                    this.scrollToPosition(0)
+                    firstLoad = false
+                }
+            }
+            this.setHasFixedSize(true)
+        }
         binding.rvPost.addItemDecoration(PostItemDecoration(requireContext()))
         binding.retryButton.setOnClickListener {
-            adapter.retry()
+            postAdapter.retry()
         }
     }
 
@@ -107,7 +118,7 @@ class HomeFragment :
             viewModel.postList
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { pagingData ->
-                    adapter.submitData(pagingData)
+                    postAdapter.submitData(pagingData)
                 }
         }
 
@@ -119,7 +130,7 @@ class HomeFragment :
                 }
         }
 
-        adapter.addLoadStateListener { loadState ->
+        postAdapter.addLoadStateListener { loadState ->
             binding.loadStateLayout.isVisible = loadState.refresh is LoadState.Error
         }
     }
