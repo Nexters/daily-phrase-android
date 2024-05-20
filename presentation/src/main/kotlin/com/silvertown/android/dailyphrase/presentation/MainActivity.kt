@@ -64,12 +64,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initObserve() {
-        // TODO : API 완성된 이후 나머지 작업 예정. 임시로 토스트를 띄워둠
         lifecycleScope.launch {
             viewModel.uiEvent.collect { event ->
                 when (event) {
                     MainViewModel.UiEvent.ForceUpdate -> {
-                        Toast.makeText(this@MainActivity, "강제 업데이트", Toast.LENGTH_SHORT).show()
+                        // TODO JH 강제 업데이트 기능 구현
                     }
 
                     is MainViewModel.UiEvent.NeedUpdate -> {
@@ -91,8 +90,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragmentResultListeners() {
-        // TODO JH: activity에서 사용시 방법 검토
-        supportFragmentManager.setFragmentResultListener(REQUEST_KEY_MOVE_TO_UPDATE, this) { _, _ ->
+        val navHostFragment = supportFragmentManager.findFragmentById(binding.fcvNavHost.id) as NavHostFragment
+        navHostFragment.childFragmentManager.setFragmentResultListener(REQUEST_KEY_MOVE_TO_UPDATE, this) { _, _ ->
             moveToUpdate()
         }
     }
