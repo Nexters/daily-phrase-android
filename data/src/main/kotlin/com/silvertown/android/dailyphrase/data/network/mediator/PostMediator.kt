@@ -93,19 +93,16 @@ class PostMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages
-            .lastOrNull { it.data.isNotEmpty() }
-            ?.data
-            ?.lastOrNull()
+        return state
+            .lastItemOrNull()
             ?.let { post ->
                 remoteKeysDao.getRemoteKeys(post.phraseId)
             }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages
-            .firstOrNull { it.data.isNotEmpty() }
-            ?.data?.firstOrNull()
+        return state
+            .firstItemOrNull()
             ?.let { post ->
                 remoteKeysDao.getRemoteKeys(post.phraseId)
             }
