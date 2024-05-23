@@ -67,29 +67,27 @@ class PostMediator @Inject constructor(
         loadType: LoadType,
         page: Int,
     ) {
-        response.let {
-            val entities = it.postList?.map { item ->
-                item.toEntity()
+        val entities = response.postList?.map { item ->
+            item.toEntity()
+        }
+
+        val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
+        val nextKey = if (isEndOfPagination(response.hasNext)) null else page + 1
+        entities
+            ?.map { post ->
+                RemoteKeys(
+                    id = post.phraseId,
+                    prevKey = prevKey,
+                    nextKey = nextKey
+                )
+            }?.let { remoteKeys ->
+                remoteKeysDao.insertAll(remoteKeys)
             }
 
-            val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
-            val nextKey = if (isEndOfPagination(response.hasNext)) null else page + 1
-            entities
-                ?.map { post ->
-                    RemoteKeys(
-                        id = post.phraseId,
-                        prevKey = prevKey,
-                        nextKey = nextKey
-                    )
-                }?.let { remoteKeys ->
-                    remoteKeysDao.insertAll(remoteKeys)
-                }
-
-            postDao.savePostsAndDeleteIfRequired(
-                posts = entities.orEmpty(),
-                shouldDelete = loadType == LoadType.REFRESH,
-            )
-        }
+        postDao.savePostsAndDeleteIfRequired(
+            posts = entities.orEmpty(),
+            shouldDelete = loadType == LoadType.REFRESH,
+        )
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
