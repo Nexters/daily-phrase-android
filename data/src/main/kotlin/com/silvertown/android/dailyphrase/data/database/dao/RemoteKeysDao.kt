@@ -10,7 +10,7 @@ import com.silvertown.android.dailyphrase.data.database.model.RemoteKeys
 interface RemoteKeysDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(remoteKey: List<RemoteKeys>)
+    suspend fun insertAll(remoteKeysList: List<RemoteKeys>)
 
     @Query("SELECT * FROM remote_keys WHERE id = :id")
     suspend fun getRemoteKeys(id: Long): RemoteKeys?
