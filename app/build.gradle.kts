@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.gms)
     kotlin("kapt")
     id("kotlin-parcelize")
 }
@@ -81,6 +82,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
+    implementation(project(":messaging"))
 
     implementation(libs.bundles.coroutines)
     implementation(platform(libs.firebase.bom))

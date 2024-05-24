@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.onFailure
@@ -11,6 +12,7 @@ import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.ModalRepository
 import com.silvertown.android.dailyphrase.domain.usecase.CompareVersionUseCase
 import com.silvertown.android.dailyphrase.domain.usecase.GetSignInTokenUseCase
+import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     val memberRepository: MemberRepository,
     private val getSignInTokenUseCase: GetSignInTokenUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
@@ -68,6 +71,8 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    val phraseId: String? = savedStateHandle.get<String>(PHRASE_ID)
 
     fun signInWithKaKaoTokenViaServer(
         token: String,
