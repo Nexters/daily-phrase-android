@@ -89,4 +89,22 @@
         android:id="@+id/policyFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.policy.PolicyFragment"
         tools:layout="@layout/fragment_policy" />
+
+    <dialog
+        android:id="@+id/twoButtonBottomSheet"
+        android:name="com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet"
+        tools:layout="@layout/dialog_fragment_two_button">
+
+        <argument
+            android:name="twoButtonBottomSheetArg"
+            app:argType="com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet$TwoButtonBottomSheetArg"/>
+    </dialog>
+    <action
+        android:id="@+id/action_global_twoButtonBottomSheet"
+        app:destination="@id/twoButtonBottomSheet">
+
+        <argument
+            android:name="twoButtonBottomSheetArg"
+            app:argType="com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet$TwoButtonBottomSheetArg"/>
+    </action>
 </navigation>
