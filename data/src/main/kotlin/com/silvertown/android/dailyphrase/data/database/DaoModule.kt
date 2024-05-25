@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DaosModule {
+object DaoModule {
     @Provides
     fun providesPostDao(
         database: PostDatabase,
