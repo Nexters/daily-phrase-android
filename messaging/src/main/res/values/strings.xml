@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_name">글귀 업데이트</string>
+    <string name="notification_channel_description">최신 글귀 업데이트에 대한 알림을 받습니다.</string>
+</resources>

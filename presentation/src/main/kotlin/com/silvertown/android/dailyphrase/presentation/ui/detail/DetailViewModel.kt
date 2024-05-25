@@ -7,6 +7,7 @@ import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
+import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,9 @@ class DetailViewModel @Inject constructor(
 
     private val _detailUiState =
         MutableStateFlow(
-            DetailUiState(phraseId = savedStateHandle["phraseId"] ?: -1),
+            DetailUiState(
+                phraseId = savedStateHandle[PHRASE_ID] ?: 1
+            )
         )
     val detailUiState = _detailUiState.asStateFlow()
 
