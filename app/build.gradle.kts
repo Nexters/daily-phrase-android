@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.hilt.navigation)
     implementation(libs.play.services.ads)
     implementation(libs.kakao.link)
+    implementation(libs.bundles.flipper)
 
     kapt(libs.hilt.compiler)
 
