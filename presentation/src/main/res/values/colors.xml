@@ -15,4 +15,6 @@
     <color name="group_divider">#64696B</color>
     <color name="home_app_bar">#F4F1EA</color>
     <color name="splash_background">#F4F1EA</color>
+    <color name="vivid_red">#E3190B</color>
+    <color name="bright_red">#FF3C3C</color>
 </resources>
