@@ -6,7 +6,6 @@ import com.facebook.flipper.android.utils.FlipperUtils
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
-import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 import com.facebook.soloader.SoLoader
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -33,7 +32,7 @@ class DailyPhraseApplication : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            setDebugTool()
+            initFlipperSetting()
         }
     }
 
@@ -47,25 +46,25 @@ class DailyPhraseApplication : Application() {
     private fun initAdmobSetting() {
         MobileAds.initialize(this) {}
         MobileAds.setRequestConfiguration(
-            RequestConfiguration.Builder().build()
+            RequestConfiguration.Builder().build(),
         )
     }
 
-    private fun setDebugTool() {
+    private fun initFlipperSetting() {
         SoLoader.init(this, false)
 
-        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
-            val client = AndroidFlipperClient.getInstance(this)
-            client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
-            client.addPlugin(
-                InspectorFlipperPlugin(
-                    applicationContext,
-                    DescriptorMapping.withDefaults(),
-                ),
-            )
-            client.addPlugin(SharedPreferencesFlipperPlugin(this, "member_preferences.pb"))
-            client.addPlugin(flipperNetworkPlugin)
-            client.start()
+        if (FlipperUtils.shouldEnableFlipper(this)) {
+            AndroidFlipperClient.getInstance(this).apply {
+                addPlugin(InspectorFlipperPlugin(this@DailyPhraseApplication, DescriptorMapping.withDefaults()))
+                addPlugin(
+                    InspectorFlipperPlugin(
+                        this@DailyPhraseApplication,
+                        DescriptorMapping.withDefaults(),
+                    ),
+                )
+                addPlugin(flipperNetworkPlugin)
+                start()
+            }
         }
     }
 }
