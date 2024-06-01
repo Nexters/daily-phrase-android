@@ -16,6 +16,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
@@ -26,6 +27,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,6 +36,8 @@ class HomeFragment :
     LoginResultListener {
 
     private lateinit var postAdapter: PostAdapter
+    private lateinit var rewardBannerAdapter: HomeRewardBannerAdapter
+    private lateinit var homeAdapter: ConcatAdapter
     private val viewModel by viewModels<HomeViewModel>()
     private var isLoggedIn: Boolean = false
     private var actionState: ActionType = ActionType.NONE
@@ -95,10 +99,18 @@ class HomeFragment :
             }
         )
 
+        rewardBannerAdapter = HomeRewardBannerAdapter(
+            onClickKaKaoLogin = { (activity as? MainActivity)?.kakaoLogin() }
+        )
+
         binding.rvPost.apply {
-            adapter = postAdapter.run {
-                withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
-            }
+            homeAdapter = ConcatAdapter(
+                rewardBannerAdapter,
+                postAdapter.run {
+                    withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
+                }
+            )
+            adapter = homeAdapter
             postAdapter.addOnPagesUpdatedListener {
                 if (postAdapter.itemCount > 0 && viewModel.getFirstLoad()) {
                     scrollToPosition(0)
@@ -122,10 +134,24 @@ class HomeFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.rewardBanner
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collectLatest {
+                    rewardBannerAdapter.submitList(listOf(it))
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoggedIn
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { state ->
                     isLoggedIn = state
+
+                    if (isLoggedIn) {
+                        removeRewardBannerAdapter()
+                    } else {
+                        addRewardBannerAdapter()
+                    }
                 }
         }
 
@@ -186,6 +212,19 @@ class HomeFragment :
         super.onStop()
         setStatusBarColor(R.color.white)
     }
+
+    private fun addRewardBannerAdapter() {
+        if (!homeAdapter.adapters.contains(rewardBannerAdapter)) {
+            homeAdapter.addAdapter(0, rewardBannerAdapter)
+        }
+    }
+
+    private fun removeRewardBannerAdapter() {
+        if (homeAdapter.adapters.contains(rewardBannerAdapter)) {
+            homeAdapter.removeAdapter(rewardBannerAdapter)
+        }
+    }
+
 
     private fun setStatusBarColor(@ColorRes colorRes: Int) {
         activity?.window?.let { window ->

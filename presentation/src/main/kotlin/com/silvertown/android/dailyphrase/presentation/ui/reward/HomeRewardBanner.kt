@@ -28,7 +28,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.silvertown.android.dailyphrase.domain.model.HomeContent
+import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.component.KaKaoLoginButton
@@ -36,7 +36,7 @@ import com.silvertown.android.dailyphrase.presentation.component.KaKaoLoginButto
 @Composable
 fun HomeRewardBanner(
     modifier: Modifier = Modifier,
-    rewardBanner: HomeContent.RewardBanner,
+    rewardBanner: RewardBanner,
     onClickKaKaoLogin: () -> Unit = {},
 ) {
     val annotatedText = buildAnnotatedString {
