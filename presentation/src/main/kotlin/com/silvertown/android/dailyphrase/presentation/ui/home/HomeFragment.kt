@@ -99,11 +99,10 @@ class HomeFragment :
             adapter = postAdapter.run {
                 withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
             }
-            var firstLoad = true
             postAdapter.addOnPagesUpdatedListener {
-                if (postAdapter.itemCount > 0 && firstLoad) {
+                if (postAdapter.itemCount > 0 && viewModel.getFirstLoad()) {
                     scrollToPosition(0)
-                    firstLoad = false
+                    viewModel.setFirstLoad()
                 }
             }
             setHasFixedSize(true)

@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -24,6 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
@@ -121,6 +123,14 @@ class HomeViewModel @Inject constructor(
             .onFailure { errorMessage, code ->
                 Timber.e(errorMessage, code)
             }
+    }
+
+    fun getFirstLoad(): Boolean {
+        return savedStateHandle["key"] ?: false
+    }
+
+    fun setFirstLoad() {
+        savedStateHandle["key"] = true
     }
 
     fun showLoginDialog(action: Boolean) {
