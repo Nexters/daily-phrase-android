@@ -43,4 +43,8 @@
     <string name="app_download">앱 다운로드</string>
     <string name="failure_load_message">새로운 글귀를 가져올 수 없어요.\n네트워크 상태를 확인해주세요.</string>
     <string name="retry">재시도</string>
+    <string name="login_prompt">로그인하고</string>
+    <string name="claim_reward">받아가세요!</string>
+    <string name="reward_date_suffix">%1$d월 이벤트</string>
+    <string name="reward_participation_suffix">%1$d명 참여중</string>
 </resources>
