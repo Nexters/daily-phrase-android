@@ -1,6 +1,8 @@
 package com.silvertown.android.dailyphrase.data.network.di
 
 import android.content.Context
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.silvertown.android.dailyphrase.data.Constants.BASE_URL
 import com.silvertown.android.dailyphrase.data.datastore.datasource.TokenDataSource
 import com.silvertown.android.dailyphrase.data.network.AuthAuthenticator
@@ -49,6 +51,7 @@ object NetworkModule {
     fun provideAuthOkHttpClient(
         authInterceptor: AuthInterceptor,
         authAuthenticator: AuthAuthenticator,
+        flipperPlugin: NetworkFlipperPlugin,
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             this.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -57,18 +60,28 @@ object NetworkModule {
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .authenticator(authAuthenticator)
+            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
             .build()
     }
 
     @DefaultOkHttpClient
     @Singleton
     @Provides
-    fun provideDefaultOkHttpClient(): OkHttpClient {
+    fun provideDefaultOkHttpClient(
+        flipperPlugin: NetworkFlipperPlugin,
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             this.setLevel(HttpLoggingInterceptor.Level.BODY)
         }
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNetworkFlipperPlugin(): NetworkFlipperPlugin {
+        return NetworkFlipperPlugin()
     }
 }
