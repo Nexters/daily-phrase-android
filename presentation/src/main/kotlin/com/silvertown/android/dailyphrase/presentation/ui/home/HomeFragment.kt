@@ -148,7 +148,6 @@ class HomeFragment :
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { state ->
                     isLoggedIn = state
-
                     if (state) {
                         removeRewardBannerAdapter()
                     } else {
@@ -200,7 +199,7 @@ class HomeFragment :
                 }
             }
 
-            if (!isLoggedIn && rewardBanner != null) {
+            if (isLoggedIn && rewardBanner != null) {
                 RewardPopup(
                     rewardBanner = rewardBanner!!
                 )
