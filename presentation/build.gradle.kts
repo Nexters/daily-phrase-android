@@ -100,6 +100,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 
+    implementation(libs.balloon.compose)
+
     // cp
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
