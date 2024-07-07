@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -41,12 +43,12 @@ class HomeViewModel @Inject constructor(
     private val _showLoginDialog = MutableStateFlow(false)
     val showLoginDialog = _showLoginDialog.asStateFlow()
 
-    val rewardBanner: SharedFlow<RewardBanner> =
+    val rewardBanner: StateFlow<RewardBanner?> =
         rewardRepository.getHomeRewardBanner()
-            .shareIn(
+            .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(1000L),
-                replay = 1
+                started = SharingStarted.Lazily,
+                initialValue = null
             )
 
     val postList: Flow<PagingData<Post>> =

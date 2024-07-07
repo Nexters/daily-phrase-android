@@ -28,6 +28,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -136,6 +137,7 @@ class HomeFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.rewardBanner
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .filterNotNull()
                 .collectLatest {
                     rewardBannerAdapter.submitList(listOf(it))
                 }
@@ -170,7 +172,7 @@ class HomeFragment :
         binding.composeView.setContent {
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
-            val rewardBanner by viewModel.rewardBanner.collectAsStateWithLifecycle(initialValue = null)
+            val rewardBanner by viewModel.rewardBanner.collectAsStateWithLifecycle()
 
             val messageRes = when (ActionType.valueOf(actionState.name)) {
                 ActionType.LIKE -> R.string.login_and_like_message
