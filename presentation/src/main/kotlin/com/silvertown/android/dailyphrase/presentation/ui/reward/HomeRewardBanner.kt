@@ -112,7 +112,7 @@ fun HomeRewardBanner(
                     Text(
                         text = stringResource(
                             id = R.string.reward_participation_suffix,
-                            rewardBanner.totalEntryCount
+                            rewardBanner.totalParticipantCount
                         ),
                         style = TextStyle(
                             fontSize = 14.sp,

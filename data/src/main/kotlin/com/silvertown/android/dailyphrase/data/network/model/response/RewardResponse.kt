@@ -18,6 +18,8 @@ data class RewardResponse(
     val prizeId: Int?,
     @SerializedName("requiredTicketCount")
     val requiredTicketCount: Int?,
+    @SerializedName("totalParticipantCount")
+    val totalParticipantCount: Int?,
     @SerializedName("shortName")
     val shortName: String?,
     @SerializedName("totalEntryCount")
@@ -34,6 +36,7 @@ fun RewardResponse.toDomainModel(): RewardBanner {
         prizeId = prizeId ?: 0,
         requiredTicketCount = requiredTicketCount ?: 0,
         shortName = shortName.orEmpty(),
+        totalParticipantCount = totalParticipantCount ?: 0,
         totalEntryCount = totalEntryCount ?: 0
     )
 }

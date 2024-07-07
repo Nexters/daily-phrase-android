@@ -1,4 +1,5 @@
 package com.silvertown.android.dailyphrase.domain.model
+
 data class RewardBanner(
     val eventId: Int,
     val imageUrl: String,
@@ -7,6 +8,7 @@ data class RewardBanner(
     val name: String,
     val prizeId: Int,
     val requiredTicketCount: Int,
+    val totalParticipantCount: Int,
     val shortName: String,
     val totalEntryCount: Int,
 )
