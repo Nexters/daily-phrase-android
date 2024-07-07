@@ -17,4 +17,5 @@
     <color name="splash_background">#F4F1EA</color>
     <color name="vivid_red">#E3190B</color>
     <color name="bright_red">#FF3C3C</color>
+    <color name="tooltip_background">#292929</color>
 </resources>
