@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/iv_prize"
+            android:layout_width="262dp"
+            android:layout_height="262dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            tools:src="@tools:sample/avatars"
+            tools:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:gravity="start"
+            android:fontFamily="@font/pretendard_medium"
+            android:textColor="@color/gray"
+            android:textSize="18dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/iv_prize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="무선 전동 마사지건(IMG-300)"/>
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingEnd="20dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray"
+            android:textSize="16dp"
+            android:lines="1"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            tools:text="인사이디"/>
+
+        <ImageView
+            android:id="@+id/iv_ticket"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_ticket"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            app:layout_constraintStart_toStartOf="@id/tv_description"/>
+
+        <TextView
+            android:id="@+id/tv_required_tickets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintTop_toTopOf="@id/iv_ticket"
+            app:layout_constraintBottom_toBottomOf="@id/iv_ticket"
+            app:layout_constraintStart_toEndOf="@id/iv_ticket"
+            tools:text="5장 필요"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
