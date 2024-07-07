@@ -46,6 +46,7 @@ class HomeViewModel @Inject constructor(
             .shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(1000L),
+                replay = 1
             )
 
     val postList: Flow<PagingData<Post>> =

@@ -24,10 +24,10 @@ import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.ui.ActionType
+import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -147,7 +147,7 @@ class HomeFragment :
                 .collectLatest { state ->
                     isLoggedIn = state
 
-                    if (isLoggedIn) {
+                    if (state) {
                         removeRewardBannerAdapter()
                     } else {
                         addRewardBannerAdapter()
@@ -169,6 +169,8 @@ class HomeFragment :
     private fun initComposeView() {
         binding.composeView.setContent {
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
+            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
+            val rewardBanner by viewModel.rewardBanner.collectAsStateWithLifecycle(initialValue = null)
 
             val messageRes = when (ActionType.valueOf(actionState.name)) {
                 ActionType.LIKE -> R.string.login_and_like_message
@@ -194,6 +196,12 @@ class HomeFragment :
                         }
                     )
                 }
+            }
+
+            if (!isLoggedIn && rewardBanner != null) {
+                RewardPopup(
+                    rewardBanner = rewardBanner!!
+                )
             }
         }
     }
@@ -224,7 +232,6 @@ class HomeFragment :
             homeAdapter.removeAdapter(rewardBannerAdapter)
         }
     }
-
 
     private fun setStatusBarColor(@ColorRes colorRes: Int) {
         activity?.window?.let { window ->
