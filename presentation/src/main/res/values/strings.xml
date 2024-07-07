@@ -47,4 +47,6 @@
     <string name="claim_reward">받아가세요!</string>
     <string name="reward_date_suffix">%1$d월 이벤트</string>
     <string name="reward_participation_suffix">%1$d명 참여중</string>
+    <string name="reward_popup_text_prefix">응모하고</string>
+    <string name="reward_popup_text_suffix">받기</string>
 </resources>
