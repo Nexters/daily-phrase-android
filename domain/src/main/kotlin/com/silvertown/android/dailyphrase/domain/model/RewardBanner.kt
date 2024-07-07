@@ -1,5 +1,7 @@
 package com.silvertown.android.dailyphrase.domain.model
 
+import java.time.LocalDateTime
+
 data class RewardBanner(
     val eventId: Int,
     val imageUrl: String,
@@ -11,4 +13,5 @@ data class RewardBanner(
     val totalParticipantCount: Int,
     val shortName: String,
     val totalEntryCount: Int,
+    val eventEndDateTime: LocalDateTime?,
 )

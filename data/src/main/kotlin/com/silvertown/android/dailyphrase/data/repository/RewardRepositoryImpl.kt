@@ -20,7 +20,7 @@ class RewardRepositoryImpl @Inject constructor(
             .getHomeRewards()
             .toResultModel { rewardWrapper ->
                 rewardWrapper.result?.rewardList?.map { reward ->
-                    reward.toDomainModel()
+                    reward.toDomainModel(rewardWrapper.result.eventEndDateTime)
                 }
             }
             .onSuccess { rewardBannerList ->

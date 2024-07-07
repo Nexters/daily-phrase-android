@@ -1,7 +1,9 @@
 package com.silvertown.android.dailyphrase.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.silvertown.android.dailyphrase.data.util.DateTimeUtils
 import com.silvertown.android.dailyphrase.domain.model.RewardBanner
+import java.time.LocalDateTime
 
 data class RewardResponse(
     @SerializedName("eventId")
@@ -26,7 +28,13 @@ data class RewardResponse(
     val totalEntryCount: Int?,
 )
 
-fun RewardResponse.toDomainModel(): RewardBanner {
+fun RewardResponse.toDomainModel(
+    eventEndDateTime: String?,
+): RewardBanner {
+    val parsedEndDate = eventEndDateTime?.let {
+        LocalDateTime.parse(it, DateTimeUtils.localDateTimeFormatter)
+    }
+
     return RewardBanner(
         eventId = eventId ?: 0,
         imageUrl = imageUrl.orEmpty(),
@@ -37,6 +45,7 @@ fun RewardResponse.toDomainModel(): RewardBanner {
         requiredTicketCount = requiredTicketCount ?: 0,
         shortName = shortName.orEmpty(),
         totalParticipantCount = totalParticipantCount ?: 0,
-        totalEntryCount = totalEntryCount ?: 0
+        totalEntryCount = totalEntryCount ?: 0,
+        eventEndDateTime = parsedEndDate
     )
 }

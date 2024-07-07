@@ -7,4 +7,6 @@ data class RewardWrapperResponse(
     val rewardList: List<RewardResponse>?,
     @SerializedName("total")
     val total: Int?,
+    @SerializedName("eventEndDateTime")
+    val eventEndDateTime: String?,
 )
