@@ -107,7 +107,7 @@ class HomeFragment :
         binding.rvPost.apply {
             homeAdapter = ConcatAdapter(
                 rewardBannerAdapter,
-                postAdapter.run {
+                postAdapter.apply {
                     withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
                 }
             )
