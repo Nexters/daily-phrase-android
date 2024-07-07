@@ -42,4 +42,10 @@
     <string name="app_download">앱 다운로드</string>
     <string name="failure_load_message">새로운 글귀를 가져올 수 없어요.\n네트워크 상태를 확인해주세요.</string>
     <string name="retry">재시도</string>
+    <string name="prize_event">경품 응모 이벤트</string>
+    <string name="remaining_entry_period">남은 응모 기간 %s</string>
+    <string name="entry_count_message">이 상품에 %d회 응모했어요</string>
+    <string name="submit_entries">%d장으로 응모하기</string>
+    <string name="my_entries">내 응모권 %d장</string>
+    <string name="required_tickets">%d장 필요</string>
 </resources>
