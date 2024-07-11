@@ -43,6 +43,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
                         binding.tvSubmitEntries.text = getString(R.string.submit_entries, prize.requiredTicketCount)
+                        binding.tvSubmitEntries.isEnabled = prize.hasEnoughEntry
                     }
             }
         })
