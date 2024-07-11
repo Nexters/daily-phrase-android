@@ -86,9 +86,20 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     private fun updateUi(prizeInfo: PrizeInfoUi) {
-        // TODO JH: 수정 예정
-//        binding.tvNotice.text = getString(R.string.remaining_entry_period, prizeInfo.eventEndDateTime)
         binding.tvMyEntries.text = getString(R.string.my_entries, prizeInfo.total)
         prizeAdapter.setList(prizeInfo.items)
+        with(prizeInfo.noticeInfo) {
+            binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
+            binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
+            binding.tvNotice.isSelected = this is PrizeInfoUi.NoticeInfo.PeriodEnded
+
+            when (this) {
+                is PrizeInfoUi.NoticeInfo.PeriodEnded -> getString(R.string.event_finish, currentMonth)
+                is PrizeInfoUi.NoticeInfo.PeriodLessThanOneDay -> getString(R.string.remaining_entry_period, formattedTime)
+                is PrizeInfoUi.NoticeInfo.PeriodMoreThanOneDay -> getString(R.string.remaining_entry_period, "${days}일 $formattedTime")
+            }.also { text ->
+                binding.tvNotice.text = text
+            }
+        }
     }
 }
