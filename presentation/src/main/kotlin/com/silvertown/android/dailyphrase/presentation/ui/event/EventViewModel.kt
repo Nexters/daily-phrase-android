@@ -122,7 +122,7 @@ class EventViewModel @Inject constructor() : ViewModel() {
                 }).let { noticeInfo ->
                     PrizeInfoUi(
                         total = prizeInfo.total,
-                        items = prizeInfo.prizes.map { it.toPresentationModel() },
+                        items = prizeInfo.prizes.map { it.toPresentationModel(total = prizeInfo.total) },
                         noticeInfo = noticeInfo
                     )
                 }.also { _uiState.emit(UiState.Loaded(it)) }

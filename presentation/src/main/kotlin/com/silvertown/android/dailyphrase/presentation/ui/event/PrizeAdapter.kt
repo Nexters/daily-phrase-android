@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.event
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.silvertown.android.dailyphrase.presentation.R
@@ -22,6 +23,7 @@ class PrizeAdapter : RecyclerView.Adapter<PrizeAdapter.PrizeViewHolder>() {
             binding.tvTitle.text = prize.name
             binding.tvDescription.text = prize.manufacturer
             binding.tvRequiredTickets.text = itemView.context.getString(R.string.required_tickets, prize.requiredTicketCount)
+            binding.tvNotEnoughEntryGuide.isVisible = !prize.hasEnoughEntry
         }
     }
 

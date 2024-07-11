@@ -24,6 +24,25 @@
             tools:scaleType="centerCrop"/>
 
         <TextView
+            android:id="@+id/tv_not_enough_entry_guide"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp"
+            android:background="@color/orange"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@string/not_enough_entry_guide"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_prize"
+            app:layout_constraintStart_toStartOf="@id/iv_prize"
+            app:layout_constraintEnd_toEndOf="@id/iv_prize"
+            tools:visibility="visible"/>
+
+        <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
