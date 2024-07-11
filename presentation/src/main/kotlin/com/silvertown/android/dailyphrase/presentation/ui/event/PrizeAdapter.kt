@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeBinding
+import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
 
 class PrizeAdapter : RecyclerView.Adapter<PrizeAdapter.PrizeViewHolder>() {
-    private val prizes = mutableListOf<PrizeInfo.Prize>()
+    private val prizes = mutableListOf<PrizeInfoUi.Item>()
 
     class PrizeViewHolder(private val binding: ItemPrizeBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(prize: PrizeInfo.Prize) {
+        fun bind(prize: PrizeInfoUi.Item) {
             Glide.with(binding.ivPrize)
                 .load(prize.imageUrl)
                 .centerCrop()
@@ -36,7 +37,7 @@ class PrizeAdapter : RecyclerView.Adapter<PrizeAdapter.PrizeViewHolder>() {
         holder.bind(prizes[position])
     }
 
-    fun setList(list: List<PrizeInfo.Prize>) {
+    fun setList(list: List<PrizeInfoUi.Item>) {
         prizes.clear()
         prizes.addAll(list)
         notifyDataSetChanged()

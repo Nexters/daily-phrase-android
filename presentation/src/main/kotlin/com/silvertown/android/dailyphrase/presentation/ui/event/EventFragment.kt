@@ -13,6 +13,7 @@ import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentEventBinding
 import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
+import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 super.onPageSelected(position)
 
                 (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                    ?.let { it.prizeInfo.prizes[position] }
+                    ?.let { it.prizeInfo.items[position] }
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
                         binding.tvSubmitEntries.text = getString(R.string.submit_entries, prize.requiredTicketCount)
@@ -84,9 +85,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         }
     }
 
-    private fun updateUi(prizeInfo: PrizeInfo) {
-        binding.tvNotice.text = getString(R.string.remaining_entry_period, prizeInfo.eventEndDateTime)
+    private fun updateUi(prizeInfo: PrizeInfoUi) {
+        // TODO JH: 수정 예정
+//        binding.tvNotice.text = getString(R.string.remaining_entry_period, prizeInfo.eventEndDateTime)
         binding.tvMyEntries.text = getString(R.string.my_entries, prizeInfo.total)
-        prizeAdapter.setList(prizeInfo.prizes)
+        prizeAdapter.setList(prizeInfo.items)
     }
 }
