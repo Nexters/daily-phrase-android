@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.silvertown.android.dailyphrase.presentation.R
@@ -29,6 +30,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         initListeners()
         initViews()
         initObserve()
+        showTicketReceivedDialog() // TODO JH: 조건에 따라 보여주기
     }
 
     private fun initListeners() {
@@ -101,5 +103,11 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 binding.tvNotice.text = text
             }
         }
+    }
+
+    private fun showTicketReceivedDialog() {
+        EventFragmentDirections
+            .moveToTicketReceivedFragment()
+            .also { findNavController().navigate(it) }
     }
 }

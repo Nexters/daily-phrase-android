@@ -89,4 +89,19 @@
         android:id="@+id/policyFragment"
         android:name="com.silvertown.android.dailyphrase.presentation.ui.mypage.policy.PolicyFragment"
         tools:layout="@layout/fragment_policy" />
+
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.event.EventFragment"
+        tools:layout="@layout/fragment_event">
+
+        <action
+            android:id="@+id/move_to_ticketReceivedFragment"
+            app:destination="@id/ticketReceivedFragment"/>
+    </fragment>
+
+    <dialog
+        android:id="@+id/ticketReceivedFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.event.TicketReceivedDialog"
+        tools:layout="@layout/dialog_ticket_received"/>
 </navigation>
