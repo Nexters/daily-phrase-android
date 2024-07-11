@@ -43,6 +43,23 @@
             tools:visibility="visible"/>
 
         <TextView
+            android:id="@+id/tv_event_result_release_date_guide"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_rectangle_black_r_top_10"
+            android:gravity="center"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/white"
+            android:textSize="22dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/iv_prize"
+            app:layout_constraintBottom_toBottomOf="@id/iv_prize"
+            app:layout_constraintStart_toStartOf="@id/iv_prize"
+            app:layout_constraintEnd_toEndOf="@id/iv_prize"
+            tools:text="6월 23일에\n응모 결과를\n확인해 주세요"
+            tools:visibility="visible"/>
+
+        <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

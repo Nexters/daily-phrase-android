@@ -52,4 +52,5 @@
     <string name="event_finish">%d월 이벤트가 종료 되었습니다. 다음 이벤트를 기대해 주세요.\u0020\u0020\u0020\u0020\u0020\u0020</string>
     <string name="ticket_received">응모권 <font color="#F26600">5장</font>을\n받았어요!</string> <!-- TODO JH: 갯수 변경 가능성 고려하기 -->
     <string name="not_enough_entry_guide">글귀를 공유하고 응모권을 모아보세요</string>
+    <string name="event_result_release_date_guide">%s에\n응모 결과를\n확인해 주세요</string>
 </resources>

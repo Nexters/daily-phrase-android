@@ -20,6 +20,7 @@ data class PrizeInfoUi(
         val totalEntryCount: Int,
         val myEntryCount: Int,
         val hasEnoughEntry: Boolean,
+        val isEventPeriodEnded: Boolean,
     )
 
     sealed class NoticeInfo(
@@ -47,7 +48,7 @@ data class PrizeInfoUi(
     }
 }
 
-fun PrizeInfo.Prize.toPresentationModel(total: Int): PrizeInfoUi.Item {
+fun PrizeInfo.Prize.toPresentationModel(total: Int, isEventPeriodEnded: Boolean): PrizeInfoUi.Item {
     return PrizeInfoUi.Item(
         prizeId = prizeId,
         eventId = eventId,
@@ -61,5 +62,6 @@ fun PrizeInfo.Prize.toPresentationModel(total: Int): PrizeInfoUi.Item {
         totalEntryCount = totalEntryCount,
         myEntryCount = myEntryCount,
         hasEnoughEntry = total >= requiredTicketCount,
+        isEventPeriodEnded = isEventPeriodEnded,
     )
 }
