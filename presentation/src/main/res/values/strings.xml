@@ -50,4 +50,5 @@
     <string name="required_tickets">%d장 필요</string>
     <!-- \u0020는 띄어쓰기를 의미함. marquee 효과를 위해서는 충분히 긴 텍스트가 필요해 임의로 넣음. -->
     <string name="event_finish">%d월 이벤트가 종료 되었습니다. 다음 이벤트를 기대해 주세요.\u0020\u0020\u0020\u0020\u0020\u0020</string>
+    <string name="ticket_received">응모권 <font color="#F26600">5장</font>을\n받았어요!</string> <!-- TODO JH: 갯수 변경 가능성 고려하기 -->
 </resources>
