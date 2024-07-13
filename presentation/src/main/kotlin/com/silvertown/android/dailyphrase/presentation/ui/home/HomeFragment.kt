@@ -28,7 +28,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeB
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
-import com.silvertown.android.dailyphrase.presentation.ui.ActionType
+import com.silvertown.android.dailyphrase.presentation.util.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTES_IN_MILLIS
@@ -181,13 +181,7 @@ class HomeFragment :
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
             val rewardBanner by viewModel.rewardBanner.collectAsStateWithLifecycle()
-
-            val messageRes = when (ActionType.valueOf(actionState.name)) {
-                ActionType.LIKE -> R.string.login_and_like_message
-                ActionType.BOOKMARK -> R.string.login_and_bookmark_message
-                ActionType.SHARE -> R.string.login_and_share_message
-                ActionType.NONE -> R.string.login_and_share_message
-            }
+            val messageRes = ActionType.valueOf(actionState.name).messageRes
 
             if (showDialog) {
                 BaseDialog(

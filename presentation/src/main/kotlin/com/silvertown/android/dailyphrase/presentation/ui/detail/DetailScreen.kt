@@ -43,7 +43,7 @@ import com.silvertown.android.dailyphrase.presentation.component.DailyPhraseBase
 import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAction
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
-import com.silvertown.android.dailyphrase.presentation.ui.ActionType
+import com.silvertown.android.dailyphrase.presentation.util.ActionType
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
