@@ -54,9 +54,9 @@ internal fun RewardPopup(
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
 
     val builder = rememberBalloonBuilder {
-        setArrowSize(8)
         setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
         setArrowPosition(0.5f)
+        setArrowTopPadding(3)
         setWidth(BalloonSizeSpec.WRAP)
         setHeight(BalloonSizeSpec.WRAP)
         setPaddingLeft(12)
@@ -64,7 +64,7 @@ internal fun RewardPopup(
         setPaddingVertical(8)
         setCornerRadius(4f)
         setBackgroundColorResource(R.color.tooltip_background)
-        setBalloonAnimation(BalloonAnimation.ELASTIC)
+        setBalloonAnimation(BalloonAnimation.NONE)
         setDismissWhenClicked(true)
         setDismissWhenTouchOutside(false)
         //setAutoDismissDuration(2000)
