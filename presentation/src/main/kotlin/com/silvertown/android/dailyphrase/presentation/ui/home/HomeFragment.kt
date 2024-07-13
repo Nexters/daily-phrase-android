@@ -5,7 +5,11 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -17,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
+import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
@@ -25,11 +30,15 @@ import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.ui.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
+import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
+import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTES_IN_MILLIS
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class HomeFragment :
@@ -199,12 +208,39 @@ class HomeFragment :
                 }
             }
 
-            if (isLoggedIn && rewardBanner != null) {
+
+            ShowRewardPopup(rewardBanner, isLoggedIn)
+        }
+    }
+
+    @Composable
+    private fun ShowRewardPopup(
+        rewardBanner: RewardBanner?,
+        isLoggedIn: Boolean,
+    ) {
+        var showRewardPopup by remember { mutableStateOf(false) }
+
+        rewardBanner?.let { banner ->
+            val remainTime =
+                Duration.between(LocalDateTime.now(), rewardBanner.eventEndDateTime).toMillis()
+
+            if (shouldShowPopup(remainTime)) {
+                showRewardPopup = true
+            }
+
+            if (isLoggedIn && showRewardPopup) {
                 RewardPopup(
-                    rewardBanner = rewardBanner!!
+                    rewardBanner = banner,
+                    onTimeBelowThreshold = {
+                        showRewardPopup = false
+                    }
                 )
             }
         }
+    }
+
+    private fun shouldShowPopup(remainTime: Long): Boolean {
+        return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
     }
 
     override fun onLoginSuccess() {
