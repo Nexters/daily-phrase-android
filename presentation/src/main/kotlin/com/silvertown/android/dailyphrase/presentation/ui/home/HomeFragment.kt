@@ -202,39 +202,8 @@ class HomeFragment :
                 }
             }
 
-
             ShowRewardPopup(rewardBanner, isLoggedIn)
         }
-    }
-
-    @Composable
-    private fun ShowRewardPopup(
-        rewardBanner: RewardBanner?,
-        isLoggedIn: Boolean,
-    ) {
-        var showRewardPopup by remember { mutableStateOf(false) }
-
-        rewardBanner?.let { banner ->
-            val remainTime =
-                Duration.between(LocalDateTime.now(), rewardBanner.eventEndDateTime).toMillis()
-
-            if (shouldShowPopup(remainTime)) {
-                showRewardPopup = true
-            }
-
-            if (isLoggedIn && showRewardPopup) {
-                RewardPopup(
-                    rewardBanner = banner,
-                    onTimeBelowThreshold = {
-                        showRewardPopup = false
-                    }
-                )
-            }
-        }
-    }
-
-    private fun shouldShowPopup(remainTime: Long): Boolean {
-        return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
     }
 
     override fun onLoginSuccess() {
@@ -271,4 +240,33 @@ class HomeFragment :
         }
     }
 
+    private fun shouldShowPopup(remainTime: Long): Boolean {
+        return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
+    }
+
+    @Composable
+    private fun ShowRewardPopup(
+        rewardBanner: RewardBanner?,
+        isLoggedIn: Boolean,
+    ) {
+        var showRewardPopup by remember { mutableStateOf(false) }
+
+        rewardBanner?.let { banner ->
+            val remainTime =
+                Duration.between(LocalDateTime.now(), rewardBanner.eventEndDateTime).toMillis()
+
+            if (shouldShowPopup(remainTime)) {
+                showRewardPopup = true
+            }
+
+            if (isLoggedIn && showRewardPopup) {
+                RewardPopup(
+                    rewardBanner = banner,
+                    onTimeBelowThreshold = {
+                        showRewardPopup = false
+                    }
+                )
+            }
+        }
+    }
 }
