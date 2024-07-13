@@ -128,7 +128,6 @@ class HomeFragment :
                 }
             }
             setHasFixedSize(true)
-            addItemDecoration(PostItemDecoration(requireContext()))
         }
 
         binding.retryButton.setOnClickListener {
