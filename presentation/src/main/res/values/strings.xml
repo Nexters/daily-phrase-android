@@ -49,4 +49,5 @@
     <string name="reward_participation_suffix">%1$d명 참여중</string>
     <string name="reward_popup_text_prefix">응모하고</string>
     <string name="reward_popup_text_suffix">받기</string>
+    <string name="event_timer_text">이벤트 마감까지 %1$s 남음</string>
 </resources>
