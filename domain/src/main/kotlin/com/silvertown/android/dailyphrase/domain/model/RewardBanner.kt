@@ -13,5 +13,6 @@ data class RewardBanner(
     val totalParticipantCount: Int,
     val shortName: String,
     val totalEntryCount: Int,
+    val myTicketCount: Int,
     val eventEndDateTime: LocalDateTime?,
 )

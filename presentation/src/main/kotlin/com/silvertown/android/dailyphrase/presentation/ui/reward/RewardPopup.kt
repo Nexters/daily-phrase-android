@@ -141,27 +141,29 @@ internal fun RewardPopup(
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .offset(x = 3.dp, y = (-1).dp) // count 포지션 offset
-                        .widthIn(min = 18.dp)
-                        .height(18.dp)
-                        .background(
-                            color = colorResource(id = R.color.bright_red),
-                            shape = CircleShape
+                if (rewardBanner.myTicketCount > 0) {
+                    Box(
+                        modifier = Modifier
+                            .offset(x = 3.dp, y = (-1).dp) // count 포지션 offset
+                            .widthIn(min = 18.dp)
+                            .height(18.dp)
+                            .background(
+                                color = colorResource(id = R.color.bright_red),
+                                shape = CircleShape
+                            )
+                            .padding(horizontal = 4.5.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = rewardBanner.myTicketCount.toString(),
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontFamily = pretendardFamily,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = colorResource(id = R.color.white),
                         )
-                        .padding(horizontal = 4.5.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = rewardBanner.totalEntryCount.toString(),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontFamily = pretendardFamily,
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        color = colorResource(id = R.color.white),
-                    )
+                    }
                 }
             }
         }
