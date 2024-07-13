@@ -18,4 +18,5 @@
     <color name="vivid_red">#E3190B</color>
     <color name="bright_red">#FF3C3C</color>
     <color name="tooltip_background">#FF7900</color>
+    <color name="light_gray_blue">#F2F3F7</color>
 </resources>
