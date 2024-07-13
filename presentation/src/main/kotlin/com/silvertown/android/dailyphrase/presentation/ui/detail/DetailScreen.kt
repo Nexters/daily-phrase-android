@@ -44,6 +44,7 @@ import com.silvertown.android.dailyphrase.presentation.component.DetailBottomAct
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
 import com.silvertown.android.dailyphrase.presentation.component.baseSnackbar
 import com.silvertown.android.dailyphrase.presentation.util.ActionType
+import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -196,64 +197,18 @@ private fun sendKakaoLink(
     uiState: DetailUiState,
     logShareEvent: () -> Unit,
 ) {
-    val webUrl = Url.webUrl + uiState.phraseId
-
-    val phraseFeed = FeedTemplate(
-        content = Content(
-            title = uiState.title,
-            description = uiState.content,
-            imageUrl = uiState.imageUrl,
-            link = Link(
-                webUrl = webUrl,
-                mobileWebUrl = webUrl
-            )
-        ),
-        social = Social(
-            likeCount = uiState.likeCount,
-            commentCount = uiState.commentCount,
-            sharedCount = uiState.sharedCount,
-            viewCount = uiState.viewCount
-        ),
-        buttons = listOf(
-            Button(
-                title = context.resources.getString(R.string.more_see),
-                Link(
-                    webUrl = webUrl,
-                    mobileWebUrl = webUrl
-                )
-            )
-        )
+    sendKakaoLink(
+        context = context,
+        phraseId = uiState.phraseId,
+        title = uiState.title,
+        description = uiState.content,
+        imageUrl = uiState.imageUrl,
+        likeCount = uiState.likeCount,
+        commentCount = uiState.commentCount,
+        sharedCount = uiState.sharedCount,
+        viewCount = uiState.viewCount,
+        logShareEvent = logShareEvent
     )
-
-    if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
-        ShareClient.instance.shareDefault(context, phraseFeed) { sharingResult, error ->
-            if (error != null) {
-                Timber.e(error)
-                Timber.e("카카오톡 공유 실패", error)
-            } else if (sharingResult != null) {
-                Timber.d("카카오톡 공유 성공 ${sharingResult.intent}")
-                context.startActivity(sharingResult.intent)
-
-                Timber.w("Warning Msg: ${sharingResult.warningMsg}")
-                Timber.w("Argument Msg: ${sharingResult.argumentMsg}")
-                logShareEvent()
-            }
-        }
-    } else {
-        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(phraseFeed)
-
-        try {
-            KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
-        } catch (e: UnsupportedOperationException) {
-            // CustomTabsServiceConnection 지원 브라우저가 없을 때 예외처리
-        }
-
-        try {
-            KakaoCustomTabsClient.open(context, sharerUrl)
-        } catch (e: ActivityNotFoundException) {
-            // 디바이스에 설치된 인터넷 브라우저가 없을 때 예외처리
-        }
-    }
 }
 
 @Composable

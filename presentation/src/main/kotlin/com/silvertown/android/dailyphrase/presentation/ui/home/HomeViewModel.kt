@@ -12,18 +12,15 @@ import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import com.silvertown.android.dailyphrase.domain.repository.RewardRepository
+import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,6 +32,7 @@ class HomeViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
     private val rewardRepository: RewardRepository,
+    private val shareRepository: ShareRepository
 ) : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -151,6 +149,12 @@ class HomeViewModel @Inject constructor(
     fun showLoginDialog(action: Boolean) {
         viewModelScope.launch {
             _showLoginDialog.value = action
+        }
+    }
+
+    fun logShareEvent(phraseId: Long) {
+        viewModelScope.launch {
+            shareRepository.logShareEvent(phraseId)
         }
     }
 

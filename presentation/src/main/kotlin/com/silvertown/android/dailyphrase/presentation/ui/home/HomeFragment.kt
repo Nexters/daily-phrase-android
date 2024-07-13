@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
+import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
@@ -33,6 +34,7 @@ import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTES_IN_MILLIS
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
+import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -92,20 +94,13 @@ class HomeFragment :
         postAdapter = PostAdapter(
             onPostClick = { moveToDetail(it) },
             onClickBookmark = { phraseId, state ->
-                if (isLoggedIn) {
-                    viewModel.onClickBookmark(phraseId, state)
-                } else {
-                    actionState = ActionType.BOOKMARK
-                    viewModel.showLoginDialog(true)
-                }
+                onClickBookmark(phraseId, state)
             },
             onClickLike = { phraseId, state ->
-                if (isLoggedIn) {
-                    viewModel.onClickLike(phraseId, state)
-                } else {
-                    actionState = ActionType.LIKE
-                    viewModel.showLoginDialog(true)
-                }
+                onClickLike(phraseId, state)
+            },
+            onClickShare = { post ->
+                onClickShare(post)
             }
         )
 
@@ -236,6 +231,43 @@ class HomeFragment :
         activity?.window?.let { window ->
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(requireContext(), colorRes)
+        }
+    }
+
+    private fun onClickBookmark(phraseId: Long, state: Boolean) {
+        if (isLoggedIn) {
+            viewModel.onClickBookmark(phraseId, state)
+        } else {
+            actionState = ActionType.BOOKMARK
+            viewModel.showLoginDialog(true)
+        }
+    }
+
+    private fun onClickLike(phraseId: Long, state: Boolean) {
+        if (isLoggedIn) {
+            viewModel.onClickLike(phraseId, state)
+        } else {
+            actionState = ActionType.LIKE
+            viewModel.showLoginDialog(true)
+        }
+    }
+
+    private fun onClickShare(post: Post) {
+        if (isLoggedIn) {
+            sendKakaoLink(
+                context = requireContext(),
+                phraseId = post.phraseId,
+                title = post.title,
+                description = post.content,
+                imageUrl = post.imageUrl,
+                likeCount = post.likeCount,
+                viewCount = post.viewCount
+            ) {
+                viewModel.logShareEvent(post.phraseId)
+            }
+        } else {
+            actionState = ActionType.SHARE
+            viewModel.showLoginDialog(true)
         }
     }
 
