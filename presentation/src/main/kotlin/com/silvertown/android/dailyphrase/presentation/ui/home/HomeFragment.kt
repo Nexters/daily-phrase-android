@@ -196,7 +196,7 @@ class HomeFragment :
                 }
             }
 
-            ShowRewardPopup(rewardBanner, isLoggedIn)
+            HomeRewardPopup(rewardBanner, isLoggedIn)
         }
     }
 
@@ -276,7 +276,7 @@ class HomeFragment :
     }
 
     @Composable
-    private fun ShowRewardPopup(
+    private fun HomeRewardPopup(
         rewardBanner: RewardBanner?,
         isLoggedIn: Boolean,
     ) {
