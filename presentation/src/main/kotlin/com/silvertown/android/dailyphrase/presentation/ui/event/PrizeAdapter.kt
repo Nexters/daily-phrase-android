@@ -46,7 +46,7 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class UnknownViewHolder(binding: ItemNoneBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
-        return when (prizes[position]) {
+        return when (prizes[position % prizes.size]) {
             is PrizeInfoUi.Item.AfterWinningDraw -> Type.AFTER_WINNING_DRAW.value
             is PrizeInfoUi.Item.BeforeWinningDraw -> Type.BEFORE_WINNING_DRAW.value
         }
@@ -66,12 +66,12 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int = prizes.size
+    override fun getItemCount(): Int = Int.MAX_VALUE
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PrizeViewHolder -> holder.bind(prizes[position] as PrizeInfoUi.Item.BeforeWinningDraw)
-            is AfterWinningDrawViewHolder -> holder.bind(prizes[position] as PrizeInfoUi.Item.AfterWinningDraw)
+            is PrizeViewHolder -> holder.bind(prizes[position % prizes.size] as PrizeInfoUi.Item.BeforeWinningDraw)
+            is AfterWinningDrawViewHolder -> holder.bind(prizes[position % prizes.size] as PrizeInfoUi.Item.AfterWinningDraw)
             else -> Unit
         }
     }

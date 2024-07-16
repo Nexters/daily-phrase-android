@@ -39,7 +39,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 super.onPageSelected(position)
 
                 (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                    ?.let { it.prizeInfo.items[position] }
+                    ?.let { it.prizeInfo.items[position % it.prizeInfo.items.size] }
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
                         binding.tvSubmitEntries.text = getString(R.string.submit_entries, prize.requiredTicketCount)
@@ -62,6 +62,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             prizeAdapter = PrizeAdapter()
             adapter = prizeAdapter
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            setCurrentItem(Int.MAX_VALUE / 2, true)
             addItemDecoration(object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
                     outRect: Rect,
