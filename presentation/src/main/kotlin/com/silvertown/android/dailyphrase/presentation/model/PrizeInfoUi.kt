@@ -7,21 +7,43 @@ data class PrizeInfoUi(
     val items: List<Item>,
     val noticeInfo: NoticeInfo,
 ) {
-    data class Item(
-        val prizeId: Long,
-        val eventId: Long,
-        val name: String,
-        val shortName: String,
-        val manufacturer: String,
-        val welcomeImageUrl: String,
-        val bannerImageUrl: String,
-        val imageUrl: String,
-        val requiredTicketCount: Int,
-        val totalEntryCount: Int,
-        val myEntryCount: Int,
-        val hasEnoughEntry: Boolean,
-        val isEventPeriodEnded: Boolean,
-    )
+    sealed class Item(
+        open val prizeId: Long,
+        open val eventId: Long,
+        open val name: String,
+        open val imageUrl: String,
+        open val requiredTicketCount: Int,
+        open val totalEntryCount: Int,
+        open val myEntryCount: Int,
+        open val hasEnoughEntry: Boolean,
+    ) {
+        data class BeforeWinningDraw(
+            override val prizeId: Long,
+            override val eventId: Long,
+            override val name: String,
+            val shortName: String,
+            val manufacturer: String,
+            val welcomeImageUrl: String,
+            val bannerImageUrl: String,
+            override val imageUrl: String,
+            override val requiredTicketCount: Int,
+            override val totalEntryCount: Int,
+            override val myEntryCount: Int,
+            override val hasEnoughEntry: Boolean,
+            val isEventPeriodEnded: Boolean,
+        ) : Item(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+
+        data class AfterWinningDraw(
+            override val prizeId: Long,
+            override val eventId: Long,
+            override val name: String,
+            override val imageUrl: String,
+            override val requiredTicketCount: Int,
+            override val totalEntryCount: Int,
+            override val myEntryCount: Int,
+            override val hasEnoughEntry: Boolean,
+        ) : Item(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+    }
 
     sealed class NoticeInfo(
         open val textColorResId: Int,
@@ -49,19 +71,34 @@ data class PrizeInfoUi(
 }
 
 fun PrizeInfo.Prize.toPresentationModel(total: Int, isEventPeriodEnded: Boolean): PrizeInfoUi.Item {
-    return PrizeInfoUi.Item(
-        prizeId = prizeId,
-        eventId = eventId,
-        name = name,
-        shortName = shortName,
-        manufacturer = manufacturer,
-        welcomeImageUrl = welcomeImageUrl,
-        bannerImageUrl = bannerImageUrl,
-        imageUrl = imageUrl,
-        requiredTicketCount = requiredTicketCount,
-        totalEntryCount = totalEntryCount,
-        myEntryCount = myEntryCount,
-        hasEnoughEntry = total >= requiredTicketCount,
-        isEventPeriodEnded = isEventPeriodEnded,
-    )
+    val isBeforeWinningDraw = false // TODO JH: api response에 당첨 발표일이 없어서 임시로 사용
+
+    return if (isBeforeWinningDraw) {
+        PrizeInfoUi.Item.BeforeWinningDraw(
+            prizeId = prizeId,
+            eventId = eventId,
+            name = name,
+            shortName = shortName,
+            manufacturer = manufacturer,
+            welcomeImageUrl = welcomeImageUrl,
+            bannerImageUrl = bannerImageUrl,
+            imageUrl = imageUrl,
+            requiredTicketCount = requiredTicketCount,
+            totalEntryCount = totalEntryCount,
+            myEntryCount = myEntryCount,
+            hasEnoughEntry = total >= requiredTicketCount,
+            isEventPeriodEnded = isEventPeriodEnded,
+        )
+    } else {
+        PrizeInfoUi.Item.AfterWinningDraw(
+            prizeId = prizeId,
+            eventId = eventId,
+            name = name,
+            imageUrl = imageUrl,
+            requiredTicketCount = requiredTicketCount,
+            totalEntryCount = totalEntryCount,
+            myEntryCount = myEntryCount,
+            hasEnoughEntry = total >= requiredTicketCount,
+        )
+    }
 }
