@@ -50,7 +50,11 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         })
 
         binding.tvSubmitEntries.setOnClickListener {
-            viewModel.entryEvent()
+            (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
+                ?.prizeInfo
+                ?.items
+                ?.let { items -> items[binding.vpPrize.currentItem % items.size] }
+                ?.also { item -> viewModel.entryEvent(selectedItem = item) }
         }
     }
 
@@ -111,6 +115,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     private fun updateUi(prizeInfo: PrizeInfoUi) {
         binding.tvMyEntries.text = getString(R.string.my_entries, prizeInfo.total)
         prizeAdapter.setList(prizeInfo.items)
+        binding.tvSubmitEntries.isEnabled = prizeInfo.items[binding.vpPrize.currentItem % prizeInfo.items.size].hasEnoughEntry
         with(prizeInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))

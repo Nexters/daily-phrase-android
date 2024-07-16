@@ -138,11 +138,29 @@ class EventViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun entryEvent() {
+    fun entryEvent(selectedItem: PrizeInfoUi.Item) {
         viewModelScope.launch {
             delay(1000) // TODO JH: API 호출 딜레이 (테스트 용)
 
             // 성공일 때
+            (_uiState.value as? UiState.Loaded)?.let { loaded ->
+                val remainingTickets = loaded.prizeInfo.total - selectedItem.requiredTicketCount
+
+                loaded.prizeInfo.items.map { item ->
+                    if (item.prizeId == selectedItem.prizeId && item is PrizeInfoUi.Item.BeforeWinningDraw) {
+                        item.copy(
+                            myEntryCount = item.myEntryCount + 1,
+                            hasEnoughEntry = remainingTickets >= item.requiredTicketCount
+                        )
+                    } else {
+                        item
+                    }
+                }.let { items ->
+                    loaded.prizeInfo.copy(items = items, total = remainingTickets)
+                }.let {
+                    _uiState.emit(UiState.Loaded(it))
+                }
+            }
             _uiEvent.emit(UiEvent.EntrySuccess)
         }
     }
