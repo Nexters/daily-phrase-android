@@ -15,6 +15,7 @@ import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentEventBinding
 import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
 import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
+import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -97,7 +98,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                     .collectLatest { event ->
                         when (event) {
-                            EventViewModel.UiEvent.EntrySuccess -> binding.lottieParticle.playAnimation()
+                            EventViewModel.UiEvent.EntrySuccess -> {
+                                binding.lottieParticle.playAnimation()
+                                vibrateSingle(requireContext())
+                            }
                         }
                     }
             }
