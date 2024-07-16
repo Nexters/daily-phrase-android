@@ -8,13 +8,13 @@ import com.bumptech.glide.Glide
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemNoneBinding
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeAfterWinningDrawBinding
-import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeBinding
+import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeBeforeWinningDrawBinding
 import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
 
 class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val prizes = mutableListOf<PrizeInfoUi.Item>()
 
-    class PrizeViewHolder(private val binding: ItemPrizeBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PrizeViewHolder(private val binding: ItemPrizeBeforeWinningDrawBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(prize: PrizeInfoUi.Item.BeforeWinningDraw) {
             Glide.with(binding.ivPrize)
                 .load(prize.imageUrl)
@@ -55,7 +55,7 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (Type.ofValue(viewType)) {
             Type.BEFORE_WINNING_DRAW -> PrizeViewHolder(
-                ItemPrizeBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                ItemPrizeBeforeWinningDrawBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             )
             Type.AFTER_WINNING_DRAW -> AfterWinningDrawViewHolder(
                 ItemPrizeAfterWinningDrawBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -89,7 +89,7 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         companion object {
             fun ofValue(value: Int): Type {
-                return entries.find { it.value == value} ?: UNKNOWN
+                return entries.find { it.value == value } ?: UNKNOWN
             }
         }
     }
