@@ -8,7 +8,9 @@ import com.silvertown.android.dailyphrase.presentation.model.toPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -24,6 +26,9 @@ class EventViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private var timeJob: Job? = null
 
@@ -133,11 +138,24 @@ class EventViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun entryEvent() {
+        viewModelScope.launch {
+            delay(1000) // TODO JH: API 호출 딜레이 (테스트 용)
+
+            // 성공일 때
+            _uiEvent.emit(UiEvent.EntrySuccess)
+        }
+    }
+
     sealed interface UiState {
         data object Loading : UiState
 
         data class Loaded(
             val prizeInfo: PrizeInfoUi,
         ) : UiState
+    }
+
+    sealed interface UiEvent {
+        data object EntrySuccess : UiEvent
     }
 }

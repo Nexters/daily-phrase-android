@@ -47,6 +47,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     }
             }
         })
+
+        binding.tvSubmitEntries.setOnClickListener {
+            viewModel.entryEvent()
+        }
     }
 
     private fun initViews() {
@@ -79,13 +83,24 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest { state ->
-                    (state as? EventViewModel.UiState.Loaded)?.let { loaded ->
-                        updateUi(loaded.prizeInfo)
+            launch {
+                viewModel.uiState
+                    .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                    .collectLatest { state ->
+                        (state as? EventViewModel.UiState.Loaded)?.let { loaded ->
+                            updateUi(loaded.prizeInfo)
+                        }
                     }
-                }
+            }
+            launch {
+                viewModel.uiEvent
+                    .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                    .collectLatest { event ->
+                        when (event) {
+                            EventViewModel.UiEvent.EntrySuccess -> binding.lottieParticle.playAnimation()
+                        }
+                    }
+            }
         }
     }
 
