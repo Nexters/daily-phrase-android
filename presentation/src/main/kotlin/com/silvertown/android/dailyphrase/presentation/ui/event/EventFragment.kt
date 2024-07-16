@@ -43,7 +43,11 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     ?.let { it.prizeInfo.items[position % it.prizeInfo.items.size] }
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
-                        binding.tvSubmitEntries.text = getString(R.string.submit_entries, prize.requiredTicketCount)
+                        binding.tvSubmitEntries.text = if (prize is PrizeInfoUi.Item.BeforeWinningDraw) {
+                            getString(R.string.submit_entries, prize.requiredTicketCount)
+                        } else {
+                            getString(R.string.confirm_entry_result)
+                        }
                         binding.tvSubmitEntries.isEnabled = prize.hasEnoughEntry
                     }
             }
@@ -54,7 +58,12 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 ?.prizeInfo
                 ?.items
                 ?.let { items -> items[binding.vpPrize.currentItem % items.size] }
-                ?.also { item -> viewModel.entryEvent(selectedItem = item) }
+                ?.also { item ->
+                    when (item) {
+                        is PrizeInfoUi.Item.AfterWinningDraw -> viewModel.checkEntryResult()
+                        is PrizeInfoUi.Item.BeforeWinningDraw -> viewModel.entryEvent(selectedItem = item)
+                    }
+                }
         }
     }
 

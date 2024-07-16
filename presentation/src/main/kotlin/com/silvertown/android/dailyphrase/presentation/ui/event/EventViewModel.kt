@@ -165,6 +165,10 @@ class EventViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun checkEntryResult() {
+        // TODO JH: 응모 결과 확인
+    }
+
     sealed interface UiState {
         data object Loading : UiState
 
