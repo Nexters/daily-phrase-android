@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.silvertown.android.dailyphrase.domain.model.RewardBanner
+import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.util.EventTimer
@@ -48,7 +48,8 @@ import com.skydoves.balloon.compose.rememberBalloonBuilder
 
 @Composable
 internal fun RewardPopup(
-    rewardBanner: RewardBanner,
+    state: HomeRewardState,
+    showRewardPopupTooltip: Boolean,
     onTimeBelowThreshold: () -> Unit,
 ) {
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
@@ -73,7 +74,7 @@ internal fun RewardPopup(
     val annotatedText = buildAnnotatedString {
         append(stringResource(id = R.string.reward_popup_text_prefix))
         withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
-            append(" " + rewardBanner.shortName + " ")
+            append(" " + state.rewardBanner.shortName + " ")
         }
         append(stringResource(id = R.string.reward_popup_text_suffix))
     }
@@ -87,7 +88,11 @@ internal fun RewardPopup(
                 .offset(y = (-30).dp), // 하단부터 팝업포지션 offset
             builder = builder,
             onBalloonWindowInitialized = { balloonWindow = it },
-            onComposedAnchor = { balloonWindow?.showAlignTop() },
+            onComposedAnchor = {
+                if (showRewardPopupTooltip) {
+                    balloonWindow?.showAlignTop()
+                }
+            },
             balloonContent = {
                 Row(
                     modifier = Modifier,
@@ -95,7 +100,7 @@ internal fun RewardPopup(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     EventTimer(
-                        eventEndedTime = rewardBanner.eventEndDateTime,
+                        eventEndedTime = state.eventEndDateTime,
                         onTimeBelowThreshold = onTimeBelowThreshold
                     )
                     Icon(
@@ -141,7 +146,7 @@ internal fun RewardPopup(
                     )
                 }
 
-                if (rewardBanner.myTicketCount > 0) {
+                if (state.rewardBanner.myTicketCount > 0) {
                     Box(
                         modifier = Modifier
                             .offset(x = 3.dp, y = (-1).dp) // count 포지션 offset
@@ -155,7 +160,7 @@ internal fun RewardPopup(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            text = rewardBanner.myTicketCount.toString(),
+                            text = state.rewardBanner.myTicketCount.toString(),
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontFamily = pretendardFamily,

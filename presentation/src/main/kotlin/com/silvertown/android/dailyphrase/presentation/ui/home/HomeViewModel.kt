@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
 import com.silvertown.android.dailyphrase.domain.model.Post
-import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
-import com.silvertown.android.dailyphrase.domain.repository.RewardRepository
 import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
+import com.silvertown.android.dailyphrase.domain.usecase.GetHomeRewardStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,8 +31,8 @@ class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
-    private val rewardRepository: RewardRepository,
-    private val shareRepository: ShareRepository
+    private val getHomeRewardStateUseCase: GetHomeRewardStateUseCase,
+    private val shareRepository: ShareRepository,
 ) : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
@@ -41,11 +41,11 @@ class HomeViewModel @Inject constructor(
     private val _showLoginDialog = MutableStateFlow(false)
     val showLoginDialog = _showLoginDialog.asStateFlow()
 
-    val rewardBanner: StateFlow<RewardBanner?> =
-        rewardRepository.getHomeRewardBanner()
+    val rewardState: StateFlow<HomeRewardState?> =
+        getHomeRewardStateUseCase()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = null
             )
 

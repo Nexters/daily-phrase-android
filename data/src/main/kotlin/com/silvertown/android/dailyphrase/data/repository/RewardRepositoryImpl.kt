@@ -4,6 +4,7 @@ import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.RewardDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
 import com.silvertown.android.dailyphrase.domain.model.RewardBanner
+import com.silvertown.android.dailyphrase.domain.model.RewardInfo
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.RewardRepository
@@ -27,6 +28,19 @@ class RewardRepositoryImpl @Inject constructor(
                 rewardBannerList.randomOrNull()?.let { rewardBanner ->
                     emit(rewardBanner)
                 }
+            }
+            .onFailure { errorMessage, _ ->
+                Timber.e(errorMessage)
+            }
+    }
+
+    override fun getRewardInfo(): Flow<RewardInfo> = flow {
+        rewardDataSource.getRewardInfo()
+            .toResultModel {
+                it.result?.toDomainModel()
+            }
+            .onSuccess { rewardInfo ->
+                emit(rewardInfo)
             }
             .onFailure { errorMessage, _ ->
                 Timber.e(errorMessage)

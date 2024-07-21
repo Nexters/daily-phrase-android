@@ -16,3 +16,10 @@ data class RewardBanner(
     val myTicketCount: Int,
     val eventEndDateTime: LocalDateTime?,
 )
+
+data class HomeRewardState(
+    val rewardBanner: RewardBanner,
+    val name: String,
+    val eventEndDateTime: LocalDateTime?,
+    val shareCount: Int,
+)

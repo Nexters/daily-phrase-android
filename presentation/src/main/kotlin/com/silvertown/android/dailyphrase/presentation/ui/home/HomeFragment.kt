@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
+import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
 import com.silvertown.android.dailyphrase.domain.model.Post
-import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
@@ -38,6 +38,7 @@ import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
@@ -138,11 +139,11 @@ class HomeFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.rewardBanner
+            viewModel.rewardState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .filterNotNull()
                 .collectLatest {
-                    rewardBannerAdapter.submitList(listOf(it))
+                    rewardBannerAdapter.submitList(listOf(it.rewardBanner))
                 }
         }
 
@@ -174,7 +175,7 @@ class HomeFragment :
         binding.composeView.setContent {
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
             val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
-            val rewardBanner by viewModel.rewardBanner.collectAsStateWithLifecycle()
+            val rewardState by viewModel.rewardState.collectAsStateWithLifecycle()
             val messageRes = ActionType.valueOf(actionState.name).messageRes
 
             if (showDialog) {
@@ -196,7 +197,7 @@ class HomeFragment :
                 }
             }
 
-            HomeRewardPopup(rewardBanner, isLoggedIn)
+            HomeRewardPopup(rewardState, isLoggedIn)
         }
     }
 
@@ -271,30 +272,31 @@ class HomeFragment :
         }
     }
 
-    private fun shouldShowPopup(remainTime: Long): Boolean {
+    private fun shouldShowPopupTooltip(remainTime: Long): Boolean {
         return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
     }
 
     @Composable
     private fun HomeRewardPopup(
-        rewardBanner: RewardBanner?,
+        rewardState: HomeRewardState?,
         isLoggedIn: Boolean,
     ) {
-        var showRewardPopup by remember { mutableStateOf(false) }
+        var showRewardPopupTooltip by remember { mutableStateOf(false) }
 
-        rewardBanner?.let { banner ->
+        rewardState?.let { state ->
             val remainTime =
-                Duration.between(LocalDateTime.now(), rewardBanner.eventEndDateTime).toMillis()
+                Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
 
-            if (shouldShowPopup(remainTime)) {
-                showRewardPopup = true
+            if (shouldShowPopupTooltip(remainTime)) {
+                showRewardPopupTooltip = true
             }
 
-            if (isLoggedIn && showRewardPopup) {
+            if (isLoggedIn) {
                 RewardPopup(
-                    rewardBanner = banner,
+                    state = state,
+                    showRewardPopupTooltip = showRewardPopupTooltip,
                     onTimeBelowThreshold = {
-                        showRewardPopup = false
+                        showRewardPopupTooltip = false
                     }
                 )
             }
