@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.reward
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,7 +54,8 @@ import kotlinx.coroutines.delay
 @Composable
 internal fun RewardPopup(
     state: HomeRewardState,
-    showRewardPopupTooltip: Boolean,
+    showSharedEventTooltip: Boolean,
+    showEndedEventTimerPopupTooltip: Boolean,
     onTimeBelowThreshold: () -> Unit,
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
@@ -117,30 +119,40 @@ internal fun RewardPopup(
                 .align(Alignment.BottomCenter)
                 .offset(y = (-30).dp), // 하단부터 팝업포지션 offset
             builder = builder,
+            key = showSharedEventTooltip to showEndedEventTimerPopupTooltip,
             onBalloonWindowInitialized = { balloonWindow = it },
-            onComposedAnchor = {
-                if (showRewardPopupTooltip) {
-                    balloonWindow?.showAlignTop()
-                }
-            },
             balloonContent = {
-                Row(
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    EventTimer(
-                        eventEndedTime = state.eventEndDateTime,
-                        onTimeBelowThreshold = onTimeBelowThreshold
+                if (showSharedEventTooltip) {
+                    Text(
+                        text = stringResource(id = R.string.get_ticket_title)
                     )
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_close_fill),
-                        tint = Color.Unspecified,
-                        contentDescription = null
-                    )
+                } else {
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        EventTimer(
+                            eventEndedTime = state.eventEndDateTime,
+                            onTimeBelowThreshold = onTimeBelowThreshold
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close_fill),
+                            tint = Color.Unspecified,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         ) { balloonWindow ->
+            LaunchedEffect(showSharedEventTooltip, showEndedEventTimerPopupTooltip) {
+                if (showSharedEventTooltip || showEndedEventTimerPopupTooltip) {
+                    balloonWindow.showAlignTop()
+                } else {
+                    balloonWindow.dismiss()
+                }
+            }
+
             Box(
                 modifier = Modifier.wrapContentSize(),
                 contentAlignment = Alignment.TopEnd

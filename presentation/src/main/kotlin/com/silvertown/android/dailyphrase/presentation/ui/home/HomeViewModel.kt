@@ -14,6 +14,7 @@ import com.silvertown.android.dailyphrase.domain.repository.PostRepository
 import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import com.silvertown.android.dailyphrase.domain.usecase.GetHomeRewardStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -41,6 +43,12 @@ class HomeViewModel @Inject constructor(
     private val _showLoginDialog = MutableStateFlow(false)
     val showLoginDialog = _showLoginDialog.asStateFlow()
 
+    private val _shareEvent = MutableSharedFlow<Unit>()
+    val shareEvent = _shareEvent.asSharedFlow()
+
+    private val prevSharedCount: Int?
+        get() = savedStateHandle.get<Int>(SHARED_COUNT)
+
     val postList: Flow<PagingData<Post>> =
         postRepository
             .getPosts()
@@ -55,13 +63,15 @@ class HomeViewModel @Inject constructor(
                 initialValue = false
             )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val rewardState: StateFlow<HomeRewardState?> =
-        getHomeRewardStateUseCase(isLoggedIn.value)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(1000L),
-                initialValue = null
-            )
+        isLoggedIn.flatMapLatest { isLoggedIn ->
+            getHomeRewardStateUseCase(isLoggedIn)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(1000L),
+            initialValue = null
+        )
 
     /** TODO: 주환 작업부 **/
     fun createMember(socialToken: String) {
@@ -158,8 +168,53 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun updateSharedCount() {
+        viewModelScope.launch {
+            if (isLoggedIn.value) {
+                shareRepository.updateSharedCount()
+            }
+        }
+    }
+
+    fun setPrevSharedCount() {
+        viewModelScope.launch {
+            rewardState.value?.let {
+                savedStateHandle[SHARED_COUNT] = it.shareCount
+            }
+        }
+    }
+
+    fun checkAndEmitSharedEvent() {
+        viewModelScope.launch {
+            updateSharedCount()
+
+            rewardState.value?.let {
+                if (shouldEmitSharedEvent(it.shareCount)) {
+                    emitSharedEvent()
+                    updatePrevSharedCount(it.shareCount)
+                }
+            }
+        }
+    }
+
+    private fun shouldEmitSharedEvent(currentSharedCount: Int): Boolean {
+        return (prevSharedCount ?: 0) < currentSharedCount
+    }
+
+    private suspend fun emitSharedEvent() {
+        _shareEvent.emit(Unit)
+    }
+
+    private fun updatePrevSharedCount(currentSharedCount: Int) {
+        savedStateHandle[SHARED_COUNT] = currentSharedCount
+    }
+
     sealed interface UiEvent {
         data object FirstSignup : UiEvent
         data object AlreadySignedUp : UiEvent
+    }
+
+    companion object {
+        const val SHARED_COUNT = "shared_count"
     }
 }

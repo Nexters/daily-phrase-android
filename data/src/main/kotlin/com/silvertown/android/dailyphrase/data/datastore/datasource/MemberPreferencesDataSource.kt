@@ -16,6 +16,7 @@ class MemberPreferencesDataSource @Inject constructor(
                 id = preferences.id.takeIf { it.toInt() != 0 } ?: DEFAULT_ID.toLong(),
                 name = preferences.name.takeIf { it.isNotBlank() } ?: DEFAULT_NAME,
                 imageUrl = preferences.imageUrl.takeIf { it.isNotBlank() } ?: DEFAULT_IMAGE_URL,
+                sharedCount = preferences.sharedCount.takeIf { it >= 0 } ?: DEFAULT_SHARED_COUNT,
                 email = DEFAULT_EMAIL,
                 quitAt = DEFAULT_QUIT_AT
             )
@@ -66,11 +67,20 @@ class MemberPreferencesDataSource @Inject constructor(
         }
     }
 
+    suspend fun updateSharedCount(count: Int) {
+        memberPreferences.updateData { currentPreferences ->
+            currentPreferences.toBuilder()
+                .setSharedCount(count)
+                .build()
+        }
+    }
+
     companion object {
         const val DEFAULT_ID = 0
         const val DEFAULT_NAME = "User"
         const val DEFAULT_IMAGE_URL =
             "https://cdn.pixabay.com/photo/2015/06/25/04/50/hand-print-820913_1280.jpg"
+        const val DEFAULT_SHARED_COUNT = 0
         const val DEFAULT_EMAIL = ""
         const val DEFAULT_QUIT_AT = ""
     }

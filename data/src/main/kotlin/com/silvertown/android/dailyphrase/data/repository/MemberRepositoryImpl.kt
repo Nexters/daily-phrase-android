@@ -68,4 +68,13 @@ class MemberRepositoryImpl @Inject constructor(
     override suspend fun deleteAccessToken() =
         tokenDataSource.deleteAccessToken()
 
+    override suspend fun updateSharedCount(count: Int) {
+        memberPreferencesDataSource.updateSharedCount(count)
+    }
+
+    override fun getSharedCountFlow(): Flow<Int> {
+        return memberPreferencesDataSource.memberData.map {
+            it.sharedCount
+        }
+    }
 }

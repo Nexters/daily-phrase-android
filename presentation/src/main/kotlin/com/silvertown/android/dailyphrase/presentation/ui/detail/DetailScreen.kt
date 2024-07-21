@@ -1,7 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.ui.detail
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.kakao.sdk.common.util.KakaoCustomTabsClient
-import com.kakao.sdk.share.ShareClient
-import com.kakao.sdk.share.WebSharerClient
-import com.kakao.sdk.template.model.Button
-import com.kakao.sdk.template.model.Content
-import com.kakao.sdk.template.model.FeedTemplate
-import com.kakao.sdk.template.model.Link
-import com.kakao.sdk.template.model.Social
 import com.silvertown.android.dailyphrase.presentation.BuildConfig
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
@@ -48,7 +39,6 @@ import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 object Url {
     const val webUrl = "https://www.daily-phrase.com/phrase-web/"
@@ -87,6 +77,7 @@ fun DetailScreen(
             onClickBookmark = detailViewModel::onClickBookmark,
             logShareEvent = detailViewModel::logShareEvent,
             onClickShare = detailViewModel::onClickShare,
+            updateSharedCount = detailViewModel::updateSharedCount,
             showLoingDialog = detailViewModel::showLoginDialog,
         )
     }
@@ -102,6 +93,7 @@ fun DetailBody(
     onClickLike: () -> Unit,
     onClickBookmark: () -> Unit,
     logShareEvent: () -> Unit,
+    updateSharedCount: () -> Unit,
     onClickShare: () -> Unit,
     showLoingDialog: (Boolean) -> Unit,
 ) {
@@ -170,7 +162,7 @@ fun DetailBody(
                                 sendKakaoLink(
                                     context = context,
                                     uiState = uiState,
-                                    logShareEvent = logShareEvent
+                                    logShareEvent = logShareEvent,
                                 )
                             }
                         )
@@ -184,7 +176,7 @@ fun DetailBody(
                     sendKakaoLink(
                         context = context,
                         uiState = uiState,
-                        logShareEvent = logShareEvent
+                        logShareEvent = logShareEvent,
                     )
                 }
             }
@@ -207,7 +199,7 @@ private fun sendKakaoLink(
         commentCount = uiState.commentCount,
         sharedCount = uiState.sharedCount,
         viewCount = uiState.viewCount,
-        logShareEvent = logShareEvent
+        logShareEvent = logShareEvent,
     )
 }
 

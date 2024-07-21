@@ -6,6 +6,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,9 +37,10 @@ import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTE
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
@@ -197,7 +199,11 @@ class HomeFragment :
                 }
             }
 
-            HomeRewardPopup(rewardState, isLoggedIn)
+            HomeRewardPopup(
+                rewardState = rewardState,
+                isLoggedIn = isLoggedIn,
+                shareEvent = viewModel.shareEvent
+            )
         }
     }
 
@@ -209,11 +215,13 @@ class HomeFragment :
     override fun onResume() {
         super.onResume()
         setStatusBarColor(R.color.home_app_bar)
+        viewModel.checkAndEmitSharedEvent()
     }
 
     override fun onStop() {
         super.onStop()
         setStatusBarColor(R.color.white)
+        viewModel.setPrevSharedCount()
     }
 
     private fun addRewardBannerAdapter() {
@@ -262,7 +270,7 @@ class HomeFragment :
                 description = post.content,
                 imageUrl = post.imageUrl,
                 likeCount = post.likeCount,
-                viewCount = post.viewCount
+                viewCount = post.viewCount,
             ) {
                 viewModel.logShareEvent(post.phraseId)
             }
@@ -272,7 +280,7 @@ class HomeFragment :
         }
     }
 
-    private fun shouldShowPopupTooltip(remainTime: Long): Boolean {
+    private fun showEndedEventTimerPopupTooltip(remainTime: Long): Boolean {
         return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
     }
 
@@ -280,23 +288,34 @@ class HomeFragment :
     private fun HomeRewardPopup(
         rewardState: HomeRewardState?,
         isLoggedIn: Boolean,
+        shareEvent: SharedFlow<Unit>,
     ) {
-        var showRewardPopupTooltip by remember { mutableStateOf(false) }
+        var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
+        var showSharedEventTooltip by remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            shareEvent.collect {
+                showSharedEventTooltip = true
+                delay(2000)
+                showSharedEventTooltip = false
+            }
+        }
 
         rewardState?.let { state ->
             val remainTime =
                 Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
 
-            if (shouldShowPopupTooltip(remainTime)) {
-                showRewardPopupTooltip = true
+            if (showEndedEventTimerPopupTooltip(remainTime)) {
+                showEndedEventTimerPopupTooltip = true
             }
 
             if (isLoggedIn) {
                 RewardPopup(
                     state = state,
-                    showRewardPopupTooltip = showRewardPopupTooltip,
+                    showSharedEventTooltip = showSharedEventTooltip,
+                    showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
                     onTimeBelowThreshold = {
-                        showRewardPopupTooltip = false
+                        showEndedEventTimerPopupTooltip = false
                     }
                 )
             }

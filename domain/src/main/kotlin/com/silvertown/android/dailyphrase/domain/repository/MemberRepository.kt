@@ -33,4 +33,7 @@ interface MemberRepository {
 
     suspend fun deleteAccessToken()
 
+    suspend fun updateSharedCount(count: Int)
+
+    fun getSharedCountFlow(): Flow<Int>
 }

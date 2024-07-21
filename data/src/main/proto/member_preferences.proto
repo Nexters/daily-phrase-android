@@ -7,4 +7,5 @@ message MemberPreferences {
   int64 id = 1;
   string name = 2;
   string imageUrl = 3;
+  int32 sharedCount = 4;
 }

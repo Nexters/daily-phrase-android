@@ -224,4 +224,13 @@ class DetailViewModel @Inject constructor(
             shareRepository.logShareEvent(_detailUiState.value.phraseId)
         }
     }
+
+    fun updateSharedCount() {
+        viewModelScope.launch {
+            val isLoggedIn = memberRepository.getLoginStatus()
+            if (isLoggedIn) {
+                shareRepository.updateSharedCount()
+            }
+        }
+    }
 }
