@@ -16,10 +16,6 @@ import javax.inject.Inject
 class TokenDataSourceImpl @Inject constructor(
     private val tokenDataStore: DataStore<Preferences>,
 ) : TokenDataSource {
-    companion object {
-        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
-    }
 
     override fun getAccessToken(): Flow<String?> {
         return tokenDataStore.data
@@ -71,5 +67,10 @@ class TokenDataSourceImpl @Inject constructor(
         tokenDataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN_KEY)
         }
+    }
+
+    companion object {
+        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
     }
 }
