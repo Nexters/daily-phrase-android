@@ -51,4 +51,6 @@
     <string name="reward_popup_text_suffix">받기</string>
     <string name="event_timer_text">이벤트 마감까지 %1$s 남음</string>
     <string name="share_this_quote">이 글귀 공유하기</string>
+    <string name="acquirable_ticket_reset_timer_text">%1$s 뒤에</string>
+    <string name="acquirable_ticket_reset_info_text">응모권을 받을 수 있어요</string>
 </resources>

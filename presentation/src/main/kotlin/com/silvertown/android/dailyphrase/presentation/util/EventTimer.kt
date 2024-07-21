@@ -20,6 +20,7 @@ import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTE
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -69,4 +70,14 @@ private fun formatTime(time: Long): String {
     val sec = TimeUnit.MILLISECONDS.toSeconds(time) % 60
 
     return String.format("%02d:%02d:%02d", hours, min, sec)
+}
+
+fun calculateAcquirableTicketResetTime(): String {
+    val now = LocalDateTime.now()
+    val midnight = now.toLocalDate().plusDays(1).atStartOfDay()
+    val remainingSeconds = ChronoUnit.SECONDS.between(now, midnight)
+    val hours = remainingSeconds / 3600
+    val minutes = (remainingSeconds % 3600) / 60
+    val seconds = remainingSeconds % 60
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
 }

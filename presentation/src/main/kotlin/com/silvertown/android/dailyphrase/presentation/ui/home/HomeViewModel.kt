@@ -41,14 +41,6 @@ class HomeViewModel @Inject constructor(
     private val _showLoginDialog = MutableStateFlow(false)
     val showLoginDialog = _showLoginDialog.asStateFlow()
 
-    val rewardState: StateFlow<HomeRewardState?> =
-        getHomeRewardStateUseCase()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = null
-            )
-
     val postList: Flow<PagingData<Post>> =
         postRepository
             .getPosts()
@@ -61,6 +53,14 @@ class HomeViewModel @Inject constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(1000L),
                 initialValue = false
+            )
+
+    val rewardState: StateFlow<HomeRewardState?> =
+        getHomeRewardStateUseCase(isLoggedIn.value)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(1000L),
+                initialValue = null
             )
 
     /** TODO: 주환 작업부 **/

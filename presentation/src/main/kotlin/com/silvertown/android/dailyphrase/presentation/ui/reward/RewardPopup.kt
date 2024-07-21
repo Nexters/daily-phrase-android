@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,12 +41,14 @@ import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 import com.silvertown.android.dailyphrase.presentation.util.EventTimer
+import com.silvertown.android.dailyphrase.presentation.util.calculateAcquirableTicketResetTime
 import com.skydoves.balloon.ArrowPositionRules
 import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.BalloonSizeSpec
 import com.skydoves.balloon.compose.Balloon
 import com.skydoves.balloon.compose.BalloonWindow
 import com.skydoves.balloon.compose.rememberBalloonBuilder
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun RewardPopup(
@@ -52,6 +56,11 @@ internal fun RewardPopup(
     showRewardPopupTooltip: Boolean,
     onTimeBelowThreshold: () -> Unit,
 ) {
+    var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
+    val shouldRunAcquirableTicketResetTimer by remember {
+        derivedStateOf { state.shareCount > 10 }
+    }
+
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
 
     val builder = rememberBalloonBuilder {
@@ -71,12 +80,33 @@ internal fun RewardPopup(
         //setAutoDismissDuration(2000)
     }
 
-    val annotatedText = buildAnnotatedString {
-        append(stringResource(id = R.string.reward_popup_text_prefix))
-        withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
-            append(" " + state.rewardBanner.shortName + " ")
+    LaunchedEffect(shouldRunAcquirableTicketResetTimer) {
+        if (shouldRunAcquirableTicketResetTimer) {
+            while (true) {
+                acquirableTicketResetTimer = calculateAcquirableTicketResetTime()
+                delay(1000L)
+            }
         }
-        append(stringResource(id = R.string.reward_popup_text_suffix))
+    }
+
+    val annotatedText = buildAnnotatedString {
+        if (state.shareCount > 10) {
+            withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
+                append(
+                    stringResource(
+                        id = R.string.acquirable_ticket_reset_timer_text,
+                        acquirableTicketResetTimer
+                    ) + " "
+                )
+            }
+            append(stringResource(id = R.string.acquirable_ticket_reset_info_text))
+        } else {
+            append(stringResource(id = R.string.reward_popup_text_prefix))
+            withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
+                append(" " + state.rewardBanner.shortName + " ")
+            }
+            append(stringResource(id = R.string.reward_popup_text_suffix))
+        }
     }
 
     Box(
