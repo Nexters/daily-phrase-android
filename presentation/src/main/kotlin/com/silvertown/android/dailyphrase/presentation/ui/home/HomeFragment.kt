@@ -199,11 +199,12 @@ class HomeFragment :
                 }
             }
 
-            HomeRewardPopup(
-                rewardState = rewardState,
-                isLoggedIn = isLoggedIn,
-                shareEvent = viewModel.shareEvent
-            )
+            if (isLoggedIn) {
+                HomeRewardPopup(
+                    rewardState = rewardState,
+                    shareEvent = viewModel.shareEvent
+                )
+            }
         }
     }
 
@@ -287,7 +288,6 @@ class HomeFragment :
     @Composable
     private fun HomeRewardPopup(
         rewardState: HomeRewardState?,
-        isLoggedIn: Boolean,
         shareEvent: SharedFlow<Unit>,
     ) {
         var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
@@ -309,16 +309,14 @@ class HomeFragment :
                 showEndedEventTimerPopupTooltip = true
             }
 
-            if (isLoggedIn) {
-                RewardPopup(
-                    state = state,
-                    showSharedEventTooltip = showSharedEventTooltip,
-                    showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
-                    onTimeBelowThreshold = {
-                        showEndedEventTimerPopupTooltip = false
-                    }
-                )
-            }
+            RewardPopup(
+                state = state,
+                showSharedEventTooltip = showSharedEventTooltip,
+                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
+                onTimeBelowThreshold = {
+                    showEndedEventTimerPopupTooltip = false
+                }
+            )
         }
     }
 }
