@@ -60,7 +60,7 @@ internal fun RewardPopup(
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
     val shouldRunAcquirableTicketResetTimer by remember {
-        derivedStateOf { state.shareCount >= 10 }
+        derivedStateOf { shouldRunAcquirableTicketResetTimer(state.shareCount) }
     }
 
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
@@ -220,7 +220,7 @@ private fun getPopupText(
             fontFamily = pretendardFamily
         )
 
-        if (state.shareCount >= 10) {
+        if (shouldRunAcquirableTicketResetTimer(state.shareCount)) {
             withStyle(style = orangeStyle) {
                 append(acquirableTicketResetTimer)
             }
@@ -243,4 +243,8 @@ private fun getPopupText(
         }
     }
     return annotatedText
+}
+
+fun shouldRunAcquirableTicketResetTimer(shareCount: Int): Boolean {
+    return shareCount >= 10
 }
