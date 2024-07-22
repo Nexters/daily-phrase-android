@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentBookmarkBinding
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkBinding::inflate) {
     private lateinit var adapter: BookmarkAdapter
     private val viewModel by viewModels<BookmarkViewModel>()
-    private var isLoggedIn: Boolean = false
+    private var loginState: LoginState = LoginState()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,7 +38,7 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
             findNavController().popBackStack() // TODO: 주환 Dev 수정 예정
         }
         binding.ivProfile.setOnClickListener {
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 BookmarkFragmentDirections.moveToMyPageFragment()
                     .also { findNavController().navigate(it) }
             } else {
@@ -77,10 +78,10 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(FragmentBookmarkB
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLoggedIn
+            viewModel.loginState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { state ->
-                    isLoggedIn = state
+                    loginState = state
                 }
         }
     }

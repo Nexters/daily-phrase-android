@@ -107,8 +107,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.isLoggedIn.collectLatest { isLoggedIn ->
-                if (isLoggedIn) {
+            viewModel.loginState.collectLatest { state ->
+                if (state.isLoggedIn) {
                     viewModel.updateSharedCount()
                 }
             }

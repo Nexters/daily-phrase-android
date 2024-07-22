@@ -5,6 +5,7 @@ import com.silvertown.android.dailyphrase.data.datastore.datasource.TokenDataSou
 import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.MemberDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.Member
 import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.domain.model.SignInToken
@@ -56,12 +57,20 @@ class MemberRepositoryImpl @Inject constructor(
             .getSignInToken(token = token)
             .toResultModel { it.result?.toDomainModel() }
 
-    override suspend fun getLoginStatus(): Boolean =
-        tokenDataSource.getLoginState()
+    override suspend fun getLoginState(): LoginState {
+        val loginState = tokenDataSource.getAccessToken()
+        return LoginState(
+            isLoggedIn = !loginState.isNullOrEmpty(),
+            accessToken = loginState.orEmpty()
+        )
+    }
 
-    override fun getLoginStateFlow(): Flow<Boolean> {
-        return tokenDataSource.getAccessToken().map { accessToken ->
-            !accessToken.isNullOrEmpty()
+    override fun getLoginStateFlow(): Flow<LoginState> {
+        return tokenDataSource.getAccessTokenFlow().map { accessToken ->
+            LoginState(
+                !accessToken.isNullOrEmpty(),
+                accessToken.orEmpty()
+            )
         }
     }
 

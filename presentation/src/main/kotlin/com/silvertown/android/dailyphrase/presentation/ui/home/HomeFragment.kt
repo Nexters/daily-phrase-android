@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
@@ -54,7 +55,7 @@ class HomeFragment :
     private lateinit var rewardBannerAdapter: HomeRewardBannerAdapter
     private lateinit var homeAdapter: ConcatAdapter
     private val viewModel by viewModels<HomeViewModel>()
-    private var isLoggedIn: Boolean = false
+    private var loginState: LoginState = LoginState()
     private var actionState: ActionType = ActionType.NONE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +71,7 @@ class HomeFragment :
         (activity as MainActivity).setLoginResultListener(this)
 
         binding.tvBookmark.setOnClickListener {
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 HomeFragmentDirections
                     .moveToBookmarkFragment()
                     .also { findNavController().navigate(it) }
@@ -81,7 +82,7 @@ class HomeFragment :
         }
 
         binding.ivProfile.setOnClickListener {
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 HomeFragmentDirections
                     .moveToMyPageFragment()
                     .also { findNavController().navigate(it) }
@@ -150,11 +151,11 @@ class HomeFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLoggedIn
+            viewModel.loginState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { state ->
-                    isLoggedIn = state
-                    if (state) {
+                    loginState = state
+                    if (state.isLoggedIn) {
                         removeRewardBannerAdapter()
                     } else {
                         addRewardBannerAdapter()
@@ -176,7 +177,7 @@ class HomeFragment :
     private fun initComposeView() {
         binding.composeView.setContent {
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
-            val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
+            val loginState by viewModel.loginState.collectAsStateWithLifecycle()
             val rewardState by viewModel.rewardState.collectAsStateWithLifecycle()
             val messageRes = ActionType.valueOf(actionState.name).messageRes
 
@@ -199,7 +200,7 @@ class HomeFragment :
                 }
             }
 
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 HomeRewardPopup(
                     rewardState = rewardState,
                     shareEvent = viewModel.shareEvent
@@ -245,7 +246,7 @@ class HomeFragment :
     }
 
     private fun onClickBookmark(phraseId: Long, state: Boolean) {
-        if (isLoggedIn) {
+        if (loginState.isLoggedIn) {
             viewModel.onClickBookmark(phraseId, state)
         } else {
             actionState = ActionType.BOOKMARK
@@ -254,7 +255,7 @@ class HomeFragment :
     }
 
     private fun onClickLike(phraseId: Long, state: Boolean) {
-        if (isLoggedIn) {
+        if (loginState.isLoggedIn) {
             viewModel.onClickLike(phraseId, state)
         } else {
             actionState = ActionType.LIKE
@@ -263,7 +264,7 @@ class HomeFragment :
     }
 
     private fun onClickShare(post: Post) {
-        if (isLoggedIn) {
+        if (loginState.isLoggedIn) {
             sendKakaoLink(
                 context = requireContext(),
                 phraseId = post.phraseId,
@@ -272,6 +273,7 @@ class HomeFragment :
                 imageUrl = post.imageUrl,
                 likeCount = post.likeCount,
                 viewCount = post.viewCount,
+                accessToken = loginState.accessToken
             ) {
                 viewModel.logShareEvent(post.phraseId)
             }

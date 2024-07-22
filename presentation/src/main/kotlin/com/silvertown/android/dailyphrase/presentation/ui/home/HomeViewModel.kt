@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
@@ -54,19 +55,19 @@ class HomeViewModel @Inject constructor(
             .getPosts()
             .cachedIn(viewModelScope)
 
-    val isLoggedIn: StateFlow<Boolean> =
+    val loginState: StateFlow<LoginState> =
         memberRepository
             .getLoginStateFlow()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(1000L),
-                initialValue = false
+                initialValue = LoginState()
             )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val rewardState: StateFlow<HomeRewardState?> =
-        isLoggedIn.flatMapLatest { isLoggedIn ->
-            getHomeRewardStateUseCase(isLoggedIn)
+        loginState.flatMapLatest { state ->
+            getHomeRewardStateUseCase(state.isLoggedIn)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(1000L),
@@ -170,7 +171,7 @@ class HomeViewModel @Inject constructor(
 
     private fun updateSharedCount() {
         viewModelScope.launch {
-            if (isLoggedIn.value) {
+            if (loginState.value.isLoggedIn) {
                 shareRepository.updateSharedCount()
             }
         }

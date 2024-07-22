@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
 import com.silvertown.android.dailyphrase.domain.repository.FirebaseRemoteConfigRepository
@@ -39,13 +40,13 @@ class MainViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    val isLoggedIn: StateFlow<Boolean> =
+    val loginState: StateFlow<LoginState> =
         memberRepository
             .getLoginStateFlow()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(1000L),
-                initialValue = false
+                initialValue = LoginState()
             )
 
     init {

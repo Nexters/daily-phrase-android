@@ -199,6 +199,7 @@ private fun sendKakaoLink(
         commentCount = uiState.commentCount,
         sharedCount = uiState.sharedCount,
         viewCount = uiState.viewCount,
+        accessToken = uiState.accessToken,
         logShareEvent = logShareEvent,
     )
 }

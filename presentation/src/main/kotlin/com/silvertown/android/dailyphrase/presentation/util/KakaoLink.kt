@@ -24,6 +24,7 @@ internal fun sendKakaoLink(
     commentCount: Int = 0,
     sharedCount: Int = 0,
     viewCount: Int = 0,
+    accessToken: String,
     logShareEvent: () -> Unit,
 ) {
     val webUrl = Url.webUrl + phraseId
@@ -55,8 +56,16 @@ internal fun sendKakaoLink(
         )
     )
 
+    val serverCallbackArgs = mapOf(
+        "accessToken" to accessToken
+    )
+
     if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
-        ShareClient.instance.shareDefault(context, phraseFeed) { sharingResult, error ->
+        ShareClient.instance.shareDefault(
+            context,
+            phraseFeed,
+            serverCallbackArgs
+        ) { sharingResult, error ->
             if (error != null) {
                 Timber.e(error)
                 Timber.e("카카오톡 공유 실패", error)
@@ -70,7 +79,7 @@ internal fun sendKakaoLink(
             }
         }
     } else {
-        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(phraseFeed)
+        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(phraseFeed, serverCallbackArgs)
 
         try {
             KakaoCustomTabsClient.openWithDefault(context, sharerUrl)

@@ -182,9 +182,11 @@ class DetailViewModel @Inject constructor(
     private fun getLoginState() = _detailUiState.value.isLoggedIn
 
     fun updateLoginState() = viewModelScope.launch {
+        val loginState = memberRepository.getLoginState()
         _detailUiState.update { state ->
             state.copy(
-                isLoggedIn = memberRepository.getLoginStatus(),
+                isLoggedIn = loginState.isLoggedIn,
+                accessToken = loginState.accessToken
             )
         }
     }
@@ -227,8 +229,8 @@ class DetailViewModel @Inject constructor(
 
     fun updateSharedCount() {
         viewModelScope.launch {
-            val isLoggedIn = memberRepository.getLoginStatus()
-            if (isLoggedIn) {
+            val loginState = memberRepository.getLoginState()
+            if (loginState.isLoggedIn) {
                 shareRepository.updateSharedCount()
             }
         }
