@@ -4,7 +4,6 @@ import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
 import com.silvertown.android.dailyphrase.domain.model.SharedCountModel
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.RewardRepository
-import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
