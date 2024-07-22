@@ -19,6 +19,7 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.etPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         binding.etPhoneNumber.addTextChangedListener {
             binding.tvInputPhoneNumber.isEnabled = (it.toString().length == 13)
         }
