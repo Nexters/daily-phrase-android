@@ -54,4 +54,8 @@
     <string name="not_enough_entry_guide">글귀를 공유하고 응모권을 모아보세요</string>
     <string name="event_result_release_date_guide">%s에\n응모 결과를\n확인해 주세요</string>
     <string name="confirm_entry_result">응모 결과 확인하기</string>
+    <string name="congratulation">당첨을 축하해요!</string>
+    <string name="input_phone_number_guide">남겨주신 연락처로\n선물을 받을 수 있는 링크를 전달해드릴게요.</string>
+    <string name="input_phone_number_hint">010-0000-0000</string>
+    <string name="input_phone_number">연락처 입력하기</string>
 </resources>

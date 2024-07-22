@@ -19,4 +19,5 @@
     <color name="olive_brown">#9A875D</color>
     <color name="ivory">#E9E2D4</color>
     <color name="deep_red">#DE3510</color>
+    <color name="edit_text_hint">#999999</color>
 </resources>

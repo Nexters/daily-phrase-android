@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_rectangle_white_r_top_30"
+    tools:layout_gravity="bottom"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/congratulation"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:fontFamily="@font/pretendard_semi_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_congratulation"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/img_pop"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_input_phone_number_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:gravity="center"
+        android:text="@string/input_phone_number_guide"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:fontFamily="@font/pretendard_medium"
+        app:layout_constraintTop_toBottomOf="@id/iv_congratulation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/et_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rectangle_gray_r_8"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="14dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:hint="@string/input_phone_number_hint"
+        android:textColorHint="@color/edit_text_hint"
+        android:inputType="phone"
+        app:layout_constraintTop_toBottomOf="@id/tv_input_phone_number_guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_input_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="12dp"
+        android:gravity="center"
+        android:background="@drawable/selector_rectangle_orange_gray_r_8"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:paddingVertical="13dp"
+        android:text="@string/input_phone_number"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@id/et_phone_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
