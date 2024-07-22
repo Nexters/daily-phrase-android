@@ -1,6 +1,5 @@
 package com.silvertown.android.dailyphrase.presentation.ui.reward
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -60,7 +60,7 @@ internal fun RewardPopup(
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
     val shouldRunAcquirableTicketResetTimer by remember {
-        derivedStateOf { state.shareCount > 10 }
+        derivedStateOf { state.shareCount >= 10 }
     }
 
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
@@ -90,25 +90,10 @@ internal fun RewardPopup(
         }
     }
 
-    val annotatedText = buildAnnotatedString {
-        if (state.shareCount > 10) {
-            withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
-                append(
-                    stringResource(
-                        id = R.string.acquirable_ticket_reset_timer_text,
-                        acquirableTicketResetTimer
-                    ) + " "
-                )
-            }
-            append(stringResource(id = R.string.acquirable_ticket_reset_info_text))
-        } else {
-            append(stringResource(id = R.string.reward_popup_text_prefix))
-            withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
-                append(" " + state.rewardBanner.shortName + " ")
-            }
-            append(stringResource(id = R.string.reward_popup_text_suffix))
-        }
-    }
+    val popupText = getPopupText(
+        state = state,
+        acquirableTicketResetTimer = acquirableTicketResetTimer
+    )
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -180,11 +165,10 @@ internal fun RewardPopup(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = annotatedText,
+                        text = popupText,
                         style = TextStyle(
                             fontSize = 16.sp,
-                            fontFamily = pretendardFamily,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
                         ),
                         color = colorResource(id = R.color.black)
                     )
@@ -221,4 +205,42 @@ internal fun RewardPopup(
             }
         }
     }
+}
+
+@Composable
+private fun getPopupText(
+    state: HomeRewardState,
+    acquirableTicketResetTimer: String,
+): AnnotatedString {
+    val annotatedText = buildAnnotatedString {
+        val orangeStyle = SpanStyle(color = colorResource(id = R.color.orange))
+        val pretendardFamilyStyle = SpanStyle(fontFamily = pretendardFamily)
+        val orangePretendardStyle = SpanStyle(
+            color = colorResource(id = R.color.orange),
+            fontFamily = pretendardFamily
+        )
+
+        if (state.shareCount >= 10) {
+            withStyle(style = orangeStyle) {
+                append(acquirableTicketResetTimer)
+            }
+            withStyle(style = orangePretendardStyle) {
+                append(" " + stringResource(id = R.string.acquirable_ticket_reset_timer_text_suffix) + " ")
+            }
+            withStyle(style = pretendardFamilyStyle) {
+                append(stringResource(id = R.string.acquirable_ticket_reset_info_text))
+            }
+        } else {
+            withStyle(style = pretendardFamilyStyle) {
+                append(stringResource(id = R.string.reward_popup_text_prefix))
+            }
+            withStyle(style = orangePretendardStyle) {
+                append(" " + state.rewardBanner.shortName + " ")
+            }
+            withStyle(style = pretendardFamilyStyle) {
+                append(stringResource(id = R.string.reward_popup_text_suffix))
+            }
+        }
+    }
+    return annotatedText
 }
