@@ -79,7 +79,6 @@ internal fun RewardPopup(
         setBalloonAnimation(BalloonAnimation.NONE)
         setDismissWhenClicked(true)
         setDismissWhenTouchOutside(false)
-        //setAutoDismissDuration(2000)
     }
 
     LaunchedEffect(shouldRunAcquirableTicketResetTimer) {
