@@ -124,7 +124,13 @@ internal fun RewardPopup(
             balloonContent = {
                 if (showSharedEventTooltip) {
                     Text(
-                        text = stringResource(id = R.string.get_ticket_title)
+                        text = stringResource(id = R.string.get_ticket_title),
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontFamily = pretendardFamily,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        color = colorResource(id = R.color.white)
                     )
                 } else {
                     Row(
@@ -180,7 +186,8 @@ internal fun RewardPopup(
                             fontSize = 16.sp,
                             fontFamily = pretendardFamily,
                             fontWeight = FontWeight.SemiBold
-                        ), color = colorResource(id = R.color.black)
+                        ),
+                        color = colorResource(id = R.color.black)
                     )
                     Image(
                         painter = painterResource(id = R.drawable.ic_ticket_30),
