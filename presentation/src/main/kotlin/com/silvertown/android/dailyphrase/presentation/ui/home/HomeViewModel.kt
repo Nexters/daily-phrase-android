@@ -150,11 +150,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getFirstLoad(): Boolean {
-        return savedStateHandle["key"] ?: false
+        return savedStateHandle[FIRST_LOAD] ?: false
     }
 
     fun setFirstLoad() {
-        savedStateHandle["key"] = true
+        savedStateHandle[FIRST_LOAD] = true
     }
 
     fun showLoginDialog(action: Boolean) {
@@ -217,5 +217,6 @@ class HomeViewModel @Inject constructor(
 
     companion object {
         const val SHARED_COUNT = "shared_count"
+        const val FIRST_LOAD = "first_load"
     }
 }
