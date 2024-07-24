@@ -5,6 +5,8 @@ import com.silvertown.android.dailyphrase.data.MemberPreferences
 import com.silvertown.android.dailyphrase.domain.model.Member
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class MemberPreferencesDataSource @Inject constructor(
@@ -68,10 +70,14 @@ class MemberPreferencesDataSource @Inject constructor(
     }
 
     suspend fun updateSharedCount(count: Int) {
-        memberPreferences.updateData { currentPreferences ->
-            currentPreferences.toBuilder()
-                .setSharedCount(count)
-                .build()
+        try {
+            memberPreferences.updateData { currentPreferences ->
+                currentPreferences.toBuilder()
+                    .setSharedCount(count)
+                    .build()
+            }
+        } catch (ioException: IOException) {
+            Timber.tag("MemberPref").e(ioException, "Failed to update member preferences")
         }
     }
 
