@@ -21,11 +21,11 @@ internal fun sendKakaoLink(
     description: String,
     imageUrl: String,
     accessToken: String,
-    logShareEvent: () -> Unit,
     likeCount: Int = 0,
     commentCount: Int = 0,
     sharedCount: Int = 0,
     viewCount: Int = 0,
+    logShareEvent: () -> Unit,
 ) {
     val webUrl = Url.webUrl + phraseId
 
