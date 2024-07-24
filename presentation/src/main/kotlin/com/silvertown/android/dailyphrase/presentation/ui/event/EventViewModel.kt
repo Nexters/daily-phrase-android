@@ -169,6 +169,10 @@ class EventViewModel @Inject constructor() : ViewModel() {
         // TODO JH: 응모 결과 확인
     }
 
+    fun enterPhoneNumber(phoneNumber: String) {
+
+    }
+
     sealed interface UiState {
         data object Loading : UiState
 

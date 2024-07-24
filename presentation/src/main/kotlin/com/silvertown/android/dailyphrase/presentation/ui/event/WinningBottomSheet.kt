@@ -9,7 +9,10 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.setFragmentResult
+import androidx.navigation.fragment.findNavController
 import com.silvertown.android.dailyphrase.presentation.base.BaseDialogFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.BottomSheetWinningBinding
 
@@ -22,6 +25,16 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
         binding.etPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         binding.etPhoneNumber.addTextChangedListener {
             binding.tvInputPhoneNumber.isEnabled = (it.toString().length == 13)
+        }
+        binding.ivClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.tvInputPhoneNumber.setOnClickListener {
+            findNavController().popBackStack()
+            setFragmentResult(
+                REQUEST_KEY_ENTERED_PHONE_NUMBER,
+                bundleOf(BUNDLE_KEY_PHONE_NUMBER to binding.etPhoneNumber.toString()),
+            )
         }
     }
 
@@ -47,5 +60,10 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etPhoneNumber, InputMethodManager.SHOW_IMPLICIT)
         }, 300)
+    }
+
+    companion object {
+        const val REQUEST_KEY_ENTERED_PHONE_NUMBER = "REQUEST_KEY_ENTERED_PHONE_NUMBER"
+        const val BUNDLE_KEY_PHONE_NUMBER = "BUNDLE_KEY_PHONE_NUMBER"
     }
 }

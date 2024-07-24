@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.event
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -64,6 +65,12 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                         is PrizeInfoUi.Item.BeforeWinningDraw -> viewModel.entryEvent(selectedItem = item)
                     }
                 }
+        }
+
+        setFragmentResultListener(WinningBottomSheet.REQUEST_KEY_ENTERED_PHONE_NUMBER) { _, bundle ->
+            bundle.getString(WinningBottomSheet.BUNDLE_KEY_PHONE_NUMBER)?.let { phoneNumber ->
+                viewModel.enterPhoneNumber(phoneNumber)
+            }
         }
     }
 
@@ -143,6 +150,12 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     private fun showTicketReceivedDialog() {
         EventFragmentDirections
             .moveToTicketReceivedFragment()
+            .also { findNavController().navigate(it) }
+    }
+
+    private fun showWinningBottomSheet() {
+        EventFragmentDirections
+            .moveToWinningBottomSheet()
             .also { findNavController().navigate(it) }
     }
 }
