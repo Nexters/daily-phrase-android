@@ -10,20 +10,26 @@ data class RewardInfoResponse(
     val eventId: Int?,
     @SerializedName("name")
     val name: String?,
-    @SerializedName("status")
-    val status: String?,
+    @SerializedName("eventStartDateTime")
+    val eventStartDateTime: String?,
     @SerializedName("eventEndDateTime")
     val eventEndDateTime: String?,
+    @SerializedName("eventWinnerAnnouncementDateTime")
+    val eventWinnerAnnouncementDateTime: String?,
 )
 
 fun RewardInfoResponse.toDomainModel(): RewardInfo {
-    val parsedEndDate = eventEndDateTime?.let {
-        LocalDateTime.parse(it, DateTimeUtils.localDateTimeFormatter)
-    }
-
     return RewardInfo(
         eventId = eventId,
         name = name.orEmpty(),
-        eventEndDateTime = parsedEndDate
+        eventStartDateTime = eventStartDateTime.toLocalDateTimeOrNull(),
+        eventEndDateTime = eventEndDateTime.toLocalDateTimeOrNull(),
+        eventWinnerAnnouncementDateTime = eventWinnerAnnouncementDateTime.toLocalDateTimeOrNull()
     )
+}
+
+fun String?.toLocalDateTimeOrNull(): LocalDateTime? {
+    return this?.let {
+        LocalDateTime.parse(it, DateTimeUtils.localDateTimeFormatter)
+    }
 }
