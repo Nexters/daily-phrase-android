@@ -57,6 +57,7 @@ internal fun RewardPopup(
     showSharedEventTooltip: Boolean,
     showEndedEventTimerPopupTooltip: Boolean,
     onTimeBelowThreshold: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
     val shouldRunAcquirableTicketResetTimer by remember {
@@ -96,7 +97,7 @@ internal fun RewardPopup(
     )
 
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Balloon(
             modifier = Modifier
@@ -107,31 +108,12 @@ internal fun RewardPopup(
             onBalloonWindowInitialized = { balloonWindow = it },
             balloonContent = {
                 if (showSharedEventTooltip) {
-                    Text(
-                        text = stringResource(id = R.string.get_ticket_title),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontFamily = pretendardFamily,
-                            fontWeight = FontWeight.Medium
-                        ),
-                        color = colorResource(id = R.color.white)
-                    )
+                    TicketReceivedText()
                 } else {
-                    Row(
-                        modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        EventTimer(
-                            eventEndedTime = state.eventEndDateTime,
-                            onTimeBelowThreshold = onTimeBelowThreshold
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_close_fill),
-                            tint = Color.Unspecified,
-                            contentDescription = null
-                        )
-                    }
+                    CountdownTimer(
+                        state = state,
+                        onTimeBelowThreshold = onTimeBelowThreshold
+                    )
                 }
             }
         ) { balloonWindow ->
@@ -147,63 +129,117 @@ internal fun RewardPopup(
                 modifier = Modifier.wrapContentSize(),
                 contentAlignment = Alignment.TopEnd
             ) {
-                Row(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .border(
-                            width = 1.dp,
-                            color = colorResource(id = R.color.orange),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(color = colorResource(id = R.color.white))
-                        .padding(
-                            start = 16.dp,
-                            end = 12.dp
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = popupText,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                        ),
-                        color = colorResource(id = R.color.black)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_ticket_30),
-                        contentDescription = null
-                    )
-                }
+                PopupContainer(popupText)
 
                 if (state.rewardBanner.myTicketCount > 0) {
-                    Box(
-                        modifier = Modifier
-                            .offset(x = 3.dp, y = (-1).dp) // count 포지션 offset
-                            .widthIn(min = 18.dp)
-                            .height(18.dp)
-                            .background(
-                                color = colorResource(id = R.color.bright_red),
-                                shape = CircleShape
-                            )
-                            .padding(horizontal = 4.5.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = state.rewardBanner.myTicketCount.toString(),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontFamily = pretendardFamily,
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            color = colorResource(id = R.color.white),
-                        )
-                    }
+                    OwnedTicketBadge(
+                        myTicketCount = state.rewardBanner.myTicketCount.toString()
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TicketReceivedText() {
+    Text(
+        text = stringResource(id = R.string.get_ticket_title),
+        style = TextStyle(
+            fontSize = 14.sp,
+            fontFamily = pretendardFamily,
+            fontWeight = FontWeight.Medium
+        ),
+        color = colorResource(id = R.color.white)
+    )
+}
+
+@Composable
+private fun CountdownTimer(
+    state: HomeRewardState,
+    onTimeBelowThreshold: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        EventTimer(
+            eventEndedTime = state.eventEndDateTime,
+            onTimeBelowThreshold = onTimeBelowThreshold
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.ic_close_fill),
+            tint = Color.Unspecified,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun PopupContainer(
+    popupText: AnnotatedString,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .height(40.dp)
+            .border(
+                width = 1.dp,
+                color = colorResource(id = R.color.orange),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clip(RoundedCornerShape(20.dp))
+            .background(color = colorResource(id = R.color.white))
+            .padding(
+                start = 16.dp,
+                end = 12.dp
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = popupText,
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+            ),
+            color = colorResource(id = R.color.black)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.ic_ticket_30),
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun OwnedTicketBadge(
+    myTicketCount: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .offset(x = 3.dp, y = (-1).dp) // count 포지션 offset
+            .widthIn(min = 18.dp)
+            .height(18.dp)
+            .background(
+                color = colorResource(id = R.color.bright_red),
+                shape = CircleShape
+            )
+            .padding(horizontal = 4.5.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = myTicketCount,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontFamily = pretendardFamily,
+                fontWeight = FontWeight.SemiBold
+            ),
+            color = colorResource(id = R.color.white),
+        )
     }
 }
 
