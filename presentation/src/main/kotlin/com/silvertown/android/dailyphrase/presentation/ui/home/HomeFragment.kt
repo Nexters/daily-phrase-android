@@ -291,6 +291,7 @@ class HomeFragment :
     private fun HomeRewardPopup(
         rewardState: HomeRewardState?,
         shareEvent: SharedFlow<Unit>,
+        modifier: Modifier = Modifier,
     ) {
         var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
         var showSharedEventTooltip by remember { mutableStateOf(false) }
