@@ -28,7 +28,7 @@ data class RewardResponse(
     val totalEntryCount: Int?,
 )
 
-fun RewardResponse.toDomainModel(): RewardBanner {
+fun RewardResponse.toRewardBannerDomainModel(): RewardBanner {
     return RewardBanner(
         eventId = eventId ?: 0,
         imageUrl = imageUrl.orEmpty(),

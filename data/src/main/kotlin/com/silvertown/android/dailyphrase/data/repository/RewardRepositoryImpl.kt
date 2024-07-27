@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.data.repository
 import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.RewardDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
+import com.silvertown.android.dailyphrase.data.network.model.response.toRewardBannerDomainModel
 import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.domain.model.RewardInfo
 import com.silvertown.android.dailyphrase.domain.model.onFailure
@@ -21,7 +22,7 @@ class RewardRepositoryImpl @Inject constructor(
             .getRewards()
             .toResultModel { rewardWrapper ->
                 rewardWrapper.result?.rewardList?.map { reward ->
-                    reward.toDomainModel()
+                    reward.toRewardBannerDomainModel()
                 }
             }
             .onSuccess { rewardBannerList ->
