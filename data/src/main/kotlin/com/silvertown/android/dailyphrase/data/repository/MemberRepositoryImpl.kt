@@ -58,13 +58,13 @@ class MemberRepositoryImpl @Inject constructor(
             .toResultModel { it.result?.toDomainModel() }
 
     override suspend fun getLoginState(): LoginState {
-        val loginState = tokenDataSource.getAccessToken()
+        val accessToken = tokenDataSource.getAccessToken()
         return LoginState(
-            isLoggedIn = !loginState.isNullOrEmpty(),
-            accessToken = loginState.orEmpty()
+            isLoggedIn = !accessToken.isNullOrEmpty(),
+            accessToken = accessToken.orEmpty()
         )
     }
-
+    
     override fun getLoginStateFlow(): Flow<LoginState> {
         return tokenDataSource.getAccessTokenFlow().map { accessToken ->
             LoginState(
