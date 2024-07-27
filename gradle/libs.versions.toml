@@ -49,6 +49,8 @@ androidxDataStore = "1.0.0"
 lifecycleCompose = "2.7.0"
 firebase-messaging = "23.4.1"
 balloonCompose = "1.6.5"
+flipper = "0.190.0"
+soloader = "0.10.4"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -123,6 +125,10 @@ hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", v
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
+facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
+facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
+#facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref = "flipper" }
+facebook-soloader = { group = "com.facebook.soloader", name = "soloader", version.ref = "soloader" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
@@ -143,3 +149,4 @@ lifecycle = ["androidx-lifecycle-runtime-ktx", "androidx-lifecycle-viewmodel-ktx
 android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-coroutines-test"]
 network = ["retrofit", "converter-gson", "logging-interceptor"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
+flipper = ["facebook-flipper", "facebook-flipper-network-plugin", "facebook-soloader"]
