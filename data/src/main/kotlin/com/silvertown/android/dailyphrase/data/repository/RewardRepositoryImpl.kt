@@ -18,7 +18,7 @@ class RewardRepositoryImpl @Inject constructor(
 ) : RewardRepository {
     override fun getHomeRewardBanner(): Flow<RewardBanner> = flow {
         rewardDataSource
-            .getHomeRewards()
+            .getRewards()
             .toResultModel { rewardWrapper ->
                 rewardWrapper.result?.rewardList?.map { reward ->
                     reward.toDomainModel(rewardWrapper.result.eventEndDateTime)

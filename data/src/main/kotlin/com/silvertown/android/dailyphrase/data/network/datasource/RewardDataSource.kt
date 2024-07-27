@@ -6,7 +6,7 @@ import com.silvertown.android.dailyphrase.data.network.model.response.RewardInfo
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardWrapperResponse
 
 interface RewardDataSource {
-    suspend fun getHomeRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>>
+    suspend fun getRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>>
     suspend fun getRewardInfo(): ApiResponse<BaseResponse<RewardInfoResponse>>
 
 }

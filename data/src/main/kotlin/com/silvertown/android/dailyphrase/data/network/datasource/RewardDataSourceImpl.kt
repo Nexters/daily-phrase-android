@@ -10,8 +10,8 @@ import javax.inject.Inject
 class RewardDataSourceImpl @Inject constructor(
     private val rewardApiService: RewardApiService,
 ) : RewardDataSource {
-    override suspend fun getHomeRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>> =
-        rewardApiService.getHomeRewards()
+    override suspend fun getRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>> =
+        rewardApiService.getRewards()
 
     override suspend fun getRewardInfo(): ApiResponse<BaseResponse<RewardInfoResponse>> =
         rewardApiService.getRewardInfo()

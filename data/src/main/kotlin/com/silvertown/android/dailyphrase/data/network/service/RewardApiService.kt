@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface RewardApiService {
     @GET("/api/v1/events/prizes")
-    suspend fun getHomeRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>>
+    suspend fun getRewards(): ApiResponse<BaseResponse<RewardWrapperResponse>>
 
     @GET("/api/v1/events/info")
     suspend fun getRewardInfo(): ApiResponse<BaseResponse<RewardInfoResponse>>
