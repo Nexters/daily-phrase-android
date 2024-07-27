@@ -109,6 +109,8 @@ class HomeFragment :
         )
 
         rewardBannerAdapter = HomeRewardBannerAdapter(
+            // TODO: 주환데브 연결 필요 -> 홈 배너에서 "3초만에 로그인하기" 클릭시
+            // TODO: kakaoLogin callback 함수 하나 넣어서 처리해도 될 듯?
             onClickKaKaoLogin = { (activity as? MainActivity)?.kakaoLogin() }
         )
 
@@ -203,7 +205,8 @@ class HomeFragment :
             if (loginState.isLoggedIn) {
                 HomeRewardPopup(
                     rewardState = rewardState,
-                    shareEvent = viewModel.shareEvent
+                    shareEvent = viewModel.shareEvent,
+                    navigateToEventPage = { } // TODO: 주환데브 연결 필요 -> 로그인 상태에서 팝업 클릭 시 이벤트 페이지로 이동
                 )
             }
         }
@@ -291,6 +294,7 @@ class HomeFragment :
     private fun HomeRewardPopup(
         rewardState: HomeRewardState?,
         shareEvent: SharedFlow<Unit>,
+        navigateToEventPage: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
@@ -313,12 +317,14 @@ class HomeFragment :
             }
 
             RewardPopup(
+                modifier = modifier,
                 state = state,
                 showSharedEventTooltip = showSharedEventTooltip,
                 showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
                 onTimeBelowThreshold = {
                     showEndedEventTimerPopupTooltip = false
-                }
+                },
+                navigateToEventPage = navigateToEventPage,
             )
         }
     }

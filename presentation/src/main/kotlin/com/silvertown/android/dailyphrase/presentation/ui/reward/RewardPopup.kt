@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.reward
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -57,6 +58,7 @@ internal fun RewardPopup(
     showSharedEventTooltip: Boolean,
     showEndedEventTimerPopupTooltip: Boolean,
     onTimeBelowThreshold: () -> Unit,
+    navigateToEventPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
@@ -129,7 +131,10 @@ internal fun RewardPopup(
                 modifier = Modifier.wrapContentSize(),
                 contentAlignment = Alignment.TopEnd
             ) {
-                PopupContainer(popupText)
+                PopupContainer(
+                    popupText = popupText,
+                    navigateToEventPage = navigateToEventPage
+                )
 
                 if (state.rewardBanner.myTicketCount > 0) {
                     OwnedTicketBadge(
@@ -180,6 +185,7 @@ private fun CountdownTimer(
 @Composable
 private fun PopupContainer(
     popupText: AnnotatedString,
+    navigateToEventPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -192,6 +198,9 @@ private fun PopupContainer(
             )
             .clip(RoundedCornerShape(20.dp))
             .background(color = colorResource(id = R.color.white))
+            .clickable {
+                navigateToEventPage()
+            }
             .padding(
                 start = 16.dp,
                 end = 12.dp
