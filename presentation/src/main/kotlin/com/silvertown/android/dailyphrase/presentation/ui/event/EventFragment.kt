@@ -15,7 +15,7 @@ import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentEventBinding
 import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
-import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
+import com.silvertown.android.dailyphrase.presentation.model.EventInfoUi
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -44,7 +44,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     ?.let { it.prizeInfo.items[position % it.prizeInfo.items.size] }
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
-                        binding.tvSubmitEntries.text = if (prize is PrizeInfoUi.Item.BeforeWinningDraw) {
+                        binding.tvSubmitEntries.text = if (prize is EventInfoUi.Item.BeforeWinningDraw) {
                             getString(R.string.submit_entries, prize.requiredTicketCount)
                         } else {
                             getString(R.string.confirm_entry_result)
@@ -61,8 +61,8 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 ?.let { items -> items[binding.vpPrize.currentItem % items.size] }
                 ?.also { item ->
                     when (item) {
-                        is PrizeInfoUi.Item.AfterWinningDraw -> viewModel.checkEntryResult()
-                        is PrizeInfoUi.Item.BeforeWinningDraw -> viewModel.entryEvent(selectedItem = item)
+                        is EventInfoUi.Item.AfterWinningDraw -> viewModel.checkEntryResult()
+                        is EventInfoUi.Item.BeforeWinningDraw -> viewModel.entryEvent(selectedItem = item)
                     }
                 }
         }
@@ -128,19 +128,19 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         }
     }
 
-    private fun updateUi(prizeInfo: PrizeInfoUi) {
+    private fun updateUi(prizeInfo: EventInfoUi) {
         binding.tvMyEntries.text = getString(R.string.my_entries, prizeInfo.total)
         prizeAdapter.setList(prizeInfo.items)
         binding.tvSubmitEntries.isEnabled = prizeInfo.items[binding.vpPrize.currentItem % prizeInfo.items.size].hasEnoughEntry
         with(prizeInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
-            binding.tvNotice.isSelected = this is PrizeInfoUi.NoticeInfo.PeriodEnded
+            binding.tvNotice.isSelected = this is EventInfoUi.NoticeInfo.PeriodEnded
 
             when (this) {
-                is PrizeInfoUi.NoticeInfo.PeriodEnded -> getString(R.string.event_finish, currentMonth)
-                is PrizeInfoUi.NoticeInfo.PeriodLessThanOneDay -> getString(R.string.remaining_entry_period, formattedTime)
-                is PrizeInfoUi.NoticeInfo.PeriodMoreThanOneDay -> getString(R.string.remaining_entry_period, "${days}일 $formattedTime")
+                is EventInfoUi.NoticeInfo.PeriodEnded -> getString(R.string.event_finish, currentMonth)
+                is EventInfoUi.NoticeInfo.PeriodLessThanOneDay -> getString(R.string.remaining_entry_period, formattedTime)
+                is EventInfoUi.NoticeInfo.PeriodMoreThanOneDay -> getString(R.string.remaining_entry_period, "${days}일 $formattedTime")
             }.also { text ->
                 binding.tvNotice.text = text
             }

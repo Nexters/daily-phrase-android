@@ -9,13 +9,13 @@ import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemNoneBinding
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeAfterWinningDrawBinding
 import com.silvertown.android.dailyphrase.presentation.databinding.ItemPrizeBeforeWinningDrawBinding
-import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
+import com.silvertown.android.dailyphrase.presentation.model.EventInfoUi
 
 class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val prizes = mutableListOf<PrizeInfoUi.Item>()
+    private val prizes = mutableListOf<EventInfoUi.Item>()
 
     class PrizeViewHolder(private val binding: ItemPrizeBeforeWinningDrawBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(prize: PrizeInfoUi.Item.BeforeWinningDraw) {
+        fun bind(prize: EventInfoUi.Item.BeforeWinningDraw) {
             Glide.with(binding.ivPrize)
                 .load(prize.imageUrl)
                 .centerCrop()
@@ -32,7 +32,7 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     class AfterWinningDrawViewHolder(private val binding: ItemPrizeAfterWinningDrawBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(prize: PrizeInfoUi.Item.AfterWinningDraw) {
+        fun bind(prize: EventInfoUi.Item.AfterWinningDraw) {
             Glide.with(binding.ivPrize)
                 .load(prize.imageUrl)
                 .centerCrop()
@@ -47,8 +47,8 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         return when (prizes[position % prizes.size]) {
-            is PrizeInfoUi.Item.AfterWinningDraw -> Type.AFTER_WINNING_DRAW.value
-            is PrizeInfoUi.Item.BeforeWinningDraw -> Type.BEFORE_WINNING_DRAW.value
+            is EventInfoUi.Item.AfterWinningDraw -> Type.AFTER_WINNING_DRAW.value
+            is EventInfoUi.Item.BeforeWinningDraw -> Type.BEFORE_WINNING_DRAW.value
         }
     }
 
@@ -70,13 +70,13 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PrizeViewHolder -> holder.bind(prizes[position % prizes.size] as PrizeInfoUi.Item.BeforeWinningDraw)
-            is AfterWinningDrawViewHolder -> holder.bind(prizes[position % prizes.size] as PrizeInfoUi.Item.AfterWinningDraw)
+            is PrizeViewHolder -> holder.bind(prizes[position % prizes.size] as EventInfoUi.Item.BeforeWinningDraw)
+            is AfterWinningDrawViewHolder -> holder.bind(prizes[position % prizes.size] as EventInfoUi.Item.AfterWinningDraw)
             else -> Unit
         }
     }
 
-    fun setList(list: List<PrizeInfoUi.Item>) {
+    fun setList(list: List<EventInfoUi.Item>) {
         prizes.clear()
         prizes.addAll(list)
         notifyDataSetChanged()

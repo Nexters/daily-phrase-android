@@ -1,6 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation.model
 
-data class PrizeInfoUi(
+data class EventInfoUi(
     val total: Int,
     val items: List<Item>,
     val noticeInfo: NoticeInfo,

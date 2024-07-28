@@ -2,7 +2,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.event
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.silvertown.android.dailyphrase.presentation.model.PrizeInfoUi
+import com.silvertown.android.dailyphrase.presentation.model.EventInfoUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -81,7 +81,7 @@ class EventViewModel @Inject constructor() : ViewModel() {
 //        }
 //    }
 
-    fun entryEvent(selectedItem: PrizeInfoUi.Item) {
+    fun entryEvent(selectedItem: EventInfoUi.Item) {
         viewModelScope.launch {
             delay(1000) // TODO JH: API 호출 딜레이 (테스트 용)
 
@@ -120,7 +120,7 @@ class EventViewModel @Inject constructor() : ViewModel() {
         data object Loading : UiState
 
         data class Loaded(
-            val prizeInfo: PrizeInfoUi,
+            val eventInfo: EventInfoUi,
         ) : UiState
     }
 
