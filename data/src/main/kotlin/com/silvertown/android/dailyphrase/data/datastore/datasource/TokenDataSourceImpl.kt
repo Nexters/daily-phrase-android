@@ -16,12 +16,8 @@ import javax.inject.Inject
 class TokenDataSourceImpl @Inject constructor(
     private val tokenDataStore: DataStore<Preferences>,
 ) : TokenDataSource {
-    companion object {
-        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
-    }
 
-    override fun getAccessToken(): Flow<String?> {
+    override fun getAccessTokenFlow(): Flow<String?> {
         return tokenDataStore.data
             .catch { exception ->
                 if (exception is IOException) {
@@ -63,13 +59,18 @@ class TokenDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLoginState(): Boolean {
-        return getAccessToken().first() != null
+    override suspend fun getAccessToken(): String? {
+        return getAccessTokenFlow().first()
     }
 
     override suspend fun deleteAccessToken() {
         tokenDataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN_KEY)
         }
+    }
+
+    companion object {
+        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
     }
 }

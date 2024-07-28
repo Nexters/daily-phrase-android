@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.domain.repository
 
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.Member
 import com.silvertown.android.dailyphrase.domain.model.SignInToken
 import com.silvertown.android.dailyphrase.domain.model.Result
@@ -27,10 +28,13 @@ interface MemberRepository {
         token: String,
     ): Result<SignInToken>
 
-    suspend fun getLoginStatus(): Boolean
+    suspend fun getLoginState(): LoginState
 
-    fun getLoginStateFlow(): Flow<Boolean>
+    fun getLoginStateFlow(): Flow<LoginState>
 
     suspend fun deleteAccessToken()
 
+    suspend fun updateSharedCount(count: Int)
+
+    fun getSharedCountFlow(): Flow<Int>
 }

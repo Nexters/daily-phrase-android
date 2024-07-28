@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.silvertown.android.dailyphrase.data.database.dao.PostDao
+import com.silvertown.android.dailyphrase.data.database.dao.RemoteKeysDao
 import com.silvertown.android.dailyphrase.data.database.model.toDomainModel
 import com.silvertown.android.dailyphrase.data.datastore.datasource.MemberPreferencesDataSource
 import com.silvertown.android.dailyphrase.data.network.common.toResultModel
@@ -27,6 +28,7 @@ import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val postDao: PostDao,
+    private val remoteKeysDao: RemoteKeysDao,
     private val postDataSource: PostDataSource,
     private val memberPreferencesDataSource: MemberPreferencesDataSource,
 ) : PostRepository {
@@ -37,10 +39,11 @@ class PostRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = PAGING_PAGE_SIZE,
                 prefetchDistance = PAGING_PREFETCH_DISTANCE,
-                initialLoadSize = PAGING_INITIAL_LOAD_SIZE
+                initialLoadSize = PAGING_INITIAL_LOAD_SIZE,
             ),
             remoteMediator = PostMediator(
                 postDao = postDao,
+                remoteKeysDao = remoteKeysDao,
                 postDataSource = postDataSource,
             ),
             pagingSourceFactory = {

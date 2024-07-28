@@ -6,6 +6,7 @@ data class Member(
     val imageUrl: String = DEFAULT_IMAGE_URL,
     val email: String = DEFAULT_EMAIL,
     val quitAt: String = DEFAULT_QUIT_AT,
+    val sharedCount: Int = 0,
 ) {
     companion object {
         const val DEFAULT_ID = 0

@@ -3,6 +3,7 @@ package com.silvertown.android.dailyphrase.presentation
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,8 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -22,15 +23,17 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
+import com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet
 import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
+import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -61,6 +64,9 @@ class MainActivity : AppCompatActivity() {
         redirectToDetailOnMessageReceived()
 
         loadingDialog = LoadingDialog(this)
+
+        initObserve()
+        setFragmentResultListeners()
     }
 
     fun setLoginResultListener(
@@ -69,10 +75,71 @@ class MainActivity : AppCompatActivity() {
         this.loginResultListener = listener
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         navController.handleDeepLink(intent)
+    }
+
+    private fun initObserve() {
+        lifecycleScope.launch {
+            viewModel.uiEvent.collect { event ->
+                when (event) {
+                    MainViewModel.UiEvent.ForceUpdate -> {
+                        // TODO JH 강제 업데이트 기능 구현
+                    }
+
+                    is MainViewModel.UiEvent.NeedUpdate -> {
+                        navController.navigate(
+                            resId = R.id.action_global_twoButtonBottomSheet,
+                            args = bundleOf(
+                                "twoButtonBottomSheetArg" to TwoButtonBottomSheet.TwoButtonBottomSheetArg(
+                                    imageUrl = event.imageUrl,
+                                    leftButtonMessage = event.leftButtonMessage,
+                                    rightButtonMessage = event.rightButtonMessage,
+                                    requestKey = REQUEST_KEY_MOVE_TO_UPDATE,
+                                ),
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.loginState.collectLatest { state ->
+                if (state.isLoggedIn) {
+                    viewModel.updateSharedCount()
+                }
+            }
+        }
+    }
+
+    private fun setFragmentResultListeners() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(binding.fcvNavHost.id) as NavHostFragment
+        navHostFragment.childFragmentManager.setFragmentResultListener(
+            REQUEST_KEY_MOVE_TO_UPDATE,
+            this
+        ) { _, _ ->
+            moveToUpdate()
+        }
+    }
+
+    private fun moveToUpdate() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            val webIntent =
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                )
+            if (webIntent.resolveActivity(packageManager) != null) {
+                startActivity(webIntent)
+            }
+        }
     }
 
     fun kakaoLogin() {
@@ -149,18 +216,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun onSuccessKaKaoLogin(oAuthToken: OAuthToken) {
         UserApiClient.instance.me { user, _ ->
             if (user != null) {
                 viewModel.signInWithKaKaoTokenViaServer(
-                    token = oAuthToken.accessToken
+                    token = oAuthToken.accessToken,
                 ) { result, memberId ->
                     if (result) {
                         viewModel.setMemberData(
                             id = memberId,
                             name = user.kakaoAccount?.profile?.nickname,
-                            imageUrl = user.kakaoAccount?.profile?.profileImageUrl
+                            imageUrl = user.kakaoAccount?.profile?.profileImageUrl,
                         )
                         loginResultListener?.onLoginSuccess()
                     } else {
@@ -208,5 +274,9 @@ class MainActivity : AppCompatActivity() {
             R.id.detailFragment,
             bundleOf(PHRASE_ID to phraseId)
         )
+    }
+
+    companion object {
+        const val REQUEST_KEY_MOVE_TO_UPDATE = "REQUEST_KEY_MOVE_TO_UPDATE"
     }
 }

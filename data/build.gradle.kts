@@ -27,6 +27,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-proguard-rules.pro")
+        buildConfigField("String", "APP_VERSION", "\"${Configuration.versionName}\"")
     }
 
     compileOptions {
@@ -111,6 +112,7 @@ dependencies {
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.androidx.dataStore.core)
     implementation(libs.androidx.dataStore.preferences)
+    implementation(libs.bundles.flipper)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

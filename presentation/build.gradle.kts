@@ -22,6 +22,7 @@ android {
 
     defaultConfig {
         minSdk = Configuration.minSdk
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -49,6 +50,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -100,6 +102,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 
+    implementation(libs.balloon.compose)
+
     // cp
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
@@ -115,5 +119,6 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.splashscreen)
 }

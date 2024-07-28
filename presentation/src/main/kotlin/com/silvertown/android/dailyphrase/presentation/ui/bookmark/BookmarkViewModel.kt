@@ -2,6 +2,7 @@ package com.silvertown.android.dailyphrase.presentation.ui.bookmark
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.silvertown.android.dailyphrase.domain.model.LoginState
 import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
@@ -28,13 +29,13 @@ class BookmarkViewModel @Inject constructor(
     private val _bookmarkList = MutableStateFlow<List<Post>>(emptyList())
     val bookmarkList = _bookmarkList.asStateFlow()
 
-    val isLoggedIn: StateFlow<Boolean> =
+    val loginState: StateFlow<LoginState> =
         memberRepository
             .getLoginStateFlow()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(1000L),
-                initialValue = false
+                initialValue = LoginState()
             )
 
     fun getBookmarks() = viewModelScope.launch {

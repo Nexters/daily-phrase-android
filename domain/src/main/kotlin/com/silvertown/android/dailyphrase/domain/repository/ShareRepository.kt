@@ -4,4 +4,6 @@ interface ShareRepository {
     suspend fun logShareEvent(
         phraseId: Long,
     )
+
+    suspend fun updateSharedCount()
 }
