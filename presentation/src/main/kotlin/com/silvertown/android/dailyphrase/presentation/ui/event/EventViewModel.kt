@@ -81,7 +81,7 @@ class EventViewModel @Inject constructor() : ViewModel() {
 //        }
 //    }
 
-    fun entryEvent(selectedItem: EventInfoUi.Item) {
+    fun entryEvent(selectedPrize: EventInfoUi.Prize) {
         viewModelScope.launch {
             delay(1000) // TODO JH: API 호출 딜레이 (테스트 용)
 

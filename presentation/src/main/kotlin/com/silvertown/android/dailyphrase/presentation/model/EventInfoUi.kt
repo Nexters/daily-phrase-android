@@ -2,10 +2,11 @@ package com.silvertown.android.dailyphrase.presentation.model
 
 data class EventInfoUi(
     val total: Int,
-    val items: List<Item>,
+    val prizes: List<Prize>,
     val noticeInfo: NoticeInfo,
+    val winnerAnnouncementDateTime: String,
 ) {
-    sealed class Item(
+    sealed class Prize(
         open val prizeId: Long,
         open val eventId: Long,
         open val name: String,
@@ -29,7 +30,7 @@ data class EventInfoUi(
             override val myEntryCount: Int,
             override val hasEnoughEntry: Boolean,
             val isEventPeriodEnded: Boolean,
-        ) : Item(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
 
         data class AfterWinningDraw(
             override val prizeId: Long,
@@ -40,7 +41,7 @@ data class EventInfoUi(
             override val totalEntryCount: Int,
             override val myEntryCount: Int,
             override val hasEnoughEntry: Boolean,
-        ) : Item(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
     }
 
     sealed class NoticeInfo(

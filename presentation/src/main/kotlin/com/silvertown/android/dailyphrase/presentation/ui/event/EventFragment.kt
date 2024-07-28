@@ -41,10 +41,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 super.onPageSelected(position)
 
                 (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                    ?.let { it.prizeInfo.items[position % it.prizeInfo.items.size] }
+                    ?.let { it.eventInfo.prizes[position % it.eventInfo.prizes.size] }
                     ?.let { prize ->
                         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
-                        binding.tvSubmitEntries.text = if (prize is EventInfoUi.Item.BeforeWinningDraw) {
+                        binding.tvSubmitEntries.text = if (prize is EventInfoUi.Prize.BeforeWinningDraw) {
                             getString(R.string.submit_entries, prize.requiredTicketCount)
                         } else {
                             getString(R.string.confirm_entry_result)
@@ -56,13 +56,13 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
         binding.tvSubmitEntries.setOnClickListener {
             (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                ?.prizeInfo
-                ?.items
-                ?.let { items -> items[binding.vpPrize.currentItem % items.size] }
-                ?.also { item ->
-                    when (item) {
-                        is EventInfoUi.Item.AfterWinningDraw -> viewModel.checkEntryResult()
-                        is EventInfoUi.Item.BeforeWinningDraw -> viewModel.entryEvent(selectedItem = item)
+                ?.eventInfo
+                ?.prizes
+                ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+                ?.also { prize ->
+                    when (prize) {
+                        is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult()
+                        is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
                     }
                 }
         }
@@ -109,7 +109,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                     .collectLatest { state ->
                         (state as? EventViewModel.UiState.Loaded)?.let { loaded ->
-                            updateUi(loaded.prizeInfo)
+                            updateUi(loaded.eventInfo)
                         }
                     }
             }
@@ -128,11 +128,11 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         }
     }
 
-    private fun updateUi(prizeInfo: EventInfoUi) {
-        binding.tvMyEntries.text = getString(R.string.my_entries, prizeInfo.total)
-        prizeAdapter.setList(prizeInfo.items)
-        binding.tvSubmitEntries.isEnabled = prizeInfo.items[binding.vpPrize.currentItem % prizeInfo.items.size].hasEnoughEntry
-        with(prizeInfo.noticeInfo) {
+    private fun updateUi(eventInfo: EventInfoUi) {
+        binding.tvMyEntries.text = getString(R.string.my_entries, eventInfo.total)
+        prizeAdapter.setList(eventInfo.prizes)
+        binding.tvSubmitEntries.isEnabled = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size].hasEnoughEntry
+        with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
             binding.tvNotice.isSelected = this is EventInfoUi.NoticeInfo.PeriodEnded
