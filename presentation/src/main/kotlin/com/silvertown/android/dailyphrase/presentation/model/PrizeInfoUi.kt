@@ -1,7 +1,5 @@
 package com.silvertown.android.dailyphrase.presentation.model
 
-import com.silvertown.android.dailyphrase.presentation.ui.event.PrizeInfo
-
 data class PrizeInfoUi(
     val total: Int,
     val items: List<Item>,
@@ -70,35 +68,36 @@ data class PrizeInfoUi(
     }
 }
 
-fun PrizeInfo.Prize.toPresentationModel(total: Int, isEventPeriodEnded: Boolean): PrizeInfoUi.Item {
-    val isBeforeWinningDraw = false // TODO JH: api response에 당첨 발표일이 없어서 임시로 사용
-
-    return if (isBeforeWinningDraw) {
-        PrizeInfoUi.Item.BeforeWinningDraw(
-            prizeId = prizeId,
-            eventId = eventId,
-            name = name,
-            shortName = shortName,
-            manufacturer = manufacturer,
-            welcomeImageUrl = welcomeImageUrl,
-            bannerImageUrl = bannerImageUrl,
-            imageUrl = imageUrl,
-            requiredTicketCount = requiredTicketCount,
-            totalEntryCount = totalEntryCount,
-            myEntryCount = myEntryCount,
-            hasEnoughEntry = total >= requiredTicketCount,
-            isEventPeriodEnded = isEventPeriodEnded,
-        )
-    } else {
-        PrizeInfoUi.Item.AfterWinningDraw(
-            prizeId = prizeId,
-            eventId = eventId,
-            name = name,
-            imageUrl = imageUrl,
-            requiredTicketCount = requiredTicketCount,
-            totalEntryCount = totalEntryCount,
-            myEntryCount = myEntryCount,
-            hasEnoughEntry = total >= requiredTicketCount,
-        )
-    }
-}
+// TODO JH: PrizeInfo 삭제해서 빌드가 안되므로 임시 주석
+// fun PrizeInfo.Prize.toPresentationModel(total: Int, isEventPeriodEnded: Boolean): PrizeInfoUi.Item {
+//    val isBeforeWinningDraw = false // TODO JH: api response에 당첨 발표일이 없어서 임시로 사용
+//
+//    return if (isBeforeWinningDraw) {
+//        PrizeInfoUi.Item.BeforeWinningDraw(
+//            prizeId = prizeId,
+//            eventId = eventId,
+//            name = name,
+//            shortName = shortName,
+//            manufacturer = manufacturer,
+//            welcomeImageUrl = welcomeImageUrl,
+//            bannerImageUrl = bannerImageUrl,
+//            imageUrl = imageUrl,
+//            requiredTicketCount = requiredTicketCount,
+//            totalEntryCount = totalEntryCount,
+//            myEntryCount = myEntryCount,
+//            hasEnoughEntry = total >= requiredTicketCount,
+//            isEventPeriodEnded = isEventPeriodEnded,
+//        )
+//    } else {
+//        PrizeInfoUi.Item.AfterWinningDraw(
+//            prizeId = prizeId,
+//            eventId = eventId,
+//            name = name,
+//            imageUrl = imageUrl,
+//            requiredTicketCount = requiredTicketCount,
+//            totalEntryCount = totalEntryCount,
+//            myEntryCount = myEntryCount,
+//            hasEnoughEntry = total >= requiredTicketCount,
+//        )
+//    }
+// }
