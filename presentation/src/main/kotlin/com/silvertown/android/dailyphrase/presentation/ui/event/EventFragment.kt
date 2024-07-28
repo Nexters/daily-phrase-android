@@ -135,7 +135,15 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             prizeAdapter.setList(eventInfo.prizes)
             isItemsSet = true
         }
-        binding.tvSubmitEntries.isEnabled = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size].hasEnoughEntry
+        eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size].also { prize ->
+            binding.tvSubmitEntries.isEnabled = prize.hasEnoughEntry
+            binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
+            binding.tvSubmitEntries.text = if (prize is EventInfoUi.Prize.BeforeWinningDraw) {
+                getString(R.string.submit_entries, prize.requiredTicketCount)
+            } else {
+                getString(R.string.confirm_entry_result)
+            }
+        }
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
