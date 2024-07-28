@@ -20,6 +20,7 @@ class PostAdapter(
     private val onPostClick: (Long) -> Unit,
     private val onClickBookmark: (Long, Boolean) -> Unit,
     private val onClickLike: (Long, Boolean) -> Unit,
+    private val onClickShare: (Post) -> Unit,
 ) : PagingDataAdapter<Post, PostAdapter.PostViewHolder>(diffUtil) {
 
     class PostViewHolder(
@@ -27,6 +28,7 @@ class PostAdapter(
         onPostClick: (Long) -> Unit,
         onClickBookmark: (Long, Boolean) -> Unit,
         onClickLike: (Long, Boolean) -> Unit,
+        onClickShare: (Post) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var post: Post
@@ -47,6 +49,9 @@ class PostAdapter(
             }
             // View 아이콘 클릭 시 root영역에 대한 클릭리스너와 중복을 피하기 위한 임시 리스너 활성
             binding.clView.setOnClickListener { }
+            binding.share.setOnClickListener {
+                onClickShare(post)
+            }
         }
 
         fun bind(post: Post) = with(binding) {
@@ -104,6 +109,7 @@ class PostAdapter(
             onPostClick,
             onClickBookmark,
             onClickLike,
+            onClickShare
         )
     }
 

@@ -5,7 +5,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -16,17 +21,30 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
+import com.silvertown.android.dailyphrase.domain.model.HomeRewardState
+import com.silvertown.android.dailyphrase.domain.model.LoginState
+import com.silvertown.android.dailyphrase.domain.model.Post
 import com.silvertown.android.dailyphrase.presentation.MainActivity
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeBinding
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
-import com.silvertown.android.dailyphrase.presentation.ui.ActionType
+import com.silvertown.android.dailyphrase.presentation.util.ActionType
+import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
+import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
+import com.silvertown.android.dailyphrase.presentation.util.Constants.TWO_MINUTES_IN_MILLIS
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
+import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class HomeFragment :
@@ -34,8 +52,10 @@ class HomeFragment :
     LoginResultListener {
 
     private lateinit var postAdapter: PostAdapter
+    private lateinit var rewardBannerAdapter: HomeRewardBannerAdapter
+    private lateinit var homeAdapter: ConcatAdapter
     private val viewModel by viewModels<HomeViewModel>()
-    private var isLoggedIn: Boolean = false
+    private var loginState: LoginState = LoginState()
     private var actionState: ActionType = ActionType.NONE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +71,7 @@ class HomeFragment :
         (activity as MainActivity).setLoginResultListener(this)
 
         binding.tvBookmark.setOnClickListener {
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 HomeFragmentDirections
                     .moveToBookmarkFragment()
                     .also { findNavController().navigate(it) }
@@ -62,7 +82,7 @@ class HomeFragment :
         }
 
         binding.ivProfile.setOnClickListener {
-            if (isLoggedIn) {
+            if (loginState.isLoggedIn) {
                 HomeFragmentDirections
                     .moveToMyPageFragment()
                     .also { findNavController().navigate(it) }
@@ -78,36 +98,37 @@ class HomeFragment :
         postAdapter = PostAdapter(
             onPostClick = { moveToDetail(it) },
             onClickBookmark = { phraseId, state ->
-                if (isLoggedIn) {
-                    viewModel.onClickBookmark(phraseId, state)
-                } else {
-                    actionState = ActionType.BOOKMARK
-                    viewModel.showLoginDialog(true)
-                }
+                onClickBookmark(phraseId, state)
             },
             onClickLike = { phraseId, state ->
-                if (isLoggedIn) {
-                    viewModel.onClickLike(phraseId, state)
-                } else {
-                    actionState = ActionType.LIKE
-                    viewModel.showLoginDialog(true)
-                }
+                onClickLike(phraseId, state)
+            },
+            onClickShare = { post ->
+                onClickShare(post)
             }
         )
 
+        rewardBannerAdapter = HomeRewardBannerAdapter(
+            // TODO: 주환데브 연결 필요 -> 홈 배너에서 "3초만에 로그인하기" 클릭시
+            // TODO: kakaoLogin callback 함수 하나 넣어서 처리해도 될 듯?
+            onClickKaKaoLogin = { (activity as? MainActivity)?.kakaoLogin() }
+        )
+
         binding.rvPost.apply {
-            adapter = postAdapter.run {
-                withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
-            }
-            var firstLoad = true
+            homeAdapter = ConcatAdapter(
+                rewardBannerAdapter,
+                postAdapter.apply {
+                    withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
+                }
+            )
+            adapter = homeAdapter
             postAdapter.addOnPagesUpdatedListener {
-                if (postAdapter.itemCount > 0 && firstLoad) {
+                if (postAdapter.itemCount > 0 && viewModel.getFirstLoad()) {
                     scrollToPosition(0)
-                    firstLoad = false
+                    viewModel.setFirstLoad()
                 }
             }
             setHasFixedSize(true)
-            addItemDecoration(PostItemDecoration(requireContext()))
         }
 
         binding.retryButton.setOnClickListener {
@@ -123,10 +144,24 @@ class HomeFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLoggedIn
+            viewModel.rewardState
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .filterNotNull()
+                .collectLatest {
+                    rewardBannerAdapter.submitList(listOf(it.rewardBanner))
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loginState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { state ->
-                    isLoggedIn = state
+                    loginState = state
+                    if (state.isLoggedIn) {
+                        removeRewardBannerAdapter()
+                    } else {
+                        addRewardBannerAdapter()
+                    }
                 }
         }
 
@@ -144,13 +179,9 @@ class HomeFragment :
     private fun initComposeView() {
         binding.composeView.setContent {
             val showDialog by viewModel.showLoginDialog.collectAsStateWithLifecycle()
-
-            val messageRes = when (ActionType.valueOf(actionState.name)) {
-                ActionType.LIKE -> R.string.login_and_like_message
-                ActionType.BOOKMARK -> R.string.login_and_bookmark_message
-                ActionType.SHARE -> R.string.login_and_share_message
-                ActionType.NONE -> R.string.login_and_share_message
-            }
+            val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+            val rewardState by viewModel.rewardState.collectAsStateWithLifecycle()
+            val messageRes = ActionType.valueOf(actionState.name).messageRes
 
             if (showDialog) {
                 BaseDialog(
@@ -170,6 +201,14 @@ class HomeFragment :
                     )
                 }
             }
+
+            if (loginState.isLoggedIn) {
+                HomeRewardPopup(
+                    rewardState = rewardState,
+                    shareEvent = viewModel.shareEvent,
+                    navigateToEventPage = { } // TODO: 주환데브 연결 필요 -> 로그인 상태에서 팝업 클릭 시 이벤트 페이지로 이동
+                )
+            }
         }
     }
 
@@ -181,11 +220,25 @@ class HomeFragment :
     override fun onResume() {
         super.onResume()
         setStatusBarColor(R.color.home_app_bar)
+        viewModel.checkAndEmitSharedEvent()
     }
 
     override fun onStop() {
         super.onStop()
         setStatusBarColor(R.color.white)
+        viewModel.setPrevSharedCount()
+    }
+
+    private fun addRewardBannerAdapter() {
+        if (!homeAdapter.adapters.contains(rewardBannerAdapter)) {
+            homeAdapter.addAdapter(0, rewardBannerAdapter)
+        }
+    }
+
+    private fun removeRewardBannerAdapter() {
+        if (homeAdapter.adapters.contains(rewardBannerAdapter)) {
+            homeAdapter.removeAdapter(rewardBannerAdapter)
+        }
     }
 
     private fun setStatusBarColor(@ColorRes colorRes: Int) {
@@ -195,4 +248,84 @@ class HomeFragment :
         }
     }
 
+    private fun onClickBookmark(phraseId: Long, state: Boolean) {
+        if (loginState.isLoggedIn) {
+            viewModel.onClickBookmark(phraseId, state)
+        } else {
+            actionState = ActionType.BOOKMARK
+            viewModel.showLoginDialog(true)
+        }
+    }
+
+    private fun onClickLike(phraseId: Long, state: Boolean) {
+        if (loginState.isLoggedIn) {
+            viewModel.onClickLike(phraseId, state)
+        } else {
+            actionState = ActionType.LIKE
+            viewModel.showLoginDialog(true)
+        }
+    }
+
+    private fun onClickShare(post: Post) {
+        if (loginState.isLoggedIn) {
+            sendKakaoLink(
+                context = requireContext(),
+                phraseId = post.phraseId,
+                title = post.title,
+                description = post.content,
+                imageUrl = post.imageUrl,
+                likeCount = post.likeCount,
+                viewCount = post.viewCount,
+                accessToken = loginState.accessToken
+            ) {
+                viewModel.logShareEvent(post.phraseId)
+            }
+        } else {
+            actionState = ActionType.SHARE
+            viewModel.showLoginDialog(true)
+        }
+    }
+
+    private fun showEndedEventTimerPopupTooltip(remainTime: Long): Boolean {
+        return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
+    }
+
+    @Composable
+    private fun HomeRewardPopup(
+        rewardState: HomeRewardState?,
+        shareEvent: SharedFlow<Unit>,
+        navigateToEventPage: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
+        var showSharedEventTooltip by remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            shareEvent.collect {
+                showSharedEventTooltip = true
+                delay(2000)
+                showSharedEventTooltip = false
+            }
+        }
+
+        rewardState?.let { state ->
+            val remainTime =
+                Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
+
+            if (showEndedEventTimerPopupTooltip(remainTime)) {
+                showEndedEventTimerPopupTooltip = true
+            }
+
+            RewardPopup(
+                modifier = modifier,
+                state = state,
+                showSharedEventTooltip = showSharedEventTooltip,
+                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
+                onTimeBelowThreshold = {
+                    showEndedEventTimerPopupTooltip = false
+                },
+                navigateToEventPage = navigateToEventPage,
+            )
+        }
+    }
 }

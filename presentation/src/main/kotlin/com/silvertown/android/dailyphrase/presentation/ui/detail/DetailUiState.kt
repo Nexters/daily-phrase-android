@@ -13,4 +13,5 @@ data class DetailUiState(
     val viewCount: Int = 0,
     val isLike: Boolean = false,
     val isBookmark: Boolean = false,
+    val accessToken: String = "",
 )

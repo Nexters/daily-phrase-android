@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -29,6 +28,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainB
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         this.loginResultListener = listener
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         navController.handleDeepLink(intent)
@@ -105,11 +105,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.loginState.collectLatest { state ->
+                if (state.isLoggedIn) {
+                    viewModel.updateSharedCount()
+                }
+            }
+        }
     }
 
     private fun setFragmentResultListeners() {
-        val navHostFragment = supportFragmentManager.findFragmentById(binding.fcvNavHost.id) as NavHostFragment
-        navHostFragment.childFragmentManager.setFragmentResultListener(REQUEST_KEY_MOVE_TO_UPDATE, this) { _, _ ->
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(binding.fcvNavHost.id) as NavHostFragment
+        navHostFragment.childFragmentManager.setFragmentResultListener(
+            REQUEST_KEY_MOVE_TO_UPDATE,
+            this
+        ) { _, _ ->
             moveToUpdate()
         }
     }
@@ -120,7 +132,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         } catch (e: Exception) {
             val webIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                )
             if (webIntent.resolveActivity(packageManager) != null) {
                 startActivity(webIntent)
             }

@@ -110,7 +110,7 @@
             android:id="@+id/retryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_orange"
             android:backgroundTint="@color/orange"
             android:fontFamily="@font/pretendard_semi_bold"
             android:paddingHorizontal="25dp"

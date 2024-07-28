@@ -3,10 +3,12 @@ package com.silvertown.android.dailyphrase.data.repository.di
 import com.silvertown.android.dailyphrase.data.repository.MemberRepositoryImpl
 import com.silvertown.android.dailyphrase.data.repository.ModalRepositoryImpl
 import com.silvertown.android.dailyphrase.data.repository.PostRepositoryImpl
+import com.silvertown.android.dailyphrase.data.repository.RewardRepositoryImpl
 import com.silvertown.android.dailyphrase.data.repository.ShareRepositoryImpl
 import com.silvertown.android.dailyphrase.domain.repository.MemberRepository
 import com.silvertown.android.dailyphrase.domain.repository.ModalRepository
 import com.silvertown.android.dailyphrase.domain.repository.PostRepository
+import com.silvertown.android.dailyphrase.domain.repository.RewardRepository
 import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import dagger.Binds
 import dagger.Module
@@ -40,4 +42,10 @@ internal interface RepositoryModule {
     fun bindModalRepository(
         modalRepository: ModalRepositoryImpl,
     ): ModalRepository
+
+    @Singleton
+    @Binds
+    fun bindRewardRepository(
+        rewardRepository: RewardRepositoryImpl,
+    ): RewardRepository
 }

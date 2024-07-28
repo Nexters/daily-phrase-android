@@ -74,10 +74,10 @@ fun DialogContent(
 
 @Composable
 fun KakaoLoginDialog(
-    modifier: Modifier = Modifier,
     @StringRes message: Int,
     onClickKaKaoLogin: () -> Unit,
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier

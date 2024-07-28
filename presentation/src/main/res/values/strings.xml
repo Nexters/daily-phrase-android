@@ -4,6 +4,7 @@
     <string name="bookmark">즐겨찾기</string>
     <string name="kakao_link_share">카카오톡으로 공유하기</string>
     <string name="kakao_login">카카오 로그인</string>
+    <string name="simple_login">3초만에 로그인 하기</string>
     <string name="more_see">자세히 보기</string>
     <string name="my_page_title">내 정보</string>
     <string name="unsubscribed_title">서비스 탈퇴</string>
@@ -42,4 +43,16 @@
     <string name="app_download">앱 다운로드</string>
     <string name="failure_load_message">새로운 글귀를 가져올 수 없어요.\n네트워크 상태를 확인해주세요.</string>
     <string name="retry">재시도</string>
+    <string name="login_prompt">로그인하고</string>
+    <string name="claim_reward">받아가세요!</string>
+    <string name="reward_date_suffix">%1$d월 이벤트</string>
+    <string name="reward_participation_suffix">%1$d명 참여중</string>
+    <string name="reward_popup_text_prefix">응모하고</string>
+    <string name="reward_popup_text_suffix">받기</string>
+    <string name="event_timer_text_prefix">이벤트 마감까지</string>
+    <string name="event_timer_text_suffix">남음</string>
+    <string name="share_this_quote">이 글귀 공유하기</string>
+    <string name="acquirable_ticket_reset_timer_text_suffix">뒤에</string>
+    <string name="acquirable_ticket_reset_info_text">응모권을 받을 수 있어요</string>
+    <string name="get_ticket_title">응모권을 받았어요!</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.silvertown.android.dailyphrase.presentation.component
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaKaoLoginButton(
     modifier: Modifier = Modifier,
+    @StringRes title: Int = R.string.kakao_login,
     onClickKaKaoLogin: () -> Unit,
 ) {
     Button(
@@ -70,7 +72,7 @@ fun KaKaoLoginButton(
             Text(
                 modifier = Modifier
                     .align(Alignment.Center),
-                text = stringResource(id = R.string.kakao_login),
+                text = stringResource(id = title),
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = pretendardFamily,
