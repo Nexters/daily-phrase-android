@@ -20,6 +20,15 @@ suspend fun <T> Result<T>.onSuccess(
     }
 }
 
+suspend fun <T> Result<T>.getOrThrow(): T {
+    return when (this) {
+        is Result.Success -> this.data
+        is Result.Failure -> throw Exception("Failure: $errorMessage (code: $code)")
+        is Result.Loading -> throw IllegalStateException("Result is still loading")
+        is Result.Empty -> throw NoSuchElementException("Result is empty")
+    }
+}
+
 suspend fun Result<*>.onFailure(
     action: suspend (errorMessage: String, code: Int) -> Unit,
 ): Result<*> =
