@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::inflate) {
     private lateinit var prizeAdapter: PrizeAdapter
     private val viewModel by viewModels<EventViewModel>()
+    private var isItemsSet = false // TODO JH: 개선 방법 고민해보기
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -130,7 +131,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
     private fun updateUi(eventInfo: EventInfoUi) {
         binding.tvMyEntries.text = getString(R.string.my_entries, eventInfo.total)
-        prizeAdapter.setList(eventInfo.prizes)
+        if (!isItemsSet) {
+            prizeAdapter.setList(eventInfo.prizes)
+            isItemsSet = true
+        }
         binding.tvSubmitEntries.isEnabled = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size].hasEnoughEntry
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
