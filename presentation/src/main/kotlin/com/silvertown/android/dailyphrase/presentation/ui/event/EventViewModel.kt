@@ -40,13 +40,15 @@ class EventViewModel @Inject constructor(
     private val _prizeInfo = MutableStateFlow<Result<PrizeInfo>>(Result.Loading)
     private val _rewardInfo = MutableStateFlow<Result<RewardInfo>>(Result.Loading)
     private val _currentTime = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
+    private val _isEntryEventLoading = MutableStateFlow(false)
 
     val uiState = combine(
         _prizeInfo,
         _rewardInfo,
         _currentTime,
-    ) { prizeInfo, rewardInfo, currentTime ->
-        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading) {
+        _isEntryEventLoading,
+    ) { prizeInfo, rewardInfo, currentTime, isEntryEventLoading ->
+        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading || isEntryEventLoading) {
             UiState.Loading
         } else if (prizeInfo is Result.Failure) {
             // TODO JH: 실패 케이스 처리
@@ -172,29 +174,28 @@ class EventViewModel @Inject constructor(
 
     fun entryEvent(selectedPrize: EventInfoUi.Prize) {
         viewModelScope.launch {
-            delay(1000) // TODO JH: API 호출 딜레이 (테스트 용)
-
-            // TODO JH: PrizeInfo 삭제해서 빌드가 안되므로 임시 주석 
-            // 성공일 때
-//            (_uiState.value as? UiState.Loaded)?.let { loaded ->
-//                val remainingTickets = loaded.prizeInfo.total - selectedItem.requiredTicketCount
-//
-//                loaded.prizeInfo.items.map { item ->
-//                    if (item.prizeId == selectedItem.prizeId && item is PrizeInfoUi.Item.BeforeWinningDraw) {
-//                        item.copy(
-//                            myEntryCount = item.myEntryCount + 1,
-//                            hasEnoughEntry = remainingTickets >= item.requiredTicketCount,
-//                        )
-//                    } else {
-//                        item
-//                    }
-//                }.let { items ->
-//                    loaded.prizeInfo.copy(items = items, total = remainingTickets)
-//                }.let {
-//                    _uiState.emit(UiState.Loaded(it))
-//                }
-//            }
-//            _uiEvent.emit(UiEvent.EntrySuccess)
+            _isEntryEventLoading.emit(true)
+            rewardRepository.postEventEnter(selectedPrize.prizeId).onSuccess {
+                (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+                    prizeInfo.items.map { item ->
+                        if (item.prizeId == selectedPrize.prizeId) {
+                            item.copy(
+                                myEntryCount = item.myEntryCount + 1,
+                            )
+                        } else {
+                            item
+                        }
+                    }.let { items ->
+                        prizeInfo.copy(items = items, total = prizeInfo.total - selectedPrize.requiredTicketCount)
+                    }
+                }?.let {
+                    _isEntryEventLoading.emit(false)
+                    _uiEvent.emit(UiEvent.EntrySuccess)
+                    _prizeInfo.emit(Result.Success(it))
+                }
+            }.onFailure { errorMessage, code ->
+                _isEntryEventLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+            }
         }
     }
 

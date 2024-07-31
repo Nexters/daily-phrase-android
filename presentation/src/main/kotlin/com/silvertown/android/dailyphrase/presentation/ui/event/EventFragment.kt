@@ -3,6 +3,8 @@ package com.silvertown.android.dailyphrase.presentation.ui.event
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -33,7 +35,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         initListeners()
         initViews()
         initObserve()
-        showTicketReceivedDialog() // TODO JH: 조건에 따라 보여주기
+//        showTicketReceivedDialog() // TODO JH: 조건에 따라 보여주기
     }
 
     private fun initListeners() {
@@ -109,6 +111,12 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 viewModel.uiState
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                     .collectLatest { state ->
+                        binding.clLoading.isVisible = state is EventViewModel.UiState.Loading
+                        if (state is EventViewModel.UiState.Loading) {
+                            activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                        } else {
+                            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                        }
                         (state as? EventViewModel.UiState.Loaded)?.let { loaded ->
                             updateUi(loaded.eventInfo)
                         }
