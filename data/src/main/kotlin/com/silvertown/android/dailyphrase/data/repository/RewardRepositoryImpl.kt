@@ -57,4 +57,8 @@ class RewardRepositoryImpl @Inject constructor(
                 Timber.e(errorMessage)
             }
     }
+
+    override suspend fun postEventEnter(prizeId: Int): Result<Unit> {
+        return rewardDataSource.postEventEnter(prizeId).toResultModel { Unit }
+    }
 }
