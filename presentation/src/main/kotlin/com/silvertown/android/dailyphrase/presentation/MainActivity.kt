@@ -142,13 +142,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun kakaoLogin() {
+    fun kakaoLogin(targetPage: LoginResultListener.TargetPage? = null) {
         lifecycleScope.launch {
             kotlin.runCatching {
                 loadingDialog.show()
                 loginWithKakaoOrThrow(this@MainActivity)
             }.onSuccess { oAuthToken ->
-                onSuccessKaKaoLogin(oAuthToken)
+                onSuccessKaKaoLogin(oAuthToken, targetPage)
                 loadingDialog.dismiss()
             }.onFailure { throwable ->
                 loadingDialog.dismiss()
@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onSuccessKaKaoLogin(oAuthToken: OAuthToken) {
+    private fun onSuccessKaKaoLogin(oAuthToken: OAuthToken, targetPage: LoginResultListener.TargetPage?) {
         UserApiClient.instance.me { user, _ ->
             if (user != null) {
                 viewModel.signInWithKaKaoTokenViaServer(
@@ -228,7 +228,11 @@ class MainActivity : AppCompatActivity() {
                             name = user.kakaoAccount?.profile?.nickname,
                             imageUrl = user.kakaoAccount?.profile?.profileImageUrl,
                         )
-                        loginResultListener?.onLoginSuccess()
+                        if (targetPage == null) {
+                            loginResultListener?.onLoginSuccess()
+                        } else {
+                            loginResultListener?.onLoginSuccess(targetPage)
+                        }
                     } else {
                         Toast.makeText(this@MainActivity, "로그인에 실패했어요.", Toast.LENGTH_SHORT)
                             .show()

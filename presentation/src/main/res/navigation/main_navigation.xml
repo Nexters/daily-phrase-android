@@ -26,6 +26,9 @@
         <action
             android:id="@+id/move_to_NonLoginFragment"
             app:destination="@id/nonLoginFragment" />
+        <action
+            android:id="@+id/move_to_eventFragment"
+            app:destination="@id/eventFragment"/>
     </fragment>
 
     <fragment

@@ -109,9 +109,9 @@ class HomeFragment :
         )
 
         rewardBannerAdapter = HomeRewardBannerAdapter(
-            // TODO: 주환데브 연결 필요 -> 홈 배너에서 "3초만에 로그인하기" 클릭시
-            // TODO: kakaoLogin callback 함수 하나 넣어서 처리해도 될 듯?
-            onClickKaKaoLogin = { (activity as? MainActivity)?.kakaoLogin() }
+            onClickKaKaoLogin = {
+                (activity as? MainActivity)?.kakaoLogin(targetPage = LoginResultListener.TargetPage.EVENT)
+            }
         )
 
         binding.rvPost.apply {
@@ -206,7 +206,7 @@ class HomeFragment :
                 HomeRewardPopup(
                     rewardState = rewardState,
                     shareEvent = viewModel.shareEvent,
-                    navigateToEventPage = { } // TODO: 주환데브 연결 필요 -> 로그인 상태에서 팝업 클릭 시 이벤트 페이지로 이동
+                    navigateToEventPage = { moveToEventFragment() }
                 )
             }
         }
@@ -215,6 +215,15 @@ class HomeFragment :
     override fun onLoginSuccess() {
         viewModel.showLoginDialog(false)
         Toast.makeText(requireContext(), R.string.login_success_desc, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onLoginSuccess(targetPage: LoginResultListener.TargetPage) {
+        super.onLoginSuccess(targetPage)
+        viewModel.showLoginDialog(false)
+
+        when (targetPage) {
+            LoginResultListener.TargetPage.EVENT -> moveToEventFragment()
+        }
     }
 
     override fun onResume() {
@@ -288,6 +297,12 @@ class HomeFragment :
 
     private fun showEndedEventTimerPopupTooltip(remainTime: Long): Boolean {
         return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
+    }
+
+    private fun moveToEventFragment() {
+        HomeFragmentDirections
+            .moveToEventFragment()
+            .also { findNavController().navigate(it) }
     }
 
     @Composable
