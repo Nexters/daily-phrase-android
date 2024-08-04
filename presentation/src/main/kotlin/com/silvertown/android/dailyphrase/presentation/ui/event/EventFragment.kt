@@ -22,6 +22,9 @@ import com.silvertown.android.dailyphrase.presentation.databinding.FragmentEvent
 import com.silvertown.android.dailyphrase.presentation.extensions.dpToPx
 import com.silvertown.android.dailyphrase.presentation.model.EventInfoUi
 import com.silvertown.android.dailyphrase.presentation.util.vibrateSingle
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,6 +34,23 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     private lateinit var prizeAdapter: PrizeAdapter
     private val viewModel by viewModels<EventViewModel>()
     private var isItemsSet = false // TODO JH: 개선 방법 고민해보기
+    private val balloon by lazy {
+        Balloon.Builder(requireContext())
+            .setArrowPosition(0.5f)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setTextIsHtml(true)
+            .setText(getString(R.string.entry_success_tooltip_message))
+            .setTextSize(16f)
+            .setPaddingVertical(8)
+            .setPaddingHorizontal(12)
+            .setCornerRadius(4f)
+            .setBackgroundColorResource(R.color.tooltip_background_black)
+            .setBalloonAnimation(BalloonAnimation.NONE)
+            .setDismissWhenClicked(true)
+            .setDismissWhenTouchOutside(false)
+            .build()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -128,6 +148,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                             EventViewModel.UiEvent.EntrySuccess -> {
                                 binding.lottieParticle.playAnimation()
                                 vibrateSingle(requireContext())
+                                showTooltip()
                             }
                             is EventViewModel.UiEvent.PrizeWinning -> showWinningBottomSheet()
                         }
@@ -205,5 +226,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         EventFragmentDirections
             .moveToWinningBottomSheet()
             .also { findNavController().navigate(it) }
+    }
+
+    private fun showTooltip() {
+        balloon.showAlignTop(anchor = binding.tvEntryCount, yOff = -6)
+        balloon.dismissWithDelay(2000L)
     }
 }

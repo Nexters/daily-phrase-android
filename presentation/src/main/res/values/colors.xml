@@ -24,4 +24,5 @@
     <color name="ivory">#E9E2D4</color>
     <color name="deep_red">#DE3510</color>
     <color name="edit_text_hint">#999999</color>
+    <color name="tooltip_background_black">#292929</color>
 </resources>
