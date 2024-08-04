@@ -62,6 +62,13 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     private fun initListeners() {
+        fun getCurrentPrize(): EventInfoUi.Prize? {
+            return (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
+                ?.eventInfo
+                ?.prizes
+                ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+        }
+
         binding.vpPrize.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -76,21 +83,22 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         })
 
         binding.tvSubmitEntries.setOnClickListener {
-            (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                ?.eventInfo
-                ?.prizes
-                ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
-                ?.also { prize ->
-                    when (prize) {
-                        is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult(selectedPrize = prize)
-                        is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
-                    }
+            getCurrentPrize()?.let { prize ->
+                when (prize) {
+                    is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult(selectedPrize = prize)
+                    is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
                 }
+            }
         }
 
         setFragmentResultListener(WinningBottomSheet.REQUEST_KEY_ENTERED_PHONE_NUMBER) { _, bundle ->
             bundle.getString(WinningBottomSheet.BUNDLE_KEY_PHONE_NUMBER)?.let { phoneNumber ->
-                viewModel.enterPhoneNumber(phoneNumber)
+                getCurrentPrize()?.let { prize ->
+                    viewModel.enterPhoneNumber(
+                        prizeId = prize.prizeId,
+                        phoneNumber = phoneNumber,
+                    )
+                }
             }
         }
 

@@ -43,15 +43,23 @@ class EventViewModel @Inject constructor(
     private val _currentTime = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
     private val _isEntryEventLoading = MutableStateFlow(false)
     private val _isCheckEntryResultLoading = MutableStateFlow(false)
+    private val _isEnterPhoneNumberLoading = MutableStateFlow(false)
+
+    private val _isLoading = combine(
+        _isEntryEventLoading,
+        _isCheckEntryResultLoading,
+        _isEnterPhoneNumberLoading,
+    ) { isEntryEventLoading, isCheckEntryResultLoading, isEnterPhoneNumberLoading ->
+        isEntryEventLoading || isCheckEntryResultLoading || isEnterPhoneNumberLoading
+    }
 
     val uiState = combine(
         _prizeInfo,
         _rewardInfo,
         _currentTime,
-        _isEntryEventLoading,
-        _isCheckEntryResultLoading,
-    ) { prizeInfo, rewardInfo, currentTime, isEntryEventLoading, isCheckEntryResultLoading ->
-        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading || isEntryEventLoading || isCheckEntryResultLoading) {
+        _isLoading,
+    ) { prizeInfo, rewardInfo, currentTime, isLoading ->
+        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading || isLoading) {
             UiState.Loading
         } else if (prizeInfo is Result.Failure) {
             // TODO JH: 실패 케이스 처리
@@ -219,7 +227,8 @@ class EventViewModel @Inject constructor(
                         PrizeInfo.Item.EntryResult.Status.WINNING -> UiEvent.PrizeWinning(selectedPrize.prizeId)
                         PrizeInfo.Item.EntryResult.Status.MISSED -> null // TODO: 당첨이 아닐때 케이스 구현
                         PrizeInfo.Item.EntryResult.Status.ENTERED,
-                        PrizeInfo.Item.EntryResult.Status.UNKNOWN -> null
+                        PrizeInfo.Item.EntryResult.Status.UNKNOWN,
+                        -> null
                     }?.let { event ->
                         _uiEvent.emit(event)
                     } ?: run {
@@ -234,7 +243,31 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    fun enterPhoneNumber(phoneNumber: String) {
+    fun enterPhoneNumber(prizeId: Int, phoneNumber: String) {
+        viewModelScope.launch {
+            _isEnterPhoneNumberLoading.emit(true)
+            rewardRepository.postWinnerPhoneNumber(
+                prizeId = prizeId,
+                phoneNumber = phoneNumber,
+            ).onSuccess {
+                _isEnterPhoneNumberLoading.emit(false)
+                (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+                    prizeInfo.items.map { item ->
+                        if (item.prizeId == prizeId) {
+                            item.copy(entryResult = item.entryResult.toWinningEntryResult(phoneNumber))
+                        } else {
+                            item
+                        }
+                    }.let { items ->
+                        prizeInfo.copy(items = items)
+                    }.also { prizeInfo ->
+                        _prizeInfo.emit(Result.Success(prizeInfo))
+                    }
+                }
+            }.onFailure { errorMessage, code ->
+                _isEnterPhoneNumberLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+            }
+        }
     }
 
     sealed interface UiState {

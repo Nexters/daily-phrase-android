@@ -36,6 +36,14 @@ data class PrizeInfo(
                     }
                 }
             }
+
+            fun toWinningEntryResult(phoneNumber: String): EntryResult {
+                return EntryResult(
+                    status = Status.WINNING,
+                    phoneNumber = phoneNumber,
+                    isChecked = true
+                )
+            }
         }
     }
 }
