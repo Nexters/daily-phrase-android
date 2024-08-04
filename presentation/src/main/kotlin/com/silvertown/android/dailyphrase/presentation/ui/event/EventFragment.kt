@@ -1,7 +1,9 @@
 package com.silvertown.android.dailyphrase.presentation.ui.event
 
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
@@ -13,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.FragmentEventBinding
@@ -43,17 +46,12 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                    ?.let { it.eventInfo.prizes[position % it.eventInfo.prizes.size] }
-                    ?.let { prize ->
-                        binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
-                        binding.tvSubmitEntries.text = if (prize is EventInfoUi.Prize.BeforeWinningDraw) {
-                            getString(R.string.submit_entries, prize.requiredTicketCount)
-                        } else {
-                            getString(R.string.confirm_entry_result)
-                        }
-                        binding.tvSubmitEntries.isEnabled = prize.hasEnoughEntry
-                    }
+                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
+                    updateEntryUi(
+                        prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
+                        total = it.eventInfo.total,
+                    )
+                }
             }
         })
 
@@ -139,20 +137,14 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     private fun updateUi(eventInfo: EventInfoUi) {
-        binding.tvMyEntries.text = getString(R.string.my_entries, eventInfo.total)
         if (!isItemsSet) {
             prizeAdapter.setList(eventInfo.prizes)
             isItemsSet = true
         }
-        eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size].also { prize ->
-            binding.tvSubmitEntries.isEnabled = prize.hasEnoughEntry
-            binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
-            binding.tvSubmitEntries.text = if (prize is EventInfoUi.Prize.BeforeWinningDraw) {
-                getString(R.string.submit_entries, prize.requiredTicketCount)
-            } else {
-                getString(R.string.confirm_entry_result)
-            }
-        }
+        updateEntryUi(
+            prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
+            total = eventInfo.total,
+        )
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
@@ -165,6 +157,41 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             }.also { text ->
                 binding.tvNotice.text = text
             }
+        }
+    }
+
+    // 응모와 관련된 ui 업데이트
+    private fun updateEntryUi(prize: EventInfoUi.Prize, total: Int) {
+        binding.tvSubmitEntries.isEnabled = when (prize) {
+            is EventInfoUi.Prize.AfterWinningDraw -> !prize.entryResult.isChecked
+            is EventInfoUi.Prize.BeforeWinningDraw -> !prize.isEventPeriodEnded && prize.hasEnoughEntry
+        }
+        binding.tvMyEntries.text = when (prize) {
+            is EventInfoUi.Prize.AfterWinningDraw -> if (prize.entryResult.isChecked) {
+                when (prize.entryResult.status) {
+                    PrizeInfo.Item.EntryResult.Status.WINNING -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Html.fromHtml(getString(R.string.entry_result_winning, prize.entryResult.phoneNumber), Html.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(getString(R.string.entry_result_winning, prize.entryResult.phoneNumber))
+                    }
+
+                    PrizeInfo.Item.EntryResult.Status.MISSED -> getString(R.string.entry_result_missed)
+                    else -> null
+                }
+            } else {
+                null
+            }
+            is EventInfoUi.Prize.BeforeWinningDraw -> if (prize.isEventPeriodEnded) {
+                null
+            } else {
+                getString(R.string.my_entries, total)
+            }
+        }
+        binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
+        binding.tvSubmitEntries.text = if (prize is EventInfoUi.Prize.BeforeWinningDraw) {
+            getString(R.string.submit_entries, prize.requiredTicketCount)
+        } else {
+            getString(R.string.confirm_entry_result)
         }
     }
 

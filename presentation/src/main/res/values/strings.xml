@@ -71,4 +71,6 @@
     <string name="input_phone_number_guide">남겨주신 연락처로\n선물을 받을 수 있는 링크를 전달해드릴게요.</string>
     <string name="input_phone_number_hint">010-0000-0000</string>
     <string name="input_phone_number">연락처 입력하기</string>
+    <string name="entry_result_missed">아쉽게도 당첨되지 않았어요.</string>
+    <string name="entry_result_winning"><![CDATA[<font color="#FF7900">%s</font>]]>으로 선물 발송 예정 (2일 이내)</string>
 </resources>

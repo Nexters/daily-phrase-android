@@ -18,6 +18,7 @@ data class EventInfoUi(
         open val totalEntryCount: Int,
         open val myEntryCount: Int,
         open val hasEnoughEntry: Boolean,
+        open val entryResult: EntryResult,
     ) {
         data class BeforeWinningDraw(
             override val prizeId: Int,
@@ -29,8 +30,9 @@ data class EventInfoUi(
             override val totalEntryCount: Int,
             override val myEntryCount: Int,
             override val hasEnoughEntry: Boolean,
+            override val entryResult: EntryResult,
             val isEventPeriodEnded: Boolean,
-        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry, entryResult)
 
         data class AfterWinningDraw(
             override val prizeId: Int,
@@ -41,7 +43,8 @@ data class EventInfoUi(
             override val totalEntryCount: Int,
             override val myEntryCount: Int,
             override val hasEnoughEntry: Boolean,
-        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry)
+            override val entryResult: EntryResult,
+        ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry, entryResult)
     }
 
     sealed class NoticeInfo(
@@ -67,6 +70,12 @@ data class EventInfoUi(
             val currentMonth: Int,
         ) : NoticeInfo(textColorResId, bgColorResId)
     }
+
+    data class EntryResult(
+        val status: PrizeInfo.Item.EntryResult.Status,
+        val phoneNumber: String?,
+        val isChecked: Boolean,
+    )
 }
 
 fun PrizeInfo.Item.toPresentationModel(
@@ -86,6 +95,7 @@ fun PrizeInfo.Item.toPresentationModel(
             myEntryCount = myEntryCount,
             hasEnoughEntry = hasEnoughEntry,
             isEventPeriodEnded = isEventPeriodEnded,
+            entryResult = entryResult.toPresentationModel(),
         )
     } else {
         EventInfoUi.Prize.AfterWinningDraw(
@@ -97,6 +107,15 @@ fun PrizeInfo.Item.toPresentationModel(
             totalEntryCount = totalEntryCount,
             myEntryCount = myEntryCount,
             hasEnoughEntry = hasEnoughEntry,
+            entryResult = entryResult.toPresentationModel()
         )
     }
+}
+
+fun PrizeInfo.Item.EntryResult.toPresentationModel(): EventInfoUi.EntryResult {
+    return EventInfoUi.EntryResult(
+        status = status,
+        phoneNumber = phoneNumber,
+        isChecked = isChecked,
+    )
 }
