@@ -65,4 +65,8 @@ class RewardRepositoryImpl @Inject constructor(
     override suspend fun postCheckEntryResult(prizeId: Int): Result<Unit> {
         return rewardDataSource.postCheckEntryResult(prizeId).toResultModel { Unit }
     }
+
+    override suspend fun postWinnerPhoneNumber(prizeId: Int, phoneNumber: String): Result<Unit> {
+        return rewardDataSource.postWinnerPhoneNumber(prizeId, phoneNumber).toResultModel { Unit }
+    }
 }
