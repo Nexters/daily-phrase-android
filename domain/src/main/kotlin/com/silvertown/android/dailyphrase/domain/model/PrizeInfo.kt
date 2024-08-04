@@ -44,6 +44,10 @@ data class PrizeInfo(
                     isChecked = true
                 )
             }
+
+            fun toCheckedEntryResult(): EntryResult {
+                return this.copy(isChecked = true)
+            }
         }
     }
 }

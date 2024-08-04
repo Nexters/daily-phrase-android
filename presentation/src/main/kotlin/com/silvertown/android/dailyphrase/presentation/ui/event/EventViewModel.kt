@@ -32,10 +32,10 @@ import javax.inject.Inject
 class EventViewModel @Inject constructor(
     private val rewardRepository: RewardRepository,
 ) : ViewModel() {
-    
+
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
-    
+
     private var isTimerActive = true
     private var timeJob: Job? = null
     private val _prizeInfo = MutableStateFlow<Result<PrizeInfo>>(Result.Loading)
@@ -138,7 +138,7 @@ class EventViewModel @Inject constructor(
             minutes,
             seconds,
         )
-        
+
         if (duration.isNegative) {
             stopTimer()
         }
@@ -211,6 +211,20 @@ class EventViewModel @Inject constructor(
     }
 
     fun checkEntryResult(selectedPrize: EventInfoUi.Prize) {
+        suspend fun setPrizeChecked(prizeId: Int) {
+            (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+                prizeInfo.items.map { item ->
+                    if (item.prizeId == prizeId) {
+                        item.copy(entryResult = item.entryResult.toCheckedEntryResult())
+                    } else {
+                        item
+                    }
+                }.let { items ->
+                    prizeInfo.copy(items = items)
+                }.also { _prizeInfo.emit(Result.Success(it)) }
+            }
+        }
+
         viewModelScope.launch {
             try {
                 val resultStatus = _prizeInfo.value.getOrNull()
@@ -224,15 +238,14 @@ class EventViewModel @Inject constructor(
                 rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
                     _isCheckEntryResultLoading.emit(false)
                     when (resultStatus) {
-                        PrizeInfo.Item.EntryResult.Status.WINNING -> UiEvent.PrizeWinning(selectedPrize.prizeId)
-                        PrizeInfo.Item.EntryResult.Status.MISSED -> null // TODO: 당첨이 아닐때 케이스 구현
+                        PrizeInfo.Item.EntryResult.Status.WINNING -> {
+                            setPrizeChecked(prizeId = selectedPrize.prizeId)
+                            _uiEvent.emit(UiEvent.PrizeWinning(selectedPrize.prizeId))
+                        }
+                        PrizeInfo.Item.EntryResult.Status.MISSED -> setPrizeChecked(prizeId = selectedPrize.prizeId)
                         PrizeInfo.Item.EntryResult.Status.ENTERED,
                         PrizeInfo.Item.EntryResult.Status.UNKNOWN,
-                        -> null
-                    }?.let { event ->
-                        _uiEvent.emit(event)
-                    } ?: run {
-                        throw Exception("Abnormal approach")
+                        -> throw Exception("Abnormal approach")
                     }
                 }.onFailure { errorMessage, code ->
                     _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
