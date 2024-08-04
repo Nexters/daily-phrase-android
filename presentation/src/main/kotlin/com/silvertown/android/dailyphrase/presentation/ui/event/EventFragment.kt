@@ -93,6 +93,10 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 viewModel.enterPhoneNumber(phoneNumber)
             }
         }
+
+        binding.ivBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun initViews() {
