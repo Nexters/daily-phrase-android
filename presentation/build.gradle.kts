@@ -103,6 +103,7 @@ dependencies {
     androidTestImplementation(libs.bundles.android.test)
 
     implementation(libs.balloon.compose)
+    implementation(libs.balloon)
 
     // cp
     implementation(libs.activity.compose)
