@@ -1,8 +1,10 @@
 package com.silvertown.android.dailyphrase.data.network.datasource
 
 import com.silvertown.android.dailyphrase.data.network.common.ApiResponse
+import com.silvertown.android.dailyphrase.data.network.model.request.CheckEntryResultRequest
 import com.silvertown.android.dailyphrase.data.network.model.request.EventEnterRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.BaseResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.CheckEntryResultResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.EventEnterResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardInfoResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardWrapperResponse
@@ -20,4 +22,7 @@ class RewardDataSourceImpl @Inject constructor(
 
     override suspend fun postEventEnter(prizeId: Int): ApiResponse<BaseResponse<EventEnterResponse>> =
         rewardApiService.postEventEnter(EventEnterRequest(prizeId))
+
+    override suspend fun postCheckEntryResult(prizeId: Int): ApiResponse<BaseResponse<CheckEntryResultResponse>> =
+        rewardApiService.postCheckEntryResult(CheckEntryResultRequest(prizeId))
 }

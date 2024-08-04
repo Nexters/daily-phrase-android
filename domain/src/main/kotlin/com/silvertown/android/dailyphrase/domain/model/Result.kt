@@ -20,6 +20,14 @@ suspend fun <T> Result<T>.onSuccess(
     }
 }
 
+fun <T> Result<T>.getOrNull(): T? {
+    return if (this is Result.Success) {
+        this.data
+    } else {
+        null
+    }
+}
+
 suspend fun <T> Result<T>.getOrThrow(): T {
     return when (this) {
         is Result.Success -> this.data
