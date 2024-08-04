@@ -184,29 +184,35 @@ class EventViewModel @Inject constructor(
     }
 
     fun entryEvent(selectedPrize: EventInfoUi.Prize) {
+        suspend fun updateEntryAndTicketStatus(selectedPrizeId: Int) {
+            (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+                prizeInfo.items.map { item ->
+                    if (item.prizeId == selectedPrizeId) {
+                        item.copy(
+                            myEntryCount = item.myEntryCount + 1,
+                        )
+                    } else {
+                        item
+                    }
+                }.let { items ->
+                    prizeInfo.copy(items = items, total = prizeInfo.total - selectedPrize.requiredTicketCount)
+                }
+            }?.let {
+                _isEntryEventLoading.emit(false)
+                _uiEvent.emit(UiEvent.EntrySuccess)
+                _prizeInfo.emit(Result.Success(it))
+            }
+        }
+        
         viewModelScope.launch {
             _isEntryEventLoading.emit(true)
-            rewardRepository.postEventEnter(selectedPrize.prizeId).onSuccess {
-                (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
-                    prizeInfo.items.map { item ->
-                        if (item.prizeId == selectedPrize.prizeId) {
-                            item.copy(
-                                myEntryCount = item.myEntryCount + 1,
-                            )
-                        } else {
-                            item
-                        }
-                    }.let { items ->
-                        prizeInfo.copy(items = items, total = prizeInfo.total - selectedPrize.requiredTicketCount)
-                    }
-                }?.let {
-                    _isEntryEventLoading.emit(false)
-                    _uiEvent.emit(UiEvent.EntrySuccess)
-                    _prizeInfo.emit(Result.Success(it))
+            rewardRepository
+                .postEventEnter(selectedPrize.prizeId)
+                .onSuccess {
+                    updateEntryAndTicketStatus(selectedPrize.prizeId)
+                }.onFailure { errorMessage, code ->
+                    _isEntryEventLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
                 }
-            }.onFailure { errorMessage, code ->
-                _isEntryEventLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
-            }
         }
     }
 
@@ -257,6 +263,22 @@ class EventViewModel @Inject constructor(
     }
 
     fun enterPhoneNumber(prizeId: Int, phoneNumber: String) {
+        suspend fun setPhoneNumberForPrize(prizeId: Int) {
+            (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+                prizeInfo.items.map { item ->
+                    if (item.prizeId == prizeId) {
+                        item.copy(entryResult = item.entryResult.toWinningEntryResult(phoneNumber))
+                    } else {
+                        item
+                    }
+                }.let { items ->
+                    prizeInfo.copy(items = items)
+                }.also { prizeInfo ->
+                    _prizeInfo.emit(Result.Success(prizeInfo))
+                }
+            }
+        }
+
         viewModelScope.launch {
             _isEnterPhoneNumberLoading.emit(true)
             rewardRepository.postWinnerPhoneNumber(
@@ -264,19 +286,7 @@ class EventViewModel @Inject constructor(
                 phoneNumber = phoneNumber,
             ).onSuccess {
                 _isEnterPhoneNumberLoading.emit(false)
-                (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
-                    prizeInfo.items.map { item ->
-                        if (item.prizeId == prizeId) {
-                            item.copy(entryResult = item.entryResult.toWinningEntryResult(phoneNumber))
-                        } else {
-                            item
-                        }
-                    }.let { items ->
-                        prizeInfo.copy(items = items)
-                    }.also { prizeInfo ->
-                        _prizeInfo.emit(Result.Success(prizeInfo))
-                    }
-                }
+                setPhoneNumberForPrize(prizeId)
             }.onFailure { errorMessage, code ->
                 _isEnterPhoneNumberLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
