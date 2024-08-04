@@ -64,7 +64,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
                 ?.also { prize ->
                     when (prize) {
-                        is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult()
+                        is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult(selectedPrize = prize)
                         is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
                     }
                 }
@@ -131,6 +131,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                                 binding.lottieParticle.playAnimation()
                                 vibrateSingle(requireContext())
                             }
+                            is EventViewModel.UiEvent.PrizeWinning -> showWinningBottomSheet()
                         }
                     }
             }

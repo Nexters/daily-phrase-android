@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.domain.model.RewardInfo
+import com.silvertown.android.dailyphrase.domain.model.getOrNull
 import com.silvertown.android.dailyphrase.domain.model.getOrThrow
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
@@ -41,14 +42,16 @@ class EventViewModel @Inject constructor(
     private val _rewardInfo = MutableStateFlow<Result<RewardInfo>>(Result.Loading)
     private val _currentTime = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
     private val _isEntryEventLoading = MutableStateFlow(false)
+    private val _isCheckEntryResultLoading = MutableStateFlow(false)
 
     val uiState = combine(
         _prizeInfo,
         _rewardInfo,
         _currentTime,
         _isEntryEventLoading,
-    ) { prizeInfo, rewardInfo, currentTime, isEntryEventLoading ->
-        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading || isEntryEventLoading) {
+        _isCheckEntryResultLoading,
+    ) { prizeInfo, rewardInfo, currentTime, isEntryEventLoading, isCheckEntryResultLoading ->
+        if (prizeInfo is Result.Loading || rewardInfo is Result.Loading || isEntryEventLoading || isCheckEntryResultLoading) {
             UiState.Loading
         } else if (prizeInfo is Result.Failure) {
             // TODO JH: 실패 케이스 처리
@@ -199,8 +202,36 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    fun checkEntryResult() {
-        // TODO JH: 응모 결과 확인
+    fun checkEntryResult(selectedPrize: EventInfoUi.Prize) {
+        viewModelScope.launch {
+            try {
+                val resultStatus = _prizeInfo.value.getOrNull()
+                    ?.items
+                    ?.firstOrNull { it.prizeId == selectedPrize.prizeId }
+                    ?.entryResult
+                    ?.status
+                requireNotNull(resultStatus)
+
+                _isCheckEntryResultLoading.emit(true)
+                rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
+                    _isCheckEntryResultLoading.emit(false)
+                    when (resultStatus) {
+                        PrizeInfo.Item.EntryResult.Status.WINNING -> UiEvent.PrizeWinning(selectedPrize.prizeId)
+                        PrizeInfo.Item.EntryResult.Status.MISSED -> null // TODO: 당첨이 아닐때 케이스 구현
+                        PrizeInfo.Item.EntryResult.Status.ENTERED,
+                        PrizeInfo.Item.EntryResult.Status.UNKNOWN -> null
+                    }?.let { event ->
+                        _uiEvent.emit(event)
+                    } ?: run {
+                        throw Exception("Abnormal approach")
+                    }
+                }.onFailure { errorMessage, code ->
+                    _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+                }
+            } catch (e: Exception) {
+                // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+            }
+        }
     }
 
     fun enterPhoneNumber(phoneNumber: String) {
@@ -217,5 +248,6 @@ class EventViewModel @Inject constructor(
 
     sealed interface UiEvent {
         data object EntrySuccess : UiEvent
+        data class PrizeWinning(val prizeId: Int) : UiEvent
     }
 }
