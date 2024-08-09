@@ -53,7 +53,7 @@ private fun EndedPopupContainer(
             .heightIn(min = 40.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(id = R.color.ended_tooltip_border),
+                color = colorResource(id = R.color.disabled_tooltip_border),
                 shape = RoundedCornerShape(20.dp)
             )
             .clip(RoundedCornerShape(20.dp))

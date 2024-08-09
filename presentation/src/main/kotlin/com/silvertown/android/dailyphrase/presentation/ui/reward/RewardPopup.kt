@@ -133,6 +133,7 @@ internal fun RewardPopup(
             ) {
                 PopupContainer(
                     popupText = popupText,
+                    hasTicket = state.rewardBanner.myTicketCount > 0,
                     navigateToEventPage = navigateToEventPage
                 )
 
@@ -185,6 +186,7 @@ private fun CountdownTimer(
 @Composable
 private fun PopupContainer(
     popupText: AnnotatedString,
+    hasTicket: Boolean,
     navigateToEventPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -193,7 +195,11 @@ private fun PopupContainer(
             .height(40.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(id = R.color.orange),
+                color = if (hasTicket) {
+                    colorResource(id = R.color.orange)
+                } else {
+                    colorResource(id = R.color.disabled_tooltip_border)
+                },
                 shape = RoundedCornerShape(20.dp)
             )
             .clip(RoundedCornerShape(20.dp))
