@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -41,7 +39,7 @@ import com.silvertown.android.dailyphrase.presentation.component.KaKaoLoginButto
 @Composable
 fun HomeRewardBanner(
     rewardBanner: RewardBanner,
-    isBeforeWinningDraw: Boolean,
+    canCheckThisMonthRewardResult: () -> Boolean,
     modifier: Modifier = Modifier,
     onClickKaKaoLogin: () -> Unit = {},
     navigateToEventPage: () -> Unit = {},
@@ -60,6 +58,8 @@ fun HomeRewardBanner(
         append("\n")
         append(stringResource(id = R.string.home_reward_announcement_winner))
     }
+
+    val isEndedEvent = canCheckThisMonthRewardResult()
 
     Column(
         modifier = modifier
@@ -100,10 +100,10 @@ fun HomeRewardBanner(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = if (isBeforeWinningDraw) {
-                        ongoingEventString
-                    } else {
+                    text = if (isEndedEvent) {
                         endedEventString
+                    } else {
+                        ongoingEventString
                     },
                     style = TextStyle(
                         fontSize = 22.sp,
@@ -148,16 +148,16 @@ fun HomeRewardBanner(
             )
         }
 
-        if (isBeforeWinningDraw) {
+        if (isEndedEvent) {
+            ConfirmEntryResultButton(
+                modifier = Modifier.fillMaxWidth(),
+                navigateToEventPage = navigateToEventPage
+            )
+        } else {
             KaKaoLoginButton(
                 modifier = Modifier.fillMaxWidth(),
                 title = R.string.simple_login,
                 onClickKaKaoLogin = onClickKaKaoLogin,
-            )
-        } else {
-            ConfirmEntryResultButton(
-                modifier = Modifier.fillMaxWidth(),
-                navigateToEventPage = navigateToEventPage
             )
         }
     }

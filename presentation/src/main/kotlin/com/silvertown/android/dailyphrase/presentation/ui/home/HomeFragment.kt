@@ -114,8 +114,8 @@ class HomeFragment :
             onClickKaKaoLogin = {
                 (activity as? MainActivity)?.kakaoLogin(targetPage = LoginResultListener.TargetPage.EVENT)
             },
-            isBeforeWinningDraw = viewModel.getBeforeWinningDrawState(),
-            navigateToEventPage = { moveToEventFragment() }
+            canCheckThisMonthRewardResult = viewModel::canCheckThisMonthRewardResult,
+            navigateToEventPage = ::moveToEventFragment
         )
 
         binding.rvPost.apply {
@@ -180,11 +180,14 @@ class HomeFragment :
                 rewardState?.let {
                     if (loginState.isLoggedIn) {
                         if (it.isBeforeWinningDraw) {
+                            // 로그인 + 응모 결과 확인 못할 때, 리워드 배너는 보이지 않음
                             removeRewardBannerAdapter()
                         } else {
+                            // 로그인 + 응모 결과 확인 가능 상태일 때, 리워드 배너 추가
                             addRewardBannerAdapter()
                         }
                     } else {
+                        // 비로그인 상태일 때, 리워드 배너 추가
                         addRewardBannerAdapter()
                     }
                 }
@@ -209,12 +212,15 @@ class HomeFragment :
                 }
             }
 
-            if (loginState.isLoggedIn) {
-                HomeRewardPopup(
-                    rewardState = rewardState,
-                    shareEvent = viewModel.shareEvent,
-                    navigateToEventPage = { moveToEventFragment() }
-                )
+            rewardState?.let { state ->
+                // 로그인 + 응모 결과를 아직 확인 못할 때 팝업
+                if (loginState.isLoggedIn && state.isBeforeWinningDraw) {
+                    HomeRewardPopup(
+                        rewardState = state,
+                        shareEvent = viewModel.shareEvent,
+                        navigateToEventPage = { moveToEventFragment() }
+                    )
+                }
             }
         }
     }
@@ -314,7 +320,7 @@ class HomeFragment :
 
     @Composable
     private fun HomeRewardPopup(
-        rewardState: HomeRewardState?,
+        rewardState: HomeRewardState,
         shareEvent: SharedFlow<Unit>,
         navigateToEventPage: () -> Unit,
         modifier: Modifier = Modifier,
@@ -330,21 +336,19 @@ class HomeFragment :
             }
         }
 
-        rewardState?.let { state ->
-            if (state.isThisMonthRewardClosed) {
-                EndedRewardPopup(
-                    eventId = state.rewardBanner.eventId,
-                    navigateToEventPage = navigateToEventPage
-                )
-            } else {
-                OngoingRewardPopup(
-                    modifier = modifier,
-                    state = state,
-                    showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
-                    showSharedEventTooltip = showSharedEventTooltip,
-                    navigateToEventPage = navigateToEventPage
-                )
-            }
+        if (rewardState.isThisMonthRewardClosed) { // 응모기간 종료되었을 때
+            EndedRewardPopup(
+                eventId = rewardState.rewardBanner.eventId,
+                navigateToEventPage = navigateToEventPage
+            )
+        } else {
+            OngoingRewardPopup(
+                modifier = modifier,
+                state = rewardState,
+                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
+                showSharedEventTooltip = showSharedEventTooltip,
+                navigateToEventPage = navigateToEventPage
+            )
         }
     }
 
