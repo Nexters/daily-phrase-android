@@ -38,15 +38,19 @@ class GetHomeRewardStateUseCase @Inject constructor(
                 rewardInfoFlow,
                 flowOf(sharedCountModel)
             ) { banner, info, countModel ->
+                val currentTime = LocalDateTime.now()
                 val isThisMonthRewardClosed =
-                    Duration.between(LocalDateTime.now(), info.eventEndDateTime)
+                    Duration.between(currentTime, info.eventEndDateTime)
+                val isBeforeWinningDraw =
+                    info.eventWinnerAnnouncementDateTime?.isAfter(currentTime) ?: true
 
                 HomeRewardState(
                     rewardBanner = banner,
                     name = info.name,
                     eventEndDateTime = info.eventEndDateTime,
                     shareCount = countModel.sharedCount,
-                    isThisMonthRewardClosed = isThisMonthRewardClosed.isNegative
+                    isThisMonthRewardClosed = isThisMonthRewardClosed.isNegative,
+                    isBeforeWinningDraw = isBeforeWinningDraw
                 )
             }
         }

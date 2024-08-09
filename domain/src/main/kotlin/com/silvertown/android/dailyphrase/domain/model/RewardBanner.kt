@@ -21,5 +21,6 @@ data class HomeRewardState(
     val name: String,
     val eventEndDateTime: LocalDateTime?,
     val shareCount: Int,
-    val isThisMonthRewardClosed: Boolean
+    val isThisMonthRewardClosed: Boolean,
+    val isBeforeWinningDraw: Boolean,
 )

@@ -42,6 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -139,30 +140,17 @@ class HomeFragment :
 
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.postList
+            combine(
+                viewModel.postList,
+                viewModel.rewardState.filterNotNull()
+            ) { postList, rewardState ->
+                postList to rewardState
+            }
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest(postAdapter::submitData)
-        }
+                .collectLatest { (postList, rewardState) ->
+                    rewardBannerAdapter.submitList(listOf(rewardState.rewardBanner))
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.rewardState
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .filterNotNull()
-                .collectLatest {
-                    rewardBannerAdapter.submitList(listOf(it.rewardBanner))
-                }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loginState
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest { state ->
-                    loginState = state
-                    if (state.isLoggedIn) {
-                        removeRewardBannerAdapter()
-                    } else {
-                        addRewardBannerAdapter()
-                    }
+                    postAdapter.submitData(postList)
                 }
         }
 
@@ -183,6 +171,22 @@ class HomeFragment :
             val loginState by viewModel.loginState.collectAsStateWithLifecycle()
             val rewardState by viewModel.rewardState.collectAsStateWithLifecycle()
             val messageRes = ActionType.valueOf(actionState.name).messageRes
+
+            LaunchedEffect(loginState, rewardState) {
+                this@HomeFragment.loginState = loginState
+
+                rewardState?.let {
+                    if (loginState.isLoggedIn) {
+                        if (it.isBeforeWinningDraw) {
+                            removeRewardBannerAdapter()
+                        } else {
+                            addRewardBannerAdapter()
+                        }
+                    } else {
+                        addRewardBannerAdapter()
+                    }
+                }
+            }
 
             if (showDialog) {
                 BaseDialog(
