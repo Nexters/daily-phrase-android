@@ -119,6 +119,8 @@ internal fun RewardPopup(
                 }
             }
         ) { balloonWindow ->
+            val hasTicket = state.rewardBanner.myTicketCount > 0
+
             LaunchedEffect(showSharedEventTooltip, showEndedEventTimerPopupTooltip) {
                 if (showSharedEventTooltip || showEndedEventTimerPopupTooltip) {
                     balloonWindow.showAlignTop()
@@ -133,11 +135,11 @@ internal fun RewardPopup(
             ) {
                 PopupContainer(
                     popupText = popupText,
-                    hasTicket = state.rewardBanner.myTicketCount > 0,
+                    hasTicket = hasTicket,
                     navigateToEventPage = navigateToEventPage
                 )
 
-                if (state.rewardBanner.myTicketCount > 0) {
+                if (hasTicket) {
                     OwnedTicketBadge(
                         myTicketCount = state.rewardBanner.myTicketCount.toString()
                     )
