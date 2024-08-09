@@ -335,47 +335,31 @@ class HomeFragment :
             }
         }
 
-        if (rewardState.isThisMonthRewardClosed) { // 응모기간 종료되었을 때
+        if (rewardState.isThisMonthRewardClosed) {
+            // 응모기간 종료되었을 때
             EndedRewardPopup(
                 eventId = rewardState.rewardBanner.eventId,
                 navigateToEventPage = navigateToEventPage
             )
         } else {
-            OngoingRewardPopup(
+            // 응모기간이 남았을 때
+            val remainTime =
+                Duration.between(LocalDateTime.now(), rewardState.eventEndDateTime).toMillis()
+
+            if (showEndedEventTimerPopupTooltip(remainTime)) {
+                showEndedEventTimerPopupTooltip = true
+            }
+
+            RewardPopup(
                 modifier = modifier,
                 state = rewardState,
-                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
                 showSharedEventTooltip = showSharedEventTooltip,
-                navigateToEventPage = navigateToEventPage
+                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
+                onTimeBelowThreshold = {
+                    showEndedEventTimerPopupTooltip = false
+                },
+                navigateToEventPage = navigateToEventPage,
             )
         }
-    }
-
-    @Composable
-    private fun OngoingRewardPopup(
-        state: HomeRewardState,
-        showEndedEventTimerPopupTooltip: Boolean,
-        showSharedEventTooltip: Boolean,
-        navigateToEventPage: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        var showEndedEventTimerPopupTooltip1 = showEndedEventTimerPopupTooltip
-        val remainTime =
-            Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
-
-        if (showEndedEventTimerPopupTooltip(remainTime)) {
-            showEndedEventTimerPopupTooltip1 = true
-        }
-
-        RewardPopup(
-            modifier = modifier,
-            state = state,
-            showSharedEventTooltip = showSharedEventTooltip,
-            showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip1,
-            onTimeBelowThreshold = {
-                showEndedEventTimerPopupTooltip1 = false
-            },
-            navigateToEventPage = navigateToEventPage,
-        )
     }
 }
