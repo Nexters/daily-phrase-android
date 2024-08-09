@@ -113,7 +113,9 @@ class HomeFragment :
         rewardBannerAdapter = HomeRewardBannerAdapter(
             onClickKaKaoLogin = {
                 (activity as? MainActivity)?.kakaoLogin(targetPage = LoginResultListener.TargetPage.EVENT)
-            }
+            },
+            isBeforeWinningDraw = viewModel.getBeforeWinningDrawState(),
+            navigateToEventPage = { moveToEventFragment() }
         )
 
         binding.rvPost.apply {

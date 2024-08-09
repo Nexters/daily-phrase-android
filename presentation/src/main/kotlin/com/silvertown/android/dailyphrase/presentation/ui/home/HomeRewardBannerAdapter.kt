@@ -13,12 +13,16 @@ import com.silvertown.android.dailyphrase.presentation.ui.reward.HomeRewardBanne
 
 class HomeRewardBannerAdapter(
     private val onClickKaKaoLogin: () -> Unit,
+    private val isBeforeWinningDraw: Boolean,
+    private val navigateToEventPage: () -> Unit
 ) : ListAdapter<RewardBanner, RewardBannerViewHolder>(RewardBannerDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardBannerViewHolder {
         return RewardBannerViewHolder(
             ComposeView(parent.context),
-            onClickKaKaoLogin
+            onClickKaKaoLogin,
+            isBeforeWinningDraw,
+            navigateToEventPage
         )
     }
 
@@ -40,6 +44,8 @@ class HomeRewardBannerAdapter(
 class RewardBannerViewHolder(
     private val composeView: ComposeView,
     private val onClickKaKaoLogin: () -> Unit,
+    private val isBeforeWinningDraw: Boolean,
+    private val navigateToEventPage: () -> Unit
 ) : RecyclerView.ViewHolder(composeView) {
 
     fun bind(rewardBanner: RewardBanner) {
@@ -49,7 +55,9 @@ class RewardBannerViewHolder(
                     .padding(top = 19.dp, bottom = 32.dp)
                     .padding(horizontal = 16.dp),
                 rewardBanner = rewardBanner,
-                onClickKaKaoLogin = onClickKaKaoLogin
+                onClickKaKaoLogin = onClickKaKaoLogin,
+                isBeforeWinningDraw = isBeforeWinningDraw,
+                navigateToEventPage = navigateToEventPage
             )
         }
     }

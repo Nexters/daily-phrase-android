@@ -5,13 +5,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -35,17 +40,25 @@ import com.silvertown.android.dailyphrase.presentation.component.KaKaoLoginButto
 
 @Composable
 fun HomeRewardBanner(
-    modifier: Modifier = Modifier,
     rewardBanner: RewardBanner,
+    isBeforeWinningDraw: Boolean,
+    modifier: Modifier = Modifier,
     onClickKaKaoLogin: () -> Unit = {},
+    navigateToEventPage: () -> Unit = {},
 ) {
-    val annotatedText = buildAnnotatedString {
+    val ongoingEventString = buildAnnotatedString {
         append(stringResource(id = R.string.login_prompt))
         append("\n")
         withStyle(style = SpanStyle(color = colorResource(id = R.color.orange))) {
             append(rewardBanner.shortName)
         }
         append(" " + stringResource(id = R.string.claim_reward))
+    }
+
+    val endedEventString = buildAnnotatedString {
+        append(stringResource(id = R.string.reward_date_suffix, rewardBanner.eventId))
+        append("\n")
+        append(stringResource(id = R.string.home_reward_announcement_winner))
     }
 
     Column(
@@ -87,7 +100,11 @@ fun HomeRewardBanner(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = annotatedText,
+                    text = if (isBeforeWinningDraw) {
+                        ongoingEventString
+                    } else {
+                        endedEventString
+                    },
                     style = TextStyle(
                         fontSize = 22.sp,
                         lineHeight = 32.sp,
@@ -131,10 +148,44 @@ fun HomeRewardBanner(
             )
         }
 
-        KaKaoLoginButton(
-            modifier = Modifier.fillMaxWidth(),
-            title = R.string.simple_login,
-            onClickKaKaoLogin = onClickKaKaoLogin,
+        if (isBeforeWinningDraw) {
+            KaKaoLoginButton(
+                modifier = Modifier.fillMaxWidth(),
+                title = R.string.simple_login,
+                onClickKaKaoLogin = onClickKaKaoLogin,
+            )
+        } else {
+            ConfirmEntryResultButton(
+                modifier = Modifier.fillMaxWidth(),
+                navigateToEventPage = navigateToEventPage
+            )
+        }
+    }
+}
+
+@Composable
+private fun ConfirmEntryResultButton(
+    navigateToEventPage: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = { navigateToEventPage() },
+        modifier = modifier
+            .heightIn(min = 48.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(id = R.color.orange),
+            contentColor = colorResource(id = R.color.white)
+        )
+    ) {
+        Text(
+            text = stringResource(id = R.string.confirm_entry_result),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = pretendardFamily,
+                fontWeight = FontWeight.SemiBold
+            ),
+            color = colorResource(id = R.color.white)
         )
     }
 }

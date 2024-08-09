@@ -210,6 +210,10 @@ class HomeViewModel @Inject constructor(
         savedStateHandle[SHARED_COUNT] = currentSharedCount
     }
 
+    fun getBeforeWinningDrawState(): Boolean {
+        return rewardState.value?.isBeforeWinningDraw ?: true
+    }
+
     sealed interface UiEvent {
         data object FirstSignup : UiEvent
         data object AlreadySignedUp : UiEvent
