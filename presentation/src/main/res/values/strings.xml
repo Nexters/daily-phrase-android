@@ -77,4 +77,6 @@
 
     <string name="home_reward_check_ended_event">"%1$d월 이벤트 확인하기"</string>
     <string name="home_reward_announcement_winner">당첨자 발표 안내</string>
+    <string name="home_reward_popup_share_quote_prefix">글귀 공유하면</string>
+    <string name="home_reward_popup_share_quote_suffix">응모권이 생겨요</string>
 </resources>
