@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import java.time.Duration
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GetHomeRewardStateUseCase @Inject constructor(
@@ -36,11 +38,15 @@ class GetHomeRewardStateUseCase @Inject constructor(
                 rewardInfoFlow,
                 flowOf(sharedCountModel)
             ) { banner, info, countModel ->
+                val isThisMonthRewardClosed =
+                    Duration.between(LocalDateTime.now(), info.eventEndDateTime)
+
                 HomeRewardState(
                     rewardBanner = banner,
                     name = info.name,
                     eventEndDateTime = info.eventEndDateTime,
-                    shareCount = countModel.sharedCount
+                    shareCount = countModel.sharedCount,
+                    isThisMonthRewardClosed = isThisMonthRewardClosed.isNegative
                 )
             }
         }

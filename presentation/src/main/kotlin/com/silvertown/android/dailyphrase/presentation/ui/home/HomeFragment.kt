@@ -31,6 +31,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeB
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
+import com.silvertown.android.dailyphrase.presentation.ui.reward.EndedRewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
@@ -324,23 +325,48 @@ class HomeFragment :
         }
 
         rewardState?.let { state ->
-            val remainTime =
-                Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
-
-            if (showEndedEventTimerPopupTooltip(remainTime)) {
-                showEndedEventTimerPopupTooltip = true
+            if (state.isThisMonthRewardClosed) {
+                EndedRewardPopup(
+                    eventId = state.rewardBanner.eventId,
+                    navigateToEventPage = navigateToEventPage
+                )
+            } else {
+                OngoingRewardPopup(
+                    modifier = modifier,
+                    state = state,
+                    showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
+                    showSharedEventTooltip = showSharedEventTooltip,
+                    navigateToEventPage = navigateToEventPage
+                )
             }
-
-            RewardPopup(
-                modifier = modifier,
-                state = state,
-                showSharedEventTooltip = showSharedEventTooltip,
-                showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
-                onTimeBelowThreshold = {
-                    showEndedEventTimerPopupTooltip = false
-                },
-                navigateToEventPage = navigateToEventPage,
-            )
         }
+    }
+
+    @Composable
+    private fun OngoingRewardPopup(
+        state: HomeRewardState,
+        showEndedEventTimerPopupTooltip: Boolean,
+        showSharedEventTooltip: Boolean,
+        navigateToEventPage: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        var showEndedEventTimerPopupTooltip1 = showEndedEventTimerPopupTooltip
+        val remainTime =
+            Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
+
+        if (showEndedEventTimerPopupTooltip(remainTime)) {
+            showEndedEventTimerPopupTooltip1 = true
+        }
+
+        RewardPopup(
+            modifier = modifier,
+            state = state,
+            showSharedEventTooltip = showSharedEventTooltip,
+            showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip1,
+            onTimeBelowThreshold = {
+                showEndedEventTimerPopupTooltip1 = false
+            },
+            navigateToEventPage = navigateToEventPage,
+        )
     }
 }
