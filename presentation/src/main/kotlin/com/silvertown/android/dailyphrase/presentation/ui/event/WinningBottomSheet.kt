@@ -33,7 +33,7 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
             findNavController().popBackStack()
             setFragmentResult(
                 REQUEST_KEY_ENTERED_PHONE_NUMBER,
-                bundleOf(BUNDLE_KEY_PHONE_NUMBER to binding.etPhoneNumber.toString()),
+                bundleOf(BUNDLE_KEY_PHONE_NUMBER to binding.etPhoneNumber.text.toString()),
             )
         }
     }
