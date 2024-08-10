@@ -5,25 +5,39 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +46,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
+import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFamily
 
@@ -39,6 +56,7 @@ import com.silvertown.android.dailyphrase.presentation.base.theme.pretendardFami
 fun BaseDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    @ColorRes backgroundColor: Int = R.color.white,
     content: @Composable () -> Unit,
 ) {
     Dialog(
@@ -46,7 +64,8 @@ fun BaseDialog(
     ) {
         DialogContent(
             modifier = modifier,
-            cornerRadius = 8.dp
+            cornerRadius = 8.dp,
+            backgroundColor = backgroundColor
         ) {
             content()
         }
@@ -57,6 +76,7 @@ fun BaseDialog(
 fun DialogContent(
     modifier: Modifier = Modifier,
     cornerRadius: Dp,
+    backgroundColor: Int,
     content: @Composable () -> Unit,
 ) {
     Column(
@@ -65,7 +85,7 @@ fun DialogContent(
         Surface(
             modifier = modifier,
             shape = RoundedCornerShape(cornerRadius),
-            color = colorResource(id = R.color.white),
+            color = colorResource(id = backgroundColor),
         ) {
             content()
         }
@@ -257,6 +277,134 @@ fun LogoutDialog(
                 ),
                 color = colorResource(id = R.color.black)
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun WelcomeEventModal(
+    prizeInfo: List<PrizeInfo.Item>,
+    pagerState: PagerState,
+    onClickKaKaoLogin: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit = {},
+) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val pagerItemSize = 140.dp
+    val pagerHorizontalPadding = 22.dp
+    val pagerContentPadding =
+        (screenWidth - (pagerHorizontalPadding * 2) - pagerItemSize) / 2
+
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 22.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(colorResource(id = R.color.event_bg)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 10.dp,
+                        end = 10.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    modifier = modifier.size(28.dp),
+                    onClick = onDismissRequest
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close_28),
+                        tint = androidx.compose.ui.graphics.Color.Unspecified,
+                        contentDescription = null
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(35.dp))
+
+            Text(
+                text = stringResource(id = R.string.welcome_event_model_login_and_get_prize),
+                style = TextStyle(
+                    fontSize = 22.sp,
+                    fontFamily = pretendardFamily,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = colorResource(id = R.color.black)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(
+                    2.dp,
+                    alignment = Alignment.CenterHorizontally
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_profile_event),
+                    tint = colorResource(id = R.color.orange),
+                    contentDescription = null
+                )
+                Text(
+                    text = stringResource(
+                        id = R.string.welcome_event_model_participation_count,
+                        prizeInfo.sumOf { it.totalParticipantCount }),
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontFamily = pretendardFamily,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    color = colorResource(id = R.color.orange)
+                )
+            }
+            Spacer(modifier = Modifier.height(35.dp))
+
+            HorizontalPager(
+                modifier = Modifier.fillMaxWidth(),
+                state = pagerState,
+                contentPadding = PaddingValues(horizontal = pagerContentPadding),
+                pageSpacing = 16.dp,
+            ) { page ->
+                val prize = prizeInfo[page]
+
+                Box(
+                    modifier = Modifier
+                        .size(pagerItemSize)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(colorResource(id = R.color.white)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        modifier = Modifier.fillMaxSize(),
+                        model = prize.imageUrl,
+                        contentDescription = null
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(84.dp))
+
+            KaKaoLoginButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp),
+                title = R.string.simple_login,
+                onClickKaKaoLogin = onClickKaKaoLogin,
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+
         }
     }
 }

@@ -12,9 +12,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.os.bundleOf
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -22,8 +29,10 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.presentation.component.LoadingDialog
 import com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet
+import com.silvertown.android.dailyphrase.presentation.component.WelcomeEventModal
 import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainBinding
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
@@ -66,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         loadingDialog = LoadingDialog(this)
 
         initObserve()
+        initComposeView()
         setFragmentResultListeners()
     }
 
@@ -110,6 +120,49 @@ class MainActivity : AppCompatActivity() {
             viewModel.loginState.collectLatest { state ->
                 if (state.isLoggedIn) {
                     viewModel.updateSharedCount()
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    private fun initComposeView() {
+        binding.composeView.setContent {
+            val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+            val welcomeEventState by viewModel.welcomeEventState.collectAsStateWithLifecycle(
+                initialValue = Pair(Result.Loading, true)
+            )
+            var shouldShowWelcome by remember { mutableStateOf(viewModel.shouldShowWelcomeModal) }
+
+            when (val state = welcomeEventState.first) {
+                is Result.Loading,
+                is Result.Failure,
+                is Result.Empty,
+                -> Unit
+
+                is Result.Success -> {
+                    val prizeInfo = state.data
+                    val pagerState = rememberPagerState(
+                        initialPage = prizeInfo.total / 2,
+                        pageCount = { prizeInfo.total }
+                    )
+
+                    // 비로그인이면서 이벤트가 진행 중일 때만 웰컴모달이 보여야 함.
+                    if (shouldShowWelcome && !loginState.isLoggedIn && !welcomeEventState.second) {
+                        WelcomeEventModal(
+                            onDismissRequest = {
+                                shouldShowWelcome = false
+                                viewModel.updateWelcomeModalShown()
+                            },
+                            pagerState = pagerState,
+                            onClickKaKaoLogin = {
+                                kakaoLogin(targetPage = LoginResultListener.TargetPage.EVENT)
+                                shouldShowWelcome = false
+                                viewModel.updateWelcomeModalShown()
+                            },
+                            prizeInfo = prizeInfo.items
+                        )
+                    }
                 }
             }
         }
