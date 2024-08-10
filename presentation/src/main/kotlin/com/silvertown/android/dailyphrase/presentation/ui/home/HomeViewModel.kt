@@ -44,8 +44,8 @@ class HomeViewModel @Inject constructor(
     private val _showLoginDialog = MutableStateFlow(false)
     val showLoginDialog = _showLoginDialog.asStateFlow()
 
-    private val _shareEvent = MutableSharedFlow<Unit>()
-    val shareEvent = _shareEvent.asSharedFlow()
+    private val _shareTooltipState = MutableStateFlow(false)
+    val shareTooltipState = _shareTooltipState.asStateFlow()
 
     private val prevSharedCount: Int?
         get() = savedStateHandle.get<Int>(SHARED_COUNT)
@@ -190,20 +190,22 @@ class HomeViewModel @Inject constructor(
             updateSharedCount()
 
             rewardState.value?.let {
-                if (shouldEmitSharedEvent(it.shareCount)) {
-                    emitSharedEvent()
+                if (shouldUpdateSharedCount(it.shareCount)) {
+                    updateSharedTooltipState(true)
                     updatePrevSharedCount(it.shareCount)
                 }
             }
         }
     }
 
-    private fun shouldEmitSharedEvent(currentSharedCount: Int): Boolean {
+    private fun shouldUpdateSharedCount(currentSharedCount: Int): Boolean {
         return (prevSharedCount ?: 0) < currentSharedCount
     }
 
-    private suspend fun emitSharedEvent() {
-        _shareEvent.emit(Unit)
+    fun updateSharedTooltipState(value: Boolean) {
+        viewModelScope.launch {
+            _shareTooltipState.value = value
+        }
     }
 
     private fun updatePrevSharedCount(currentSharedCount: Int) {

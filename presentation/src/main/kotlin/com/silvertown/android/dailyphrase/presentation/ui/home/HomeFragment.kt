@@ -40,7 +40,6 @@ import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -216,7 +215,6 @@ class HomeFragment :
                 if (loginState.isLoggedIn && state.isBeforeWinningDraw) {
                     HomeRewardPopup(
                         rewardState = state,
-                        shareEvent = viewModel.shareEvent,
                         navigateToEventPage = { moveToEventFragment() }
                     )
                 }
@@ -241,7 +239,11 @@ class HomeFragment :
     override fun onResume() {
         super.onResume()
         setStatusBarColor(R.color.home_app_bar)
-        viewModel.checkAndEmitSharedEvent()
+
+        lifecycleScope.launch {
+            delay(1000L)
+            viewModel.checkAndEmitSharedEvent()
+        }
     }
 
     override fun onStop() {
@@ -320,18 +322,16 @@ class HomeFragment :
     @Composable
     private fun HomeRewardPopup(
         rewardState: HomeRewardState,
-        shareEvent: SharedFlow<Unit>,
         navigateToEventPage: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
-        var showSharedEventTooltip by remember { mutableStateOf(false) }
+        val showSharedEventTooltip by viewModel.shareTooltipState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            shareEvent.collect {
-                showSharedEventTooltip = true
-                delay(2000)
-                showSharedEventTooltip = false
+        LaunchedEffect(showSharedEventTooltip) {
+            if (showSharedEventTooltip) {
+                delay(2000L)
+                viewModel.updateSharedTooltipState(false)
             }
         }
 
