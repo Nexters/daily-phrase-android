@@ -74,4 +74,5 @@
     <string name="entry_result_missed">아쉽게도 당첨되지 않았어요.</string>
     <string name="entry_result_winning"><![CDATA[<font color="#FF7900">%s</font>]]>으로 선물 발송 예정 (2일 이내)</string>
     <string name="entry_success_tooltip_message">응모완료! <![CDATA[<font color="#FF7900">당첨 확률이 높아졌어요</font>]]></string>
+    <string name="invalid_phone_number_message">올바른 연락처를 입력해주세요.</string>
 </resources>
