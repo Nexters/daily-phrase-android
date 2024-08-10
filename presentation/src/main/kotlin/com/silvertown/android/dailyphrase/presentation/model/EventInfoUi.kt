@@ -32,6 +32,7 @@ data class EventInfoUi(
             override val hasEnoughEntry: Boolean,
             override val entryResult: EntryResult,
             val isEventPeriodEnded: Boolean,
+            val winningResultDate: LocalDateTime,
         ) : Prize(prizeId, eventId, name, imageUrl, requiredTicketCount, totalEntryCount, myEntryCount, hasEnoughEntry, entryResult)
 
         data class AfterWinningDraw(
@@ -82,6 +83,7 @@ fun PrizeInfo.Item.toPresentationModel(
     hasEnoughEntry: Boolean,
     isEventPeriodEnded: Boolean,
     isBeforeWinningDraw: Boolean,
+    winningResultDate: LocalDateTime,
 ): EventInfoUi.Prize {
     return if (isBeforeWinningDraw) {
         EventInfoUi.Prize.BeforeWinningDraw(
@@ -96,6 +98,7 @@ fun PrizeInfo.Item.toPresentationModel(
             hasEnoughEntry = hasEnoughEntry,
             isEventPeriodEnded = isEventPeriodEnded,
             entryResult = entryResult.toPresentationModel(),
+            winningResultDate = winningResultDate,
         )
     } else {
         EventInfoUi.Prize.AfterWinningDraw(

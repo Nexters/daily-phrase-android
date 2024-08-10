@@ -166,7 +166,9 @@ class EventViewModel @Inject constructor(
             }
             ).let { noticeInfo ->
             val isEventPeriodEnded = duration.isNegative
-            val isBeforeWinningDraw = rewardInfo.eventWinnerAnnouncementDateTime?.isAfter(currentTime) ?: true
+            val eventWinnerAnnouncementDateTime =
+                rewardInfo.eventWinnerAnnouncementDateTime ?: throw NullPointerException()
+            val isBeforeWinningDraw = eventWinnerAnnouncementDateTime.isAfter(currentTime)
 
             EventInfoUi(
                 total = prizeInfo.total,
@@ -175,6 +177,7 @@ class EventViewModel @Inject constructor(
                         hasEnoughEntry = prizeInfo.total >= item.requiredTicketCount,
                         isEventPeriodEnded = isEventPeriodEnded,
                         isBeforeWinningDraw = isBeforeWinningDraw,
+                        winningResultDate = eventWinnerAnnouncementDateTime,
                     )
                 },
                 noticeInfo = noticeInfo,

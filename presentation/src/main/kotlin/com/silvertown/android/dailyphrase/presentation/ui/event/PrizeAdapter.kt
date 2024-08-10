@@ -26,7 +26,10 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.tvDescription.text = prize.manufacturer
             binding.tvRequiredTickets.text = itemView.context.getString(R.string.required_tickets, prize.requiredTicketCount)
             binding.tvNotEnoughEntryGuide.isVisible = !prize.hasEnoughEntry && !prize.isEventPeriodEnded
-            binding.tvEventResultReleaseDateGuide.text = itemView.context.getString(R.string.event_result_release_date_guide, "6월 23일") // TODO JH: 임시 데이터 수정
+            binding.tvEventResultReleaseDateGuide.text = itemView.context.getString(
+                R.string.event_result_release_date_guide,
+                String.format("%s월 %s일", prize.winningResultDate.monthValue, prize.winningResultDate.dayOfMonth)
+            )
             binding.tvEventResultReleaseDateGuide.isVisible = prize.isEventPeriodEnded
         }
     }
