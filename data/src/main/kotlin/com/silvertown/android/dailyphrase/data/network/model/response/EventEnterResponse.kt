@@ -8,5 +8,5 @@ data class EventEnterResponse(
     @SerializedName("memberId")
     val memberId: Int,
     @SerializedName("status")
-    val status: Int
+    val status: String
 )
