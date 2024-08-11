@@ -1,5 +1,6 @@
 package com.silvertown.android.dailyphrase.presentation
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -165,7 +166,7 @@ class MainViewModel @Inject constructor(
             rewardRepository
                 .getPrizeInfo()
                 .onSuccess {
-                    if (it.total == 0) {
+                    if (it.items.isEmpty()) {
                         _prizeInfo.emit(Result.Empty)
                     } else {
                         _prizeInfo.emit(Result.Success(it))
