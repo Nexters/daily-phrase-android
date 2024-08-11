@@ -4,7 +4,7 @@ import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import java.time.LocalDateTime
 
 data class EventInfoUi(
-    val total: Int,
+    val myTicketCount: Int,
     val prizes: List<Prize>,
     val noticeInfo: NoticeInfo,
     val winnerAnnouncementDateTime: LocalDateTime?,

@@ -171,10 +171,10 @@ class EventViewModel @Inject constructor(
             val isBeforeWinningDraw = eventWinnerAnnouncementDateTime.isAfter(currentTime)
 
             EventInfoUi(
-                total = prizeInfo.total,
+                myTicketCount = prizeInfo.myTicketCount,
                 prizes = prizeInfo.items.map { item ->
                     item.toPresentationModel(
-                        hasEnoughEntry = prizeInfo.total >= item.requiredTicketCount,
+                        hasEnoughEntry = prizeInfo.myTicketCount >= item.requiredTicketCount,
                         isEventPeriodEnded = isEventPeriodEnded,
                         isBeforeWinningDraw = isBeforeWinningDraw,
                         winningResultDate = eventWinnerAnnouncementDateTime,
@@ -198,7 +198,7 @@ class EventViewModel @Inject constructor(
                         item
                     }
                 }.let { items ->
-                    prizeInfo.copy(items = items, total = prizeInfo.total - selectedPrize.requiredTicketCount)
+                    prizeInfo.copy(items = items, myTicketCount = prizeInfo.myTicketCount - selectedPrize.requiredTicketCount)
                 }
             }?.let {
                 _isEntryEventLoading.emit(false)

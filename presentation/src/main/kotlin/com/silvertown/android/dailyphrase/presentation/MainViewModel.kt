@@ -165,7 +165,7 @@ class MainViewModel @Inject constructor(
             rewardRepository
                 .getPrizeInfo()
                 .onSuccess {
-                    if (it.total == 0) {
+                    if (it.items.isEmpty()) {
                         _prizeInfo.emit(Result.Empty)
                     } else {
                         _prizeInfo.emit(Result.Success(it))

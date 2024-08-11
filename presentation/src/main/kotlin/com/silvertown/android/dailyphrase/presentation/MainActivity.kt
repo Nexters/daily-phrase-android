@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
                 is Result.Success -> {
                     val prizeInfo = state.data
-                    val pageCount = prizeInfo.total * 100 // 굳이 Int.MAX로 잡지 않음.
+                    val pageCount = prizeInfo.items.size * 100 // 굳이 Int.MAX로 잡지 않음.
                     val pagerState = rememberPagerState(
                         initialPage = pageCount / 2,
                         pageCount = { pageCount }

@@ -74,7 +74,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                 (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
                     updateEntryUi(
                         prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
-                        total = it.eventInfo.total,
+                        myTicketCount = it.eventInfo.myTicketCount,
                     )
                 }
             }
@@ -146,7 +146,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         }
         updateEntryUi(
             prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
-            total = eventInfo.total,
+            myTicketCount = eventInfo.myTicketCount,
         )
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
@@ -164,7 +164,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     // 응모와 관련된 ui 업데이트
-    private fun updateEntryUi(prize: EventInfoUi.Prize, total: Int) {
+    private fun updateEntryUi(prize: EventInfoUi.Prize, myTicketCount: Int) {
         binding.tvSubmitEntries.isEnabled = when (prize) {
             is EventInfoUi.Prize.AfterWinningDraw -> !prize.entryResult.isChecked
             is EventInfoUi.Prize.BeforeWinningDraw -> !prize.isEventPeriodEnded && prize.hasEnoughEntry
@@ -187,7 +187,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             is EventInfoUi.Prize.BeforeWinningDraw -> if (prize.isEventPeriodEnded) {
                 null
             } else {
-                getString(R.string.my_entries, total)
+                getString(R.string.my_entries, myTicketCount)
             }
         }
         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
