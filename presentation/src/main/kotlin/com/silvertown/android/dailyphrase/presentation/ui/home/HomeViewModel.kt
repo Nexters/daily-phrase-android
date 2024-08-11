@@ -169,11 +169,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun updateSharedCount() {
-        viewModelScope.launch {
-            if (loginState.value.isLoggedIn) {
-                shareRepository.updateSharedCount()
-            }
+    private suspend fun updateSharedCount() {
+        if (loginState.value.isLoggedIn) {
+            shareRepository.updateSharedCount()
         }
     }
 
