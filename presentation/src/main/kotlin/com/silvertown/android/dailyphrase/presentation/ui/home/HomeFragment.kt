@@ -241,7 +241,7 @@ class HomeFragment :
         setStatusBarColor(R.color.home_app_bar)
 
         lifecycleScope.launch {
-            delay(1000L)
+            delay(3000L)
             viewModel.checkAndEmitSharedEvent()
         }
     }

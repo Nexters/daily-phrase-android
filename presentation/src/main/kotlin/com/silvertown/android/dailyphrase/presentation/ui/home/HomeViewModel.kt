@@ -197,7 +197,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun shouldUpdateSharedCount(currentSharedCount: Int): Boolean {
-        return (prevSharedCount ?: 0) < currentSharedCount
+        prevSharedCount ?: return false
+        return prevSharedCount!! < currentSharedCount
     }
 
     fun updateSharedTooltipState(value: Boolean) {
