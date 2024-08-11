@@ -124,7 +124,11 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    private fun generateEventInfoUi(prizeInfo: PrizeInfo, rewardInfo: RewardInfo, currentTime: LocalDateTime): EventInfoUi {
+    private fun generateEventInfoUi(
+        prizeInfo: PrizeInfo,
+        rewardInfo: RewardInfo,
+        currentTime: LocalDateTime,
+    ): EventInfoUi {
         val duration = Duration.between(currentTime, rewardInfo.eventEndDateTime)
 
         val days = duration.toDays()
@@ -144,46 +148,46 @@ class EventViewModel @Inject constructor(
         }
 
         return (
-            if (duration.isNegative) {
-                EventInfoUi.NoticeInfo.PeriodEnded(
-                    textColorResId = R.color.white,
-                    bgColorResId = R.color.orange,
-                    currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1,
-                )
-            } else if (days <= 0) {
-                EventInfoUi.NoticeInfo.PeriodLessThanOneDay(
-                    textColorResId = R.color.white,
-                    bgColorResId = R.color.deep_red,
-                    formattedTime = formattedTime,
-                )
-            } else {
-                EventInfoUi.NoticeInfo.PeriodMoreThanOneDay(
-                    textColorResId = R.color.olive_brown,
-                    bgColorResId = R.color.ivory,
-                    days = days,
-                    formattedTime = formattedTime,
+                if (duration.isNegative) {
+                    EventInfoUi.NoticeInfo.PeriodEnded(
+                        textColorResId = R.color.white,
+                        bgColorResId = R.color.orange,
+                        currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1,
+                    )
+                } else if (days <= 0) {
+                    EventInfoUi.NoticeInfo.PeriodLessThanOneDay(
+                        textColorResId = R.color.white,
+                        bgColorResId = R.color.deep_red,
+                        formattedTime = formattedTime,
+                    )
+                } else {
+                    EventInfoUi.NoticeInfo.PeriodMoreThanOneDay(
+                        textColorResId = R.color.olive_brown,
+                        bgColorResId = R.color.ivory,
+                        days = days,
+                        formattedTime = formattedTime,
+                    )
+                }
+                ).let { noticeInfo ->
+                val isEventPeriodEnded = duration.isNegative
+                val eventWinnerAnnouncementDateTime =
+                    rewardInfo.eventWinnerAnnouncementDateTime ?: throw NullPointerException()
+                val isBeforeWinningDraw = eventWinnerAnnouncementDateTime.isAfter(currentTime)
+
+                EventInfoUi(
+                    total = prizeInfo.myTicketCount,
+                    prizes = prizeInfo.items.map { item ->
+                        item.toPresentationModel(
+                            hasEnoughEntry = prizeInfo.myTicketCount >= item.requiredTicketCount,
+                            isEventPeriodEnded = isEventPeriodEnded,
+                            isBeforeWinningDraw = isBeforeWinningDraw,
+                            winningResultDate = eventWinnerAnnouncementDateTime,
+                        )
+                    },
+                    noticeInfo = noticeInfo,
+                    winnerAnnouncementDateTime = rewardInfo.eventWinnerAnnouncementDateTime,
                 )
             }
-            ).let { noticeInfo ->
-            val isEventPeriodEnded = duration.isNegative
-            val eventWinnerAnnouncementDateTime =
-                rewardInfo.eventWinnerAnnouncementDateTime ?: throw NullPointerException()
-            val isBeforeWinningDraw = eventWinnerAnnouncementDateTime.isAfter(currentTime)
-
-            EventInfoUi(
-                total = prizeInfo.total,
-                prizes = prizeInfo.items.map { item ->
-                    item.toPresentationModel(
-                        hasEnoughEntry = prizeInfo.total >= item.requiredTicketCount,
-                        isEventPeriodEnded = isEventPeriodEnded,
-                        isBeforeWinningDraw = isBeforeWinningDraw,
-                        winningResultDate = eventWinnerAnnouncementDateTime,
-                    )
-                },
-                noticeInfo = noticeInfo,
-                winnerAnnouncementDateTime = rewardInfo.eventWinnerAnnouncementDateTime,
-            )
-        }
     }
 
     fun entryEvent(selectedPrize: EventInfoUi.Prize) {
@@ -198,7 +202,10 @@ class EventViewModel @Inject constructor(
                         item
                     }
                 }.let { items ->
-                    prizeInfo.copy(items = items, total = prizeInfo.total - selectedPrize.requiredTicketCount)
+                    prizeInfo.copy(
+                        items = items,
+                        myTicketCount = prizeInfo.myTicketCount - selectedPrize.requiredTicketCount
+                    )
                 }
             }?.let {
                 _isEntryEventLoading.emit(false)
@@ -206,7 +213,7 @@ class EventViewModel @Inject constructor(
                 _prizeInfo.emit(Result.Success(it))
             }
         }
-        
+
         viewModelScope.launch {
             _isEntryEventLoading.emit(true)
             rewardRepository
@@ -251,6 +258,7 @@ class EventViewModel @Inject constructor(
                             setPrizeChecked(prizeId = selectedPrize.prizeId)
                             _uiEvent.emit(UiEvent.PrizeWinning(selectedPrize.prizeId))
                         }
+
                         PrizeInfo.Item.EntryResult.Status.MISSED -> setPrizeChecked(prizeId = selectedPrize.prizeId)
                         PrizeInfo.Item.EntryResult.Status.ENTERED,
                         PrizeInfo.Item.EntryResult.Status.UNKNOWN,
