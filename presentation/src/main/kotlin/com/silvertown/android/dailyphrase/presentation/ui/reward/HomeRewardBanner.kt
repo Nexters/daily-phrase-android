@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -75,8 +76,7 @@ fun HomeRewardBanner(
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .padding(top = 24.dp, bottom = 20.dp)
-            .padding(horizontal = 24.dp),
+            .padding(top = 10.dp, bottom = 20.dp, start = 24.dp, end = 10.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -143,7 +143,7 @@ fun HomeRewardBanner(
             }
 
             AsyncImage(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.size(160.dp),
                 model = rewardBanner.imageUrl,
                 contentDescription = null
             )
@@ -156,7 +156,9 @@ fun HomeRewardBanner(
             )
         } else {
             KaKaoLoginButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 14.dp), // Column의 10.dp + 14.dp = 24.dp
                 title = R.string.simple_login,
                 onClickKaKaoLogin = onClickKaKaoLogin,
             )
