@@ -83,7 +83,20 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         binding.tvSubmitEntries.setOnClickListener {
             getCurrentPrize()?.let { prize ->
                 when (prize) {
-                    is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult(selectedPrize = prize)
+                    is EventInfoUi.Prize.AfterWinningDraw -> {
+                        (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.eventInfo?.prizes
+                            ?.let { prizes -> prizes.firstOrNull { it.prizeId == prize.prizeId } }
+                            ?.entryResult
+                            ?.status
+                            ?.let { status ->
+                                when (status) {
+                                    PrizeInfo.Item.EntryResult.Status.WINNING -> showWinningBottomSheet()
+                                    PrizeInfo.Item.EntryResult.Status.MISSED -> viewModel.checkEntryResult(selectedPrize = prize)
+                                    PrizeInfo.Item.EntryResult.Status.ENTERED,
+                                    PrizeInfo.Item.EntryResult.Status.UNKNOWN -> Unit
+                                }
+                            }
+                    }
                     is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
                 }
             }
@@ -132,7 +145,6 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                                 vibrateSingle(requireContext())
                                 showTooltip()
                             }
-                            is EventViewModel.UiEvent.PrizeWinning -> showWinningBottomSheet()
                             EventViewModel.UiEvent.ShowGetTicketPopup -> showTicketReceivedDialog()
                         }
                     }
