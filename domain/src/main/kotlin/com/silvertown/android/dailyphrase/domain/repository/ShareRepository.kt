@@ -5,5 +5,5 @@ interface ShareRepository {
         phraseId: Long,
     )
 
-    suspend fun updateSharedCount()
+    suspend fun updateSharedCount(): Int?
 }

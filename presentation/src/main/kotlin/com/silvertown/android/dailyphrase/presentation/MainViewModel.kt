@@ -151,10 +151,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateSharedCount() {
-        viewModelScope.launch {
-            shareRepository.updateSharedCount()
-        }
+    suspend fun updateSharedCount() {
+        shareRepository.updateSharedCount()
     }
 
     fun updateWelcomeModalShown() {

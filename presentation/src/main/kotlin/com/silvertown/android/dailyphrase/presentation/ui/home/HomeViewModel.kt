@@ -169,10 +169,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateSharedCount() {
+    private suspend fun updateSharedCount(): Int? {
         if (loginState.value.isLoggedIn) {
-            shareRepository.updateSharedCount()
+            return shareRepository.updateSharedCount()
         }
+
+        return null
     }
 
     fun setPrevSharedCount() {
@@ -185,13 +187,11 @@ class HomeViewModel @Inject constructor(
 
     fun checkAndEmitSharedEvent() {
         viewModelScope.launch {
-            updateSharedCount()
+            val updateCount = updateSharedCount() ?: return@launch
 
-            rewardState.value?.let {
-                if (shouldUpdateSharedCount(it.shareCount)) {
-                    updateSharedTooltipState(true)
-                    updatePrevSharedCount(it.shareCount)
-                }
+            if (shouldUpdateSharedCount(updateCount)) {
+                updateSharedTooltipState(true)
+                updatePrevSharedCount(updateCount)
             }
         }
     }
