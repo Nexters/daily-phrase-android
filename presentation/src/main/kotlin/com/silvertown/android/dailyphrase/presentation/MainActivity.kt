@@ -142,9 +142,10 @@ class MainActivity : AppCompatActivity() {
 
                 is Result.Success -> {
                     val prizeInfo = state.data
+                    val pageCount = prizeInfo.total * 100 // 굳이 Int.MAX로 잡지 않음.
                     val pagerState = rememberPagerState(
-                        initialPage = prizeInfo.total / 2,
-                        pageCount = { prizeInfo.total }
+                        initialPage = pageCount / 2,
+                        pageCount = { pageCount }
                     )
 
                     // 비로그인이면서 이벤트가 진행 중일 때만 웰컴모달이 보여야 함.

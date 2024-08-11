@@ -378,7 +378,8 @@ fun WelcomeEventModal(
                 contentPadding = PaddingValues(horizontal = pagerContentPadding),
                 pageSpacing = 16.dp,
             ) { page ->
-                val prize = prizeInfo[page]
+                val actualPage = page % prizeInfo.size
+                val prize = prizeInfo[actualPage]
 
                 Box(
                     modifier = Modifier
