@@ -133,6 +133,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                                 showTooltip()
                             }
                             is EventViewModel.UiEvent.PrizeWinning -> showWinningBottomSheet()
+                            EventViewModel.UiEvent.ShowGetTicketPopup -> showTicketReceivedDialog()
                         }
                     }
             }

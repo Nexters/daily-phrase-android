@@ -9,6 +9,7 @@ import com.silvertown.android.dailyphrase.data.network.model.response.CheckEntry
 import com.silvertown.android.dailyphrase.data.network.model.response.EventEnterResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardInfoResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardWrapperResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.ShouldShowGetTicketPopup
 import com.silvertown.android.dailyphrase.data.network.model.response.WinnerPhoneNumberResponse
 import com.silvertown.android.dailyphrase.data.network.service.RewardApiService
 import javax.inject.Inject
@@ -36,4 +37,7 @@ class RewardDataSourceImpl @Inject constructor(
             prizeId = prizeId,
             winnerPhoneNumberRequest = WinnerPhoneNumberRequest(phoneNumber),
         )
+
+    override suspend fun getShouldShowTicketPopup(): ApiResponse<BaseResponse<ShouldShowGetTicketPopup>> =
+        rewardApiService.getShouldShowTicketPopup()
 }

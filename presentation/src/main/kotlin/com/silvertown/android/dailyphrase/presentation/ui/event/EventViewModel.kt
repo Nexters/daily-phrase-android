@@ -84,6 +84,7 @@ class EventViewModel @Inject constructor(
         startTimer()
         fetchPrizeInfo()
         fetchRewardInfo()
+        fetchShouldShowGetTicketPopup()
     }
 
     private fun startTimer() {
@@ -120,6 +121,14 @@ class EventViewModel @Inject constructor(
         viewModelScope.launch {
             rewardRepository.getRewardInfo().collect {
                 _rewardInfo.emit(Result.Success(it))
+            }
+        }
+    }
+
+    private fun fetchShouldShowGetTicketPopup() {
+        viewModelScope.launch {
+            rewardRepository.getShouldShowTicketPopup().onSuccess {
+                if (it) _uiEvent.emit(UiEvent.ShowGetTicketPopup)
             }
         }
     }
@@ -308,5 +317,6 @@ class EventViewModel @Inject constructor(
     sealed interface UiEvent {
         data object EntrySuccess : UiEvent
         data class PrizeWinning(val prizeId: Int) : UiEvent
+        data object ShowGetTicketPopup : UiEvent
     }
 }

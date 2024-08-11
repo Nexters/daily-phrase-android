@@ -6,6 +6,7 @@ import com.silvertown.android.dailyphrase.data.network.model.response.CheckEntry
 import com.silvertown.android.dailyphrase.data.network.model.response.EventEnterResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardInfoResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardWrapperResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.ShouldShowGetTicketPopup
 import com.silvertown.android.dailyphrase.data.network.model.response.WinnerPhoneNumberResponse
 
 interface RewardDataSource {
@@ -14,4 +15,5 @@ interface RewardDataSource {
     suspend fun postEventEnter(prizeId: Int): ApiResponse<BaseResponse<EventEnterResponse>>
     suspend fun postCheckEntryResult(prizeId: Int): ApiResponse<BaseResponse<CheckEntryResultResponse>>
     suspend fun postWinnerPhoneNumber(prizeId: Int, phoneNumber: String): ApiResponse<BaseResponse<WinnerPhoneNumberResponse>>
+    suspend fun getShouldShowTicketPopup(): ApiResponse<BaseResponse<ShouldShowGetTicketPopup>>
 }
