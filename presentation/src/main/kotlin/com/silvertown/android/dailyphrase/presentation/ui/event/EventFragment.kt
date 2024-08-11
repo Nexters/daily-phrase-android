@@ -91,7 +91,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                             ?.let { status ->
                                 when (status) {
                                     PrizeInfo.Item.EntryResult.Status.WINNING -> showWinningBottomSheet()
-                                    PrizeInfo.Item.EntryResult.Status.MISSED -> viewModel.checkEntryResult(selectedPrize = prize)
+                                    PrizeInfo.Item.EntryResult.Status.MISSED -> viewModel.checkEntryResult(selectedPrizeId = prize.prizeId)
                                     PrizeInfo.Item.EntryResult.Status.ENTERED,
                                     PrizeInfo.Item.EntryResult.Status.UNKNOWN -> Unit
                                 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.domain.model.RewardInfo
-import com.silvertown.android.dailyphrase.domain.model.getOrNull
 import com.silvertown.android.dailyphrase.domain.model.getOrThrow
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
@@ -228,7 +227,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    fun checkEntryResult(selectedPrize: EventInfoUi.Prize) {
+    fun checkEntryResult(selectedPrizeId: Int) {
         suspend fun setPrizeChecked(prizeId: Int) {
             (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
                 prizeInfo.items.map { item ->
@@ -245,9 +244,9 @@ class EventViewModel @Inject constructor(
 
         viewModelScope.launch {
             _isCheckEntryResultLoading.emit(true)
-            rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
+            rewardRepository.postCheckEntryResult(selectedPrizeId).onSuccess {
                 _isCheckEntryResultLoading.emit(false)
-                setPrizeChecked(prizeId = selectedPrize.prizeId)
+                setPrizeChecked(prizeId = selectedPrizeId)
             }.onFailure { errorMessage, code ->
                 _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
@@ -279,6 +278,7 @@ class EventViewModel @Inject constructor(
             ).onSuccess {
                 _isEnterPhoneNumberLoading.emit(false)
                 setPhoneNumberForPrize(prizeId)
+                checkEntryResult(prizeId)
             }.onFailure { errorMessage, code ->
                 _isEnterPhoneNumberLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
