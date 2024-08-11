@@ -361,7 +361,8 @@ fun WelcomeEventModal(
                 Text(
                     text = stringResource(
                         id = R.string.welcome_event_model_participation_count,
-                        prizeInfo.sumOf { it.totalParticipantCount }),
+                        prizeInfo.firstOrNull()?.totalParticipantCount ?: 0
+                    ),
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = pretendardFamily,
