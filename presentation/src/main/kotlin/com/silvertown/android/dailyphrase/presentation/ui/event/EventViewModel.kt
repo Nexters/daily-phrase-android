@@ -229,20 +229,6 @@ class EventViewModel @Inject constructor(
     }
 
     fun checkEntryResult(selectedPrize: EventInfoUi.Prize) {
-        suspend fun setPrizeChecked(prizeId: Int) {
-            (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
-                prizeInfo.items.map { item ->
-                    if (item.prizeId == prizeId) {
-                        item.copy(entryResult = item.entryResult.toCheckedEntryResult())
-                    } else {
-                        item
-                    }
-                }.let { items ->
-                    prizeInfo.copy(items = items)
-                }.also { _prizeInfo.emit(Result.Success(it)) }
-            }
-        }
-
         viewModelScope.launch {
             try {
                 val resultStatus = _prizeInfo.value.getOrNull()
@@ -252,25 +238,38 @@ class EventViewModel @Inject constructor(
                     ?.status
                 requireNotNull(resultStatus)
 
-                _isCheckEntryResultLoading.emit(true)
-                rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
-                    _isCheckEntryResultLoading.emit(false)
-                    when (resultStatus) {
-                        PrizeInfo.Item.EntryResult.Status.WINNING -> {
+                when (resultStatus) {
+                    PrizeInfo.Item.EntryResult.Status.WINNING -> _uiEvent.emit(UiEvent.PrizeWinning(selectedPrize.prizeId))
+                    PrizeInfo.Item.EntryResult.Status.MISSED -> {
+                        _isCheckEntryResultLoading.emit(true)
+                        rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
+                            _isCheckEntryResultLoading.emit(false)
                             setPrizeChecked(prizeId = selectedPrize.prizeId)
-                            _uiEvent.emit(UiEvent.PrizeWinning(selectedPrize.prizeId))
+                        }.onFailure { errorMessage, code ->
+                            _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
                         }
-                        PrizeInfo.Item.EntryResult.Status.MISSED -> setPrizeChecked(prizeId = selectedPrize.prizeId)
-                        PrizeInfo.Item.EntryResult.Status.ENTERED,
-                        PrizeInfo.Item.EntryResult.Status.UNKNOWN,
-                        -> throw Exception("Abnormal approach")
                     }
-                }.onFailure { errorMessage, code ->
-                    _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+                    PrizeInfo.Item.EntryResult.Status.ENTERED,
+                    PrizeInfo.Item.EntryResult.Status.UNKNOWN,
+                    -> Unit
                 }
             } catch (e: Exception) {
                 // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
+        }
+    }
+
+    private suspend fun setPrizeChecked(prizeId: Int) {
+        (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
+            prizeInfo.items.map { item ->
+                if (item.prizeId == prizeId) {
+                    item.copy(entryResult = item.entryResult.toCheckedEntryResult())
+                } else {
+                    item
+                }
+            }.let { items ->
+                prizeInfo.copy(items = items)
+            }.also { _prizeInfo.emit(Result.Success(it)) }
         }
     }
 
