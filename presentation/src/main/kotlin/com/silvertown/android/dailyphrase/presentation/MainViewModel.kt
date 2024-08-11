@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     val memberRepository: MemberRepository,
     private val getSignInTokenUseCase: GetSignInTokenUseCase,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
