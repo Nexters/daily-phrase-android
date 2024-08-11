@@ -9,12 +9,15 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.silvertown.android.dailyphrase.presentation.R
 import com.silvertown.android.dailyphrase.presentation.base.BaseDialogFragment
 import com.silvertown.android.dailyphrase.presentation.databinding.BottomSheetWinningBinding
+import java.util.regex.Pattern
 
 class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomSheetWinningBinding::inflate) {
     private val dimAmount = 0.45f
@@ -30,11 +33,15 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
             findNavController().popBackStack()
         }
         binding.tvInputPhoneNumber.setOnClickListener {
-            findNavController().popBackStack()
-            setFragmentResult(
-                REQUEST_KEY_ENTERED_PHONE_NUMBER,
-                bundleOf(BUNDLE_KEY_PHONE_NUMBER to binding.etPhoneNumber.toString()),
-            )
+            if (isValidPhoneNumber(binding.etPhoneNumber.text.toString())) {
+                findNavController().popBackStack()
+                setFragmentResult(
+                    REQUEST_KEY_ENTERED_PHONE_NUMBER,
+                    bundleOf(BUNDLE_KEY_PHONE_NUMBER to binding.etPhoneNumber.text.toString()),
+                )
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.invalid_phone_number_message), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -60,6 +67,11 @@ class WinningBottomSheet : BaseDialogFragment<BottomSheetWinningBinding>(BottomS
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etPhoneNumber, InputMethodManager.SHOW_IMPLICIT)
         }, 300)
+    }
+
+    private fun isValidPhoneNumber(input: String): Boolean {
+        val regex = "^010-\\d{4}-\\d{4}$"
+        return Pattern.matches(regex, input)
     }
 
     companion object {

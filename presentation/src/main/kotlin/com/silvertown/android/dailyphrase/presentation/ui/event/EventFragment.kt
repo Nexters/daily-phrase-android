@@ -31,9 +31,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::inflate) {
-    private lateinit var prizeAdapter: PrizeAdapter
+    private var prizeAdapter: PrizeAdapter? = null
     private val viewModel by viewModels<EventViewModel>()
-    private var isItemsSet = false // TODO JH: 개선 방법 고민해보기
     private val balloon by lazy {
         Balloon.Builder(requireContext())
             .setArrowPosition(0.5f)
@@ -56,7 +55,6 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         super.onViewCreated(view, savedInstanceState)
 
         initListeners()
-        initViews()
         initObserve()
 //        showTicketReceivedDialog() // TODO JH: 조건에 따라 보여주기
     }
@@ -107,34 +105,6 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         }
     }
 
-    private fun initViews() {
-        val pageMarginPx = 53.dpToPx(requireContext())
-        val offsetPx = pageMarginPx / 2
-
-        with(binding.vpPrize) {
-            setPageTransformer { page, position ->
-                page.translationX = position * -offsetPx
-            }
-
-            offscreenPageLimit = 1
-            prizeAdapter = PrizeAdapter()
-            adapter = prizeAdapter
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            setCurrentItem(Int.MAX_VALUE / 2, true)
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State,
-                ) {
-                    outRect.right = offsetPx
-                    outRect.left = offsetPx
-                }
-            })
-        }
-    }
-
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
@@ -170,9 +140,9 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     private fun updateUi(eventInfo: EventInfoUi) {
-        if (!isItemsSet) {
-            prizeAdapter.setList(eventInfo.prizes)
-            isItemsSet = true
+        if (prizeAdapter == null && eventInfo.prizes.isNotEmpty()) {
+            setViewPager()
+            prizeAdapter?.setList(eventInfo.prizes)
         }
         updateEntryUi(
             prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
@@ -225,6 +195,34 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             getString(R.string.submit_entries, prize.requiredTicketCount)
         } else {
             getString(R.string.confirm_entry_result)
+        }
+    }
+
+    private fun setViewPager() {
+        val pageMarginPx = 53.dpToPx(requireContext())
+        val offsetPx = pageMarginPx / 2
+
+        with(binding.vpPrize) {
+            setPageTransformer { page, position ->
+                page.translationX = position * -offsetPx
+            }
+
+            binding.vpPrize.offscreenPageLimit = 1
+            prizeAdapter = PrizeAdapter()
+            binding.vpPrize.adapter = prizeAdapter
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            setCurrentItem(Int.MAX_VALUE / 2, true)
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State,
+                ) {
+                    outRect.right = offsetPx
+                    outRect.left = offsetPx
+                }
+            })
         }
     }
 

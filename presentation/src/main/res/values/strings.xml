@@ -81,4 +81,6 @@
     <string name="home_reward_popup_share_quote_suffix">응모권이 생겨요</string>
     <string name="welcome_event_model_login_and_get_prize">로그인하고 경품 받아가세요</string>
     <string name="welcome_event_model_participation_count">%d명이 이벤트에 참여중</string>
+    <string name="invalid_phone_number_message">올바른 연락처를 입력해주세요.</string>
+
 </resources>
