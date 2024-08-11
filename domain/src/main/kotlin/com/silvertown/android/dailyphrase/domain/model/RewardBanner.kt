@@ -19,6 +19,7 @@ data class RewardBanner(
 data class HomeRewardState(
     val rewardBanner: RewardBanner,
     val name: String,
+    val eventMonth: Int,
     val eventEndDateTime: LocalDateTime?,
     val shareCount: Int,
     val isThisMonthRewardClosed: Boolean,

@@ -47,6 +47,7 @@ class GetHomeRewardStateUseCase @Inject constructor(
                 HomeRewardState(
                     rewardBanner = banner,
                     name = info.name,
+                    eventMonth = info.eventMonth,
                     eventEndDateTime = info.eventEndDateTime,
                     shareCount = countModel.sharedCount,
                     isThisMonthRewardClosed = isThisMonthRewardClosed.isNegative,

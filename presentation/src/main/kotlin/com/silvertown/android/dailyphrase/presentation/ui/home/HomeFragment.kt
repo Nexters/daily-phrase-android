@@ -148,7 +148,7 @@ class HomeFragment :
             }
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collectLatest { (postList, rewardState) ->
-                    rewardBannerAdapter.submitList(listOf(rewardState.rewardBanner))
+                    rewardBannerAdapter.submitList(listOf(rewardState))
 
                     postAdapter.submitData(postList)
                 }
@@ -338,7 +338,7 @@ class HomeFragment :
         if (rewardState.isThisMonthRewardClosed) {
             // 응모기간 종료되었을 때
             EndedRewardPopup(
-                eventId = rewardState.rewardBanner.eventId,
+                eventMonth = rewardState.eventMonth,
                 navigateToEventPage = navigateToEventPage
             )
         } else {

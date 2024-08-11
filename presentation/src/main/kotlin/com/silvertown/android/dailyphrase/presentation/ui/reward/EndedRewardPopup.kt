@@ -25,7 +25,7 @@ import com.silvertown.android.dailyphrase.presentation.R
 
 @Composable
 fun EndedRewardPopup(
-    eventId: Int,
+    eventMonth: Int,
     navigateToEventPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,7 +36,7 @@ fun EndedRewardPopup(
         contentAlignment = Alignment.BottomCenter
     ) {
         EndedPopupContainer(
-            popupText = stringResource(id = R.string.home_reward_check_ended_event, eventId),
+            popupText = stringResource(id = R.string.home_reward_check_ended_event, eventMonth),
             navigateToEventPage = navigateToEventPage
         )
     }

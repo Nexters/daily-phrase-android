@@ -39,6 +39,7 @@ import com.silvertown.android.dailyphrase.presentation.component.KaKaoLoginButto
 @Composable
 fun HomeRewardBanner(
     rewardBanner: RewardBanner,
+    eventMonth: Int,
     canCheckThisMonthRewardResult: () -> Boolean,
     modifier: Modifier = Modifier,
     onClickKaKaoLogin: () -> Unit = {},
@@ -54,7 +55,7 @@ fun HomeRewardBanner(
     }
 
     val endedEventString = buildAnnotatedString {
-        append(stringResource(id = R.string.reward_date_suffix, rewardBanner.eventId))
+        append(stringResource(id = R.string.reward_date_suffix, eventMonth))
         append("\n")
         append(stringResource(id = R.string.home_reward_announcement_winner))
     }
@@ -89,7 +90,7 @@ fun HomeRewardBanner(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = stringResource(id = R.string.reward_date_suffix, rewardBanner.eventId),
+                    text = stringResource(id = R.string.reward_date_suffix, eventMonth),
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = pretendardFamily,
