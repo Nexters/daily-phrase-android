@@ -28,7 +28,7 @@ fun <T> Result<T>.getOrNull(): T? {
     }
 }
 
-suspend fun <T> Result<T>.getOrThrow(): T {
+fun <T> Result<T>.getOrThrow(): T {
     return when (this) {
         is Result.Success -> this.data
         is Result.Failure -> throw Exception("Failure: $errorMessage (code: $code)")
