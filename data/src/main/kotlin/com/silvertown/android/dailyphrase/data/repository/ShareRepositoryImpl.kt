@@ -5,8 +5,7 @@ import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.ShareDataSource
 import com.silvertown.android.dailyphrase.data.network.model.request.ShareEventRequest
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
-import com.silvertown.android.dailyphrase.domain.model.onFailure
-import com.silvertown.android.dailyphrase.domain.model.onSuccess
+import com.silvertown.android.dailyphrase.domain.model.getOrNull
 import com.silvertown.android.dailyphrase.domain.repository.ShareRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,16 +23,18 @@ class ShareRepositoryImpl @Inject constructor(
         ).toResultModel { it.result?.toDomainModel() }
     }
 
-    override suspend fun updateSharedCount() {
-        shareDataSource.getSharedCount()
-            .toResultModel {
-                it.result?.toDomainModel()
-            }
-            .onSuccess { sharedCount ->
-                memberPreferencesDataSource.updateSharedCount(sharedCount.sharedCount)
-            }
-            .onFailure { errorMessage, _ ->
-                Timber.e(errorMessage)
-            }
+    override suspend fun updateSharedCount(): Int? {
+        return try {
+            shareDataSource.getSharedCount()
+                .toResultModel { it.result?.toDomainModel() }
+                .getOrNull()
+                ?.let { sharedModel ->
+                    memberPreferencesDataSource.updateSharedCount(sharedModel.sharedCount)
+                    sharedModel.sharedCount
+                }
+        } catch (exception: Exception) {
+            Timber.e(exception)
+            null
+        }
     }
 }

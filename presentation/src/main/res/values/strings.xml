@@ -74,6 +74,13 @@
     <string name="entry_result_missed">아쉽게도 당첨되지 않았어요.</string>
     <string name="entry_result_winning"><![CDATA[<font color="#FF7900">%s</font>]]>으로 선물 발송 예정 (2일 이내)</string>
     <string name="entry_success_tooltip_message">응모완료! <![CDATA[<font color="#FF7900">당첨 확률이 높아졌어요</font>]]></string>
+
+    <string name="home_reward_check_ended_event">"%1$d월 이벤트 확인하기"</string>
+    <string name="home_reward_announcement_winner">당첨자 발표 안내</string>
+    <string name="home_reward_popup_share_quote_prefix">글귀 공유하면</string>
+    <string name="home_reward_popup_share_quote_suffix">응모권이 생겨요</string>
+    <string name="welcome_event_model_login_and_get_prize">로그인하고 경품 받아가세요</string>
+    <string name="welcome_event_model_participation_count">%d명이 이벤트에 참여중</string>
     <string name="invalid_phone_number_message">올바른 연락처를 입력해주세요.</string>
     <string name="date_format_month_day">%s월 %s일</string>
 </resources>

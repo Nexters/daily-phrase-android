@@ -1,11 +1,13 @@
 package com.silvertown.android.dailyphrase.domain.model
 
 data class PrizeInfo(
-    val total: Int,
+    val myTicketCount: Int,
     val items: List<Item>,
 ) {
     data class Item(
         val eventId: Int,
+        val welcomeImageUrl: String,
+        val bannerImageUrl: String,
         val imageUrl: String,
         val manufacturer: String,
         val myEntryCount: Int,
@@ -15,7 +17,6 @@ data class PrizeInfo(
         val totalParticipantCount: Int,
         val shortName: String,
         val totalEntryCount: Int,
-        val myTicketCount: Int,
         val entryResult: EntryResult,
     ) {
         data class EntryResult(

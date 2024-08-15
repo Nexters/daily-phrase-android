@@ -24,7 +24,7 @@ class RewardRepositoryImpl @Inject constructor(
             .getRewards()
             .toResultModel { rewardWrapper ->
                 rewardWrapper.result?.rewardList?.map { reward ->
-                    reward.toRewardBannerDomainModel()
+                    reward.toRewardBannerDomainModel(rewardWrapper.result.myTicketCount)
                 }
             }
             .onSuccess { rewardBannerList ->

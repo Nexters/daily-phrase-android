@@ -63,7 +63,7 @@ internal fun RewardPopup(
 ) {
     var acquirableTicketResetTimer by remember { mutableStateOf(calculateAcquirableTicketResetTime()) }
     val shouldRunAcquirableTicketResetTimer by remember {
-        derivedStateOf { shouldRunAcquirableTicketResetTimer(state.shareCount) }
+        derivedStateOf { hasReachedDailyShareLimit(state.shareCount) }
     }
 
     var balloonWindow: BalloonWindow? by remember { mutableStateOf(null) }
@@ -119,6 +119,8 @@ internal fun RewardPopup(
                 }
             }
         ) { balloonWindow ->
+            val hasTicket = state.rewardBanner.myTicketCount > 0
+
             LaunchedEffect(showSharedEventTooltip, showEndedEventTimerPopupTooltip) {
                 if (showSharedEventTooltip || showEndedEventTimerPopupTooltip) {
                     balloonWindow.showAlignTop()
@@ -133,10 +135,11 @@ internal fun RewardPopup(
             ) {
                 PopupContainer(
                     popupText = popupText,
+                    hasTicket = hasTicket,
                     navigateToEventPage = navigateToEventPage
                 )
 
-                if (state.rewardBanner.myTicketCount > 0) {
+                if (hasTicket) {
                     OwnedTicketBadge(
                         myTicketCount = state.rewardBanner.myTicketCount.toString()
                     )
@@ -185,6 +188,7 @@ private fun CountdownTimer(
 @Composable
 private fun PopupContainer(
     popupText: AnnotatedString,
+    hasTicket: Boolean,
     navigateToEventPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -193,7 +197,11 @@ private fun PopupContainer(
             .height(40.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(id = R.color.orange),
+                color = if (hasTicket) {
+                    colorResource(id = R.color.orange)
+                } else {
+                    colorResource(id = R.color.disabled_tooltip_border)
+                },
                 shape = RoundedCornerShape(20.dp)
             )
             .clip(RoundedCornerShape(20.dp))
@@ -265,17 +273,28 @@ private fun getPopupText(
             fontFamily = pretendardFamily
         )
 
-        if (shouldRunAcquirableTicketResetTimer(state.shareCount)) {
-            withStyle(style = orangeStyle) {
-                append(acquirableTicketResetTimer)
+
+        if (state.rewardBanner.myTicketCount <= 0) { // 응모권 없음
+            if (hasReachedDailyShareLimit(state.shareCount)) { // 오늘 글귀 공유 10회 이상
+                withStyle(style = orangeStyle) {
+                    append(acquirableTicketResetTimer)
+                }
+                withStyle(style = orangePretendardStyle) {
+                    append(" " + stringResource(id = R.string.acquirable_ticket_reset_timer_text_suffix) + " ")
+                }
+                withStyle(style = pretendardFamilyStyle) {
+                    append(stringResource(id = R.string.acquirable_ticket_reset_info_text))
+                }
+            } else { // 오늘 글귀 공유 1~9회 진행
+                withStyle(style = orangePretendardStyle) {
+                    append(stringResource(id = R.string.home_reward_popup_share_quote_prefix))
+                }
+                append(" ")
+                withStyle(style = pretendardFamilyStyle) {
+                    append(stringResource(id = R.string.home_reward_popup_share_quote_suffix))
+                }
             }
-            withStyle(style = orangePretendardStyle) {
-                append(" " + stringResource(id = R.string.acquirable_ticket_reset_timer_text_suffix) + " ")
-            }
-            withStyle(style = pretendardFamilyStyle) {
-                append(stringResource(id = R.string.acquirable_ticket_reset_info_text))
-            }
-        } else {
+        } else { // 응모권 있음
             withStyle(style = pretendardFamilyStyle) {
                 append(stringResource(id = R.string.reward_popup_text_prefix))
             }
@@ -290,6 +309,6 @@ private fun getPopupText(
     return annotatedText
 }
 
-fun shouldRunAcquirableTicketResetTimer(shareCount: Int): Boolean {
+fun hasReachedDailyShareLimit(shareCount: Int): Boolean {
     return shareCount >= 10
 }

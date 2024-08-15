@@ -25,4 +25,5 @@
     <color name="deep_red">#DE3510</color>
     <color name="edit_text_hint">#999999</color>
     <color name="tooltip_background_black">#292929</color>
+    <color name="disabled_tooltip_border">#D2D5D6</color>
 </resources>
