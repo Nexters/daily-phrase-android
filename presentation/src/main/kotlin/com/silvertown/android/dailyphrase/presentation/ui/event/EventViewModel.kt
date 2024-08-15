@@ -264,8 +264,8 @@ class EventViewModel @Inject constructor(
                     }
                 }.let { items ->
                     prizeInfo.copy(items = items)
-                }.also { prizeInfo ->
-                    _prizeInfo.emit(Result.Success(prizeInfo))
+                }.also { updatedPrizeInfo ->
+                    _prizeInfo.emit(Result.Success(updatedPrizeInfo))
                 }
             }
         }
