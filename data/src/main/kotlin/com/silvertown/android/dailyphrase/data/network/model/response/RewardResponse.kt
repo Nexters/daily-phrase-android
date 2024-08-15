@@ -36,7 +36,7 @@ data class RewardResponse(
         @SerializedName("phoneNumber")
         val phoneNumber: String?,
         @SerializedName("isChecked")
-        val icChecked: Boolean,
+        val isChecked: Boolean,
     )
 }
 
@@ -77,6 +77,6 @@ fun RewardResponse.PrizeEntryResult.toEntryResultDomainModel(): PrizeInfo.Item.E
     return PrizeInfo.Item.EntryResult(
         status = PrizeInfo.Item.EntryResult.Status.ofValue(status),
         phoneNumber = phoneNumber,
-        isChecked = icChecked,
+        isChecked = isChecked,
     )
 }
