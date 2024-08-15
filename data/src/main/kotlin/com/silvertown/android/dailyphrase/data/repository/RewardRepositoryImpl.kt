@@ -69,4 +69,8 @@ class RewardRepositoryImpl @Inject constructor(
     override suspend fun postWinnerPhoneNumber(prizeId: Int, phoneNumber: String): Result<Unit> {
         return rewardDataSource.postWinnerPhoneNumber(prizeId, phoneNumber).toResultModel { Unit }
     }
+
+    override suspend fun getShouldShowTicketPopup(): Result<Boolean> {
+        return rewardDataSource.getShouldShowTicketPopup().toResultModel { it.result?.showGetTicketPopup ?: false }
+    }
 }

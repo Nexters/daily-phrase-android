@@ -9,6 +9,7 @@ import com.silvertown.android.dailyphrase.data.network.model.response.CheckEntry
 import com.silvertown.android.dailyphrase.data.network.model.response.EventEnterResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardInfoResponse
 import com.silvertown.android.dailyphrase.data.network.model.response.RewardWrapperResponse
+import com.silvertown.android.dailyphrase.data.network.model.response.ShouldShowGetTicketPopup
 import com.silvertown.android.dailyphrase.data.network.model.response.WinnerPhoneNumberResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -37,4 +38,7 @@ interface RewardApiService {
         @Body winnerPhoneNumberRequest: WinnerPhoneNumberRequest,
         @Path("prizeId") prizeId: Int,
     ): ApiResponse<BaseResponse<WinnerPhoneNumberResponse>>
+
+    @GET("/api/v1/events/tickets/me")
+    suspend fun getShouldShowTicketPopup(): ApiResponse<BaseResponse<ShouldShowGetTicketPopup>>
 }

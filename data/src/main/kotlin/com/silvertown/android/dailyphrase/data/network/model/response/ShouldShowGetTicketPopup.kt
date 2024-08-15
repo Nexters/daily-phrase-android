@@ -2,11 +2,9 @@ package com.silvertown.android.dailyphrase.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class EventEnterResponse(
-    @SerializedName("prizeId")
-    val prizeId: Int,
+data class ShouldShowGetTicketPopup(
     @SerializedName("memberId")
     val memberId: Int,
-    @SerializedName("status")
-    val status: String
+    @SerializedName("showGetTicketPopup")
+    val showGetTicketPopup: Boolean,
 )

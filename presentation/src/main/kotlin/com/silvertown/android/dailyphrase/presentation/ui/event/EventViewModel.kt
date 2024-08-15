@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
 import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.domain.model.RewardInfo
-import com.silvertown.android.dailyphrase.domain.model.getOrNull
 import com.silvertown.android.dailyphrase.domain.model.getOrThrow
 import com.silvertown.android.dailyphrase.domain.model.onFailure
 import com.silvertown.android.dailyphrase.domain.model.onSuccess
@@ -84,6 +83,7 @@ class EventViewModel @Inject constructor(
         startTimer()
         fetchPrizeInfo()
         fetchRewardInfo()
+        fetchShouldShowGetTicketPopup()
     }
 
     private fun startTimer() {
@@ -120,6 +120,14 @@ class EventViewModel @Inject constructor(
         viewModelScope.launch {
             rewardRepository.getRewardInfo().collect {
                 _rewardInfo.emit(Result.Success(it))
+            }
+        }
+    }
+
+    private fun fetchShouldShowGetTicketPopup() {
+        viewModelScope.launch {
+            rewardRepository.getShouldShowTicketPopup().onSuccess {
+                if (it) _uiEvent.emit(UiEvent.ShowGetTicketPopup)
             }
         }
     }
@@ -219,7 +227,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    fun checkEntryResult(selectedPrize: EventInfoUi.Prize) {
+    fun checkEntryResult(selectedPrizeId: Int) {
         suspend fun setPrizeChecked(prizeId: Int) {
             (_prizeInfo.value as? Result.Success)?.data?.let { prizeInfo ->
                 prizeInfo.items.map { item ->
@@ -235,32 +243,12 @@ class EventViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            try {
-                val resultStatus = _prizeInfo.value.getOrNull()
-                    ?.items
-                    ?.firstOrNull { it.prizeId == selectedPrize.prizeId }
-                    ?.entryResult
-                    ?.status
-                requireNotNull(resultStatus)
-
-                _isCheckEntryResultLoading.emit(true)
-                rewardRepository.postCheckEntryResult(selectedPrize.prizeId).onSuccess {
-                    _isCheckEntryResultLoading.emit(false)
-                    when (resultStatus) {
-                        PrizeInfo.Item.EntryResult.Status.WINNING -> {
-                            setPrizeChecked(prizeId = selectedPrize.prizeId)
-                            _uiEvent.emit(UiEvent.PrizeWinning(selectedPrize.prizeId))
-                        }
-                        PrizeInfo.Item.EntryResult.Status.MISSED -> setPrizeChecked(prizeId = selectedPrize.prizeId)
-                        PrizeInfo.Item.EntryResult.Status.ENTERED,
-                        PrizeInfo.Item.EntryResult.Status.UNKNOWN,
-                        -> throw Exception("Abnormal approach")
-                    }
-                }.onFailure { errorMessage, code ->
-                    _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
-                }
-            } catch (e: Exception) {
-                // TODO JH: 팝업? 토스트? 아무것도 안할건지?
+            _isCheckEntryResultLoading.emit(true)
+            rewardRepository.postCheckEntryResult(selectedPrizeId).onSuccess {
+                _isCheckEntryResultLoading.emit(false)
+                setPrizeChecked(prizeId = selectedPrizeId)
+            }.onFailure { errorMessage, code ->
+                _isCheckEntryResultLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
         }
     }
@@ -276,8 +264,8 @@ class EventViewModel @Inject constructor(
                     }
                 }.let { items ->
                     prizeInfo.copy(items = items)
-                }.also { prizeInfo ->
-                    _prizeInfo.emit(Result.Success(prizeInfo))
+                }.also { updatedPrizeInfo ->
+                    _prizeInfo.emit(Result.Success(updatedPrizeInfo))
                 }
             }
         }
@@ -290,6 +278,7 @@ class EventViewModel @Inject constructor(
             ).onSuccess {
                 _isEnterPhoneNumberLoading.emit(false)
                 setPhoneNumberForPrize(prizeId)
+                checkEntryResult(prizeId)
             }.onFailure { errorMessage, code ->
                 _isEnterPhoneNumberLoading.emit(false) // TODO JH: 팝업? 토스트? 아무것도 안할건지?
             }
@@ -307,6 +296,6 @@ class EventViewModel @Inject constructor(
 
     sealed interface UiEvent {
         data object EntrySuccess : UiEvent
-        data class PrizeWinning(val prizeId: Int) : UiEvent
+        data object ShowGetTicketPopup : UiEvent
     }
 }

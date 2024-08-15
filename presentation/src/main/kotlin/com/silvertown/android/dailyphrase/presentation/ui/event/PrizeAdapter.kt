@@ -28,7 +28,7 @@ class PrizeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.tvNotEnoughEntryGuide.isVisible = !prize.hasEnoughEntry && !prize.isEventPeriodEnded
             binding.tvEventResultReleaseDateGuide.text = itemView.context.getString(
                 R.string.event_result_release_date_guide,
-                String.format("%s월 %s일", prize.winningResultDate.monthValue, prize.winningResultDate.dayOfMonth)
+                String.format(itemView.context.getString(R.string.date_format_month_day), prize.winningResultDate.monthValue, prize.winningResultDate.dayOfMonth)
             )
             binding.tvEventResultReleaseDateGuide.isVisible = prize.isEventPeriodEnded
         }

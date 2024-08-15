@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -61,21 +62,30 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
     private fun initListeners() {
         fun getCurrentPrize(): EventInfoUi.Prize? {
-            return (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                ?.eventInfo
-                ?.prizes
-                ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+            return try {
+                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
+                    ?.eventInfo
+                    ?.prizes
+                    ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+            } catch (e: Exception) {
+                showDefaultErrorMessage()
+                null
+            }
         }
 
         binding.vpPrize.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
-                    updateEntryUi(
-                        prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
-                        myTicketCount = it.eventInfo.myTicketCount,
-                    )
+                try {
+                    (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
+                        updateEntryUi(
+                            prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
+                            total = it.eventInfo.total,
+                        )
+                    }
+                } catch (e: Exception) {
+                    showDefaultErrorMessage()
                 }
             }
         })
@@ -83,7 +93,20 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         binding.tvSubmitEntries.setOnClickListener {
             getCurrentPrize()?.let { prize ->
                 when (prize) {
-                    is EventInfoUi.Prize.AfterWinningDraw -> viewModel.checkEntryResult(selectedPrize = prize)
+                    is EventInfoUi.Prize.AfterWinningDraw -> {
+                        (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.eventInfo?.prizes
+                            ?.let { prizes -> prizes.firstOrNull { it.prizeId == prize.prizeId } }
+                            ?.entryResult
+                            ?.status
+                            ?.let { status ->
+                                when (status) {
+                                    PrizeInfo.Item.EntryResult.Status.WINNING -> showWinningBottomSheet()
+                                    PrizeInfo.Item.EntryResult.Status.MISSED -> viewModel.checkEntryResult(selectedPrizeId = prize.prizeId)
+                                    PrizeInfo.Item.EntryResult.Status.ENTERED,
+                                    PrizeInfo.Item.EntryResult.Status.UNKNOWN -> Unit
+                                }
+                            }
+                    }
                     is EventInfoUi.Prize.BeforeWinningDraw -> viewModel.entryEvent(selectedPrize = prize)
                 }
             }
@@ -132,7 +155,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                                 vibrateSingle(requireContext())
                                 showTooltip()
                             }
-                            is EventViewModel.UiEvent.PrizeWinning -> showWinningBottomSheet()
+                            EventViewModel.UiEvent.ShowGetTicketPopup -> showTicketReceivedDialog()
                         }
                     }
             }
@@ -144,10 +167,14 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             setViewPager()
             prizeAdapter?.setList(eventInfo.prizes)
         }
-        updateEntryUi(
-            prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
-            myTicketCount = eventInfo.myTicketCount,
-        )
+        try {
+            updateEntryUi(
+                prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
+                total = eventInfo.total,
+            )
+        } catch (e: Exception) {
+            showDefaultErrorMessage()
+        }
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
@@ -164,7 +191,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     }
 
     // 응모와 관련된 ui 업데이트
-    private fun updateEntryUi(prize: EventInfoUi.Prize, myTicketCount: Int) {
+    private fun updateEntryUi(prize: EventInfoUi.Prize, total: Int) {
         binding.tvSubmitEntries.isEnabled = when (prize) {
             is EventInfoUi.Prize.AfterWinningDraw -> !prize.entryResult.isChecked
             is EventInfoUi.Prize.BeforeWinningDraw -> !prize.isEventPeriodEnded && prize.hasEnoughEntry
@@ -187,7 +214,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             is EventInfoUi.Prize.BeforeWinningDraw -> if (prize.isEventPeriodEnded) {
                 null
             } else {
-                getString(R.string.my_entries, myTicketCount)
+                getString(R.string.my_entries, total)
             }
         }
         binding.tvEntryCount.text = getString(R.string.entry_count_message, prize.myEntryCount)
@@ -241,5 +268,9 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     private fun showTooltip() {
         balloon.showAlignTop(anchor = binding.tvEntryCount, yOff = -6)
         balloon.dismissWithDelay(2000L)
+    }
+
+    private fun showDefaultErrorMessage() {
+        Toast.makeText(requireContext(), getString(R.string.failure_request), Toast.LENGTH_SHORT).show()
     }
 }

@@ -13,4 +13,5 @@ interface RewardRepository {
     suspend fun postEventEnter(prizeId: Int): Result<Unit>
     suspend fun postCheckEntryResult(prizeId: Int): Result<Unit>
     suspend fun postWinnerPhoneNumber(prizeId: Int, phoneNumber: String): Result<Unit>
+    suspend fun getShouldShowTicketPopup(): Result<Boolean>
 }
