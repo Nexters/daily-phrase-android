@@ -62,10 +62,15 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
     private fun initListeners() {
         fun getCurrentPrize(): EventInfoUi.Prize? {
-            return (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
-                ?.eventInfo
-                ?.prizes
-                ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+            return try {
+                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)
+                    ?.eventInfo
+                    ?.prizes
+                    ?.let { prizes -> prizes[binding.vpPrize.currentItem % prizes.size] }
+            } catch (e: Exception) {
+                showDefaultErrorMessage()
+                null
+            }
         }
 
         binding.vpPrize.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -80,7 +85,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                         )
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(requireContext(), getString(R.string.failure_request), Toast.LENGTH_SHORT).show()
+                    showDefaultErrorMessage()
                 }
             }
         })
@@ -162,10 +167,14 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             setViewPager()
             prizeAdapter?.setList(eventInfo.prizes)
         }
-        updateEntryUi(
-            prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
-            total = eventInfo.total,
-        )
+        try {
+            updateEntryUi(
+                prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
+                total = eventInfo.total,
+            )
+        } catch (e: Exception) {
+            showDefaultErrorMessage()
+        }
         with(eventInfo.noticeInfo) {
             binding.tvNotice.setBackgroundColor(resources.getColor(bgColorResId, null))
             binding.tvNotice.setTextColor(resources.getColor(textColorResId, null))
@@ -259,5 +268,9 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
     private fun showTooltip() {
         balloon.showAlignTop(anchor = binding.tvEntryCount, yOff = -6)
         balloon.dismissWithDelay(2000L)
+    }
+
+    private fun showDefaultErrorMessage() {
+        Toast.makeText(requireContext(), getString(R.string.failure_request), Toast.LENGTH_SHORT).show()
     }
 }
