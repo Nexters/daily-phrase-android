@@ -377,6 +377,7 @@ fun WelcomeEventModal(
             HorizontalPager(
                 modifier = Modifier.fillMaxWidth(),
                 state = pagerState,
+                userScrollEnabled = false,
                 contentPadding = PaddingValues(horizontal = pagerContentPadding),
                 pageSpacing = 16.dp,
             ) { page ->

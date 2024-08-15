@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.ActivityMainB
 import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.Constants.PHRASE_ID
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -147,6 +149,14 @@ class MainActivity : AppCompatActivity() {
                         initialPage = pageCount / 2,
                         pageCount = { pageCount }
                     )
+
+                    LaunchedEffect(pagerState) {
+                        while (true) {
+                            delay(1000)
+                            val nextPage = (pagerState.currentPage + 1) % pageCount
+                            pagerState.animateScrollToPage(nextPage)
+                        }
+                    }
 
                     // 비로그인이면서 이벤트가 진행 중일 때만 웰컴모달이 보여야 함.
                     if (shouldShowWelcome && !loginState.isLoggedIn && !welcomeEventState.second) {
