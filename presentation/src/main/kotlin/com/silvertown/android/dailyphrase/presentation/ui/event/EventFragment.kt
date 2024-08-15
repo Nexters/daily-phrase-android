@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -71,11 +72,15 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
-                    updateEntryUi(
-                        prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
-                        total = it.eventInfo.total,
-                    )
+                try {
+                    (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
+                        updateEntryUi(
+                            prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
+                            total = it.eventInfo.total,
+                        )
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), getString(R.string.failure_request), Toast.LENGTH_SHORT).show()
                 }
             }
         })
