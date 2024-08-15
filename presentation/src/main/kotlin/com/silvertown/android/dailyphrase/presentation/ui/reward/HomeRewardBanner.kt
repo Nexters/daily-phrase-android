@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -142,11 +143,17 @@ fun HomeRewardBanner(
                 }
             }
 
-            AsyncImage(
+            Box(
                 modifier = Modifier.size(160.dp),
-                model = rewardBanner.imageUrl,
-                contentDescription = null
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    model = rewardBanner.bannerImageUrl,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
+            }
         }
 
         if (isEndedEvent) {

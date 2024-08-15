@@ -7,6 +7,10 @@ import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 data class RewardResponse(
     @SerializedName("eventId")
     val eventId: Int?,
+    @SerializedName("welcomeImageUrl")
+    val welcomeImageUrl: String?,
+    @SerializedName("bannerImageUrl")
+    val bannerImageUrl: String?,
     @SerializedName("imageUrl")
     val imageUrl: String?,
     @SerializedName("manufacturer")
@@ -43,6 +47,8 @@ fun RewardResponse.toRewardBannerDomainModel(
 ): RewardBanner {
     return RewardBanner(
         eventId = eventId ?: 0,
+        welcomeImageUrl = welcomeImageUrl.orEmpty(),
+        bannerImageUrl = bannerImageUrl.orEmpty(),
         imageUrl = imageUrl.orEmpty(),
         manufacturer = manufacturer.orEmpty(),
         myEntryCount = myEntryCount ?: 0,
@@ -59,6 +65,8 @@ fun RewardResponse.toRewardBannerDomainModel(
 fun RewardResponse.toPrizeDomainModel(): PrizeInfo.Item {
     return PrizeInfo.Item(
         eventId = eventId ?: 0,
+        welcomeImageUrl = bannerImageUrl.orEmpty(),
+        bannerImageUrl = bannerImageUrl.orEmpty(),
         imageUrl = imageUrl.orEmpty(),
         manufacturer = manufacturer.orEmpty(),
         myEntryCount = myEntryCount ?: 0,

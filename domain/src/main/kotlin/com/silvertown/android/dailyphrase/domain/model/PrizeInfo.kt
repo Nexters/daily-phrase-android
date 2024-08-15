@@ -6,6 +6,8 @@ data class PrizeInfo(
 ) {
     data class Item(
         val eventId: Int,
+        val welcomeImageUrl: String,
+        val bannerImageUrl: String,
         val imageUrl: String,
         val manufacturer: String,
         val myEntryCount: Int,

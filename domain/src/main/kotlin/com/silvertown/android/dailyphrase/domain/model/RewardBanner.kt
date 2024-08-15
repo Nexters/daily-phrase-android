@@ -4,6 +4,8 @@ import java.time.LocalDateTime
 
 data class RewardBanner(
     val eventId: Int,
+    val welcomeImageUrl: String,
+    val bannerImageUrl: String,
     val imageUrl: String,
     val manufacturer: String,
     val myEntryCount: Int,
