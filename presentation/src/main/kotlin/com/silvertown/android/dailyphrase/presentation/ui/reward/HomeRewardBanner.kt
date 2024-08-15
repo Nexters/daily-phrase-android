@@ -151,7 +151,9 @@ fun HomeRewardBanner(
 
         if (isEndedEvent) {
             ConfirmEntryResultButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 14.dp), // Column의 10.dp + 14.dp = 24.dp
                 navigateToEventPage = navigateToEventPage
             )
         } else {
