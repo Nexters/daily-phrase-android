@@ -57,7 +57,6 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
 
         initListeners()
         initObserve()
-//        showTicketReceivedDialog() // TODO JH: 조건에 따라 보여주기
     }
 
     private fun initListeners() {
