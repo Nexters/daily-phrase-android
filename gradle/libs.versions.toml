@@ -49,6 +49,7 @@ androidxDataStore = "1.0.0"
 lifecycleCompose = "2.7.0"
 firebase-messaging = "23.4.1"
 balloonCompose = "1.6.5"
+balloon = "1.6.5"
 flipper = "0.190.0"
 soloader = "0.10.4"
 
@@ -71,6 +72,7 @@ androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:na
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 balloon-compose = { group = "com.github.skydoves", name = "balloon-compose", version.ref = "balloonCompose" }
+balloon = { group = "com.github.skydoves", name = "balloon", version.ref = "balloon" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

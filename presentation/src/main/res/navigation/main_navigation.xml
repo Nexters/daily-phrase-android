@@ -26,6 +26,9 @@
         <action
             android:id="@+id/move_to_NonLoginFragment"
             app:destination="@id/nonLoginFragment" />
+        <action
+            android:id="@+id/move_to_eventFragment"
+            app:destination="@id/eventFragment"/>
     </fragment>
 
     <fragment
@@ -107,4 +110,28 @@
             android:name="twoButtonBottomSheetArg"
             app:argType="com.silvertown.android.dailyphrase.presentation.component.TwoButtonBottomSheet$TwoButtonBottomSheetArg"/>
     </action>
+
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.event.EventFragment"
+        tools:layout="@layout/fragment_event">
+
+        <action
+            android:id="@+id/move_to_ticketReceivedFragment"
+            app:destination="@id/ticketReceivedFragment"/>
+
+        <action
+            android:id="@+id/move_to_winningBottomSheet"
+            app:destination="@id/winningBottomSheet"/>
+    </fragment>
+
+    <dialog
+        android:id="@+id/ticketReceivedFragment"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.event.TicketReceivedDialog"
+        tools:layout="@layout/dialog_ticket_received"/>
+
+    <dialog
+        android:id="@+id/winningBottomSheet"
+        android:name="com.silvertown.android.dailyphrase.presentation.ui.event.WinningBottomSheet"
+        tools:layout="@layout/bottom_sheet_winning"/>
 </navigation>

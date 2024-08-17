@@ -31,6 +31,7 @@ import com.silvertown.android.dailyphrase.presentation.databinding.FragmentHomeB
 import com.silvertown.android.dailyphrase.presentation.base.BaseFragment
 import com.silvertown.android.dailyphrase.presentation.component.BaseDialog
 import com.silvertown.android.dailyphrase.presentation.component.KakaoLoginDialog
+import com.silvertown.android.dailyphrase.presentation.ui.reward.EndedRewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.ActionType
 import com.silvertown.android.dailyphrase.presentation.ui.reward.RewardPopup
 import com.silvertown.android.dailyphrase.presentation.util.Constants.TWENTY_FOUR_HOURS_IN_MILLIS
@@ -39,8 +40,8 @@ import com.silvertown.android.dailyphrase.presentation.util.LoginResultListener
 import com.silvertown.android.dailyphrase.presentation.util.sendKakaoLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -109,14 +110,15 @@ class HomeFragment :
         )
 
         rewardBannerAdapter = HomeRewardBannerAdapter(
-            // TODO: 주환데브 연결 필요 -> 홈 배너에서 "3초만에 로그인하기" 클릭시
-            // TODO: kakaoLogin callback 함수 하나 넣어서 처리해도 될 듯?
-            onClickKaKaoLogin = { (activity as? MainActivity)?.kakaoLogin() }
+            onClickKaKaoLogin = {
+                (activity as? MainActivity)?.kakaoLogin(targetPage = LoginResultListener.TargetPage.EVENT)
+            },
+            canCheckThisMonthRewardResult = viewModel::canCheckThisMonthRewardResult,
+            navigateToEventPage = ::moveToEventFragment
         )
 
         binding.rvPost.apply {
             homeAdapter = ConcatAdapter(
-                rewardBannerAdapter,
                 postAdapter.apply {
                     withLoadStateFooter(PostFooterLoadStateAdapter { postAdapter.retry() })
                 }
@@ -138,30 +140,17 @@ class HomeFragment :
 
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.postList
+            combine(
+                viewModel.postList,
+                viewModel.rewardState.filterNotNull()
+            ) { postList, rewardState ->
+                postList to rewardState
+            }
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest(postAdapter::submitData)
-        }
+                .collectLatest { (postList, rewardState) ->
+                    rewardBannerAdapter.submitList(listOf(rewardState))
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.rewardState
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .filterNotNull()
-                .collectLatest {
-                    rewardBannerAdapter.submitList(listOf(it.rewardBanner))
-                }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loginState
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collectLatest { state ->
-                    loginState = state
-                    if (state.isLoggedIn) {
-                        removeRewardBannerAdapter()
-                    } else {
-                        addRewardBannerAdapter()
-                    }
+                    postAdapter.submitData(postList)
                 }
         }
 
@@ -183,6 +172,25 @@ class HomeFragment :
             val rewardState by viewModel.rewardState.collectAsStateWithLifecycle()
             val messageRes = ActionType.valueOf(actionState.name).messageRes
 
+            LaunchedEffect(loginState, rewardState) {
+                this@HomeFragment.loginState = loginState
+
+                rewardState?.let {
+                    if (loginState.isLoggedIn) {
+                        if (it.isBeforeWinningDraw) {
+                            // 로그인 + 응모 결과 확인 못할 때, 리워드 배너는 보이지 않음
+                            removeRewardBannerAdapter()
+                        } else {
+                            // 로그인 + 응모 결과 확인 가능 상태일 때, 리워드 배너 추가
+                            addRewardBannerAdapter()
+                        }
+                    } else {
+                        // 비로그인 상태일 때, 리워드 배너 추가
+                        addRewardBannerAdapter()
+                    }
+                }
+            }
+
             if (showDialog) {
                 BaseDialog(
                     modifier = Modifier,
@@ -202,12 +210,14 @@ class HomeFragment :
                 }
             }
 
-            if (loginState.isLoggedIn) {
-                HomeRewardPopup(
-                    rewardState = rewardState,
-                    shareEvent = viewModel.shareEvent,
-                    navigateToEventPage = { } // TODO: 주환데브 연결 필요 -> 로그인 상태에서 팝업 클릭 시 이벤트 페이지로 이동
-                )
+            rewardState?.let { state ->
+                // 로그인 + 응모 결과를 아직 확인 못할 때 팝업
+                if (loginState.isLoggedIn && state.isBeforeWinningDraw) {
+                    HomeRewardPopup(
+                        rewardState = state,
+                        navigateToEventPage = { moveToEventFragment() }
+                    )
+                }
             }
         }
     }
@@ -217,10 +227,23 @@ class HomeFragment :
         Toast.makeText(requireContext(), R.string.login_success_desc, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onLoginSuccess(targetPage: LoginResultListener.TargetPage) {
+        super.onLoginSuccess(targetPage)
+        viewModel.showLoginDialog(false)
+
+        when (targetPage) {
+            LoginResultListener.TargetPage.EVENT -> moveToEventFragment()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         setStatusBarColor(R.color.home_app_bar)
-        viewModel.checkAndEmitSharedEvent()
+
+        lifecycleScope.launch {
+            delay(3000L)
+            viewModel.checkAndEmitSharedEvent()
+        }
     }
 
     override fun onStop() {
@@ -290,27 +313,38 @@ class HomeFragment :
         return remainTime in (TWO_MINUTES_IN_MILLIS + 1) until TWENTY_FOUR_HOURS_IN_MILLIS
     }
 
+    private fun moveToEventFragment() {
+        HomeFragmentDirections
+            .moveToEventFragment()
+            .also { findNavController().navigate(it) }
+    }
+
     @Composable
     private fun HomeRewardPopup(
-        rewardState: HomeRewardState?,
-        shareEvent: SharedFlow<Unit>,
+        rewardState: HomeRewardState,
         navigateToEventPage: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var showEndedEventTimerPopupTooltip by remember { mutableStateOf(false) }
-        var showSharedEventTooltip by remember { mutableStateOf(false) }
+        val showSharedEventTooltip by viewModel.shareTooltipState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            shareEvent.collect {
-                showSharedEventTooltip = true
-                delay(2000)
-                showSharedEventTooltip = false
+        LaunchedEffect(showSharedEventTooltip) {
+            if (showSharedEventTooltip) {
+                delay(2000L)
+                viewModel.updateSharedTooltipState(false)
             }
         }
 
-        rewardState?.let { state ->
+        if (rewardState.isThisMonthRewardClosed) {
+            // 응모기간 종료되었을 때
+            EndedRewardPopup(
+                eventMonth = rewardState.eventMonth,
+                navigateToEventPage = navigateToEventPage
+            )
+        } else {
+            // 응모기간이 남았을 때
             val remainTime =
-                Duration.between(LocalDateTime.now(), state.eventEndDateTime).toMillis()
+                Duration.between(LocalDateTime.now(), rewardState.eventEndDateTime).toMillis()
 
             if (showEndedEventTimerPopupTooltip(remainTime)) {
                 showEndedEventTimerPopupTooltip = true
@@ -318,7 +352,7 @@ class HomeFragment :
 
             RewardPopup(
                 modifier = modifier,
-                state = state,
+                state = rewardState,
                 showSharedEventTooltip = showSharedEventTooltip,
                 showEndedEventTimerPopupTooltip = showEndedEventTimerPopupTooltip,
                 onTimeBelowThreshold = {

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/event_bg"
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    tools:context=".ui.event.EventFragment">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_particle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="34dp"
+        app:lottie_rawRes="@raw/lottie_particle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/vp_prize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="@string/prize_event"
+        android:textColor="@color/black"
+        android:textSize="22dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        app:layout_constraintStart_toEndOf="@id/iv_back"
+        app:layout_constraintTop_toTopOf="@id/iv_back" />
+
+    <TextView
+        android:id="@+id/tv_notice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/ivory"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="@string/remaining_entry_period"
+        android:textColor="@color/olive_brown"
+        android:textSize="16dp"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_back"
+        tools:text="남은 응모 기간 7일 12:31:29" />
+
+    <TextView
+        android:id="@+id/tv_entry_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/bg_rectangle_white_r_100"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:text="@string/entry_count_message"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_notice"
+        tools:text="이 상품에 3회 응모했어요" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_prize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"
+        android:paddingHorizontal="53dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        app:layout_constraintTop_toBottomOf="@id/tv_entry_count"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_height="376dp"/>
+
+    <TextView
+        android:id="@+id/tv_my_entries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="@string/my_entries"
+        android:textSize="16dp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/vp_prize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="내 응모권 5장"/>
+
+    <TextView
+        android:id="@+id/tv_submit_entries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/selector_rectangle_orange_gray_r_8"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:paddingHorizontal="70dp"
+        android:paddingVertical="13dp"
+        android:text="@string/submit_entries"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_entries"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="3장으로 응모하기"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

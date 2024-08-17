@@ -55,4 +55,32 @@
     <string name="acquirable_ticket_reset_timer_text_suffix">뒤에</string>
     <string name="acquirable_ticket_reset_info_text">응모권을 받을 수 있어요</string>
     <string name="get_ticket_title">응모권을 받았어요!</string>
+    <string name="prize_event">경품 응모 이벤트</string>
+    <string name="remaining_entry_period">남은 응모 기간 %s</string>
+    <string name="entry_count_message">이 상품에 %d회 응모했어요</string>
+    <string name="submit_entries">%d장으로 응모하기</string>
+    <string name="my_entries">내 응모권 %d장</string>
+    <string name="required_tickets">%d장 필요</string>
+    <!-- \u0020는 띄어쓰기를 의미함. marquee 효과를 위해서는 충분히 긴 텍스트가 필요해 임의로 넣음. -->
+    <string name="event_finish">%d월 이벤트 종료! 다음 이벤트를 기대해 주세요.\u0020\u0020\u0020\u0020\u0020\u0020</string>
+    <string name="ticket_received">응모권 <font color="#F26600">5장</font>을\n받았어요!</string> <!-- TODO JH: 갯수 변경 가능성 고려하기 -->
+    <string name="not_enough_entry_guide">글귀를 공유하고 응모권을 모아보세요</string>
+    <string name="event_result_release_date_guide">%s에\n응모 결과를\n확인해 주세요</string>
+    <string name="confirm_entry_result">응모 결과 확인하기</string>
+    <string name="congratulation">당첨을 축하해요!</string>
+    <string name="input_phone_number_guide">남겨주신 연락처로\n선물을 받을 수 있는 링크를 전달해드릴게요.</string>
+    <string name="input_phone_number_hint">010-0000-0000</string>
+    <string name="input_phone_number">연락처 입력하기</string>
+    <string name="entry_result_missed">아쉽게도 당첨되지 않았어요.</string>
+    <string name="entry_result_winning"><![CDATA[<font color="#FF7900">%s</font>]]>으로 선물 발송 예정 (2일 이내)</string>
+    <string name="entry_success_tooltip_message">응모완료! <![CDATA[<font color="#FF7900">당첨 확률이 높아졌어요</font>]]></string>
+
+    <string name="home_reward_check_ended_event">"%1$d월 이벤트 확인하기"</string>
+    <string name="home_reward_announcement_winner">당첨자 발표 안내</string>
+    <string name="home_reward_popup_share_quote_prefix">글귀 공유하면</string>
+    <string name="home_reward_popup_share_quote_suffix">응모권이 생겨요</string>
+    <string name="welcome_event_model_login_and_get_prize">로그인하고 경품 받아가세요</string>
+    <string name="welcome_event_model_participation_count">%d명이 이벤트에 참여중</string>
+    <string name="invalid_phone_number_message">올바른 연락처를 입력해주세요.</string>
+    <string name="date_format_month_day">%s월 %s일</string>
 </resources>

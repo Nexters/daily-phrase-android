@@ -10,6 +10,8 @@ data class RewardInfoResponse(
     val eventId: Int?,
     @SerializedName("name")
     val name: String?,
+    @SerializedName("eventMonth")
+    val eventMonth: Int?,
     @SerializedName("eventStartDateTime")
     val eventStartDateTime: String?,
     @SerializedName("eventEndDateTime")
@@ -22,6 +24,7 @@ fun RewardInfoResponse.toDomainModel(): RewardInfo {
     return RewardInfo(
         eventId = eventId,
         name = name.orEmpty(),
+        eventMonth = eventMonth ?: 0,
         eventStartDateTime = eventStartDateTime.toLocalDateTimeOrNull(),
         eventEndDateTime = eventEndDateTime.toLocalDateTimeOrNull(),
         eventWinnerAnnouncementDateTime = eventWinnerAnnouncementDateTime.toLocalDateTimeOrNull()

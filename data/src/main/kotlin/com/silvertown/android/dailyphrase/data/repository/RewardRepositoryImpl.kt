@@ -4,6 +4,8 @@ import com.silvertown.android.dailyphrase.data.network.common.toResultModel
 import com.silvertown.android.dailyphrase.data.network.datasource.RewardDataSource
 import com.silvertown.android.dailyphrase.data.network.model.response.toDomainModel
 import com.silvertown.android.dailyphrase.data.network.model.response.toRewardBannerDomainModel
+import com.silvertown.android.dailyphrase.domain.model.PrizeInfo
+import com.silvertown.android.dailyphrase.domain.model.Result
 import com.silvertown.android.dailyphrase.domain.model.RewardBanner
 import com.silvertown.android.dailyphrase.domain.model.RewardInfo
 import com.silvertown.android.dailyphrase.domain.model.onFailure
@@ -22,7 +24,7 @@ class RewardRepositoryImpl @Inject constructor(
             .getRewards()
             .toResultModel { rewardWrapper ->
                 rewardWrapper.result?.rewardList?.map { reward ->
-                    reward.toRewardBannerDomainModel()
+                    reward.toRewardBannerDomainModel(rewardWrapper.result.myTicketCount)
                 }
             }
             .onSuccess { rewardBannerList ->
@@ -32,6 +34,14 @@ class RewardRepositoryImpl @Inject constructor(
             }
             .onFailure { errorMessage, _ ->
                 Timber.e(errorMessage)
+            }
+    }
+
+    override suspend fun getPrizeInfo(): Result<PrizeInfo> {
+        return rewardDataSource
+            .getRewards()
+            .toResultModel { response ->
+                response.result?.toDomainModel()
             }
     }
 
@@ -46,5 +56,21 @@ class RewardRepositoryImpl @Inject constructor(
             .onFailure { errorMessage, _ ->
                 Timber.e(errorMessage)
             }
+    }
+
+    override suspend fun postEventEnter(prizeId: Int): Result<Unit> {
+        return rewardDataSource.postEventEnter(prizeId).toResultModel { Unit }
+    }
+
+    override suspend fun postCheckEntryResult(prizeId: Int): Result<Unit> {
+        return rewardDataSource.postCheckEntryResult(prizeId).toResultModel { Unit }
+    }
+
+    override suspend fun postWinnerPhoneNumber(prizeId: Int, phoneNumber: String): Result<Unit> {
+        return rewardDataSource.postWinnerPhoneNumber(prizeId, phoneNumber).toResultModel { Unit }
+    }
+
+    override suspend fun getShouldShowTicketPopup(): Result<Boolean> {
+        return rewardDataSource.getShouldShowTicketPopup().toResultModel { it.result?.showGetTicketPopup ?: false }
     }
 }
