@@ -80,7 +80,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
                     (viewModel.uiState.value as? EventViewModel.UiState.Loaded)?.let {
                         updateEntryUi(
                             prize = it.eventInfo.prizes[position % it.eventInfo.prizes.size],
-                            total = it.eventInfo.total,
+                            total = it.eventInfo.myTicketCount,
                         )
                     }
                 } catch (e: Exception) {
@@ -169,7 +169,7 @@ class EventFragment : BaseFragment<FragmentEventBinding>(FragmentEventBinding::i
         try {
             updateEntryUi(
                 prize = eventInfo.prizes[binding.vpPrize.currentItem % eventInfo.prizes.size],
-                total = eventInfo.total,
+                total = eventInfo.myTicketCount,
             )
         } catch (e: Exception) {
             showDefaultErrorMessage()
